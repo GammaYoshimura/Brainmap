@@ -1,9 +1,14 @@
 #!/usr/bin/env node
 
+import { initCommand } from "./commands/init.js";
+
 export const HELP_TEXT = `Brainmap - Project memory and context-routing tool
 
 Usage:
   brainmap [command] [options]
+
+Commands:
+  init           Initialize Brain structure in current project
 
 Options:
   -h, --help     Show this help message
@@ -16,6 +21,12 @@ export function run(args: string[] = process.argv.slice(2)): number {
   if (args.includes("--help") || args.includes("-h") || args[0] === "help") {
     console.log(HELP_TEXT.trim());
     return EXIT_SUCCESS;
+  }
+
+  const command = args[0];
+
+  if (command === "init") {
+    return initCommand(args.slice(1));
   }
 
   if (args.length > 0 && args[0].startsWith("-")) {
