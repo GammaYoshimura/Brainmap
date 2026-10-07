@@ -20,6 +20,13 @@ export interface DirectoryModel {
   subdirectories: string[];
 }
 
+export interface DependencyModel {
+  name: string;
+  version: string;
+  kind: "production" | "development" | "peer" | "optional";
+  manifestPath?: string;
+}
+
 export interface ProjectModel {
   name: string;
   rootPath: string;
@@ -27,9 +34,21 @@ export interface ProjectModel {
   version: string;
   files: FileModel[];
   directories: DirectoryModel[];
-  dependencies: unknown[];
+  dependencies: DependencyModel[];
   brainDocuments: unknown[];
   diagnostics: unknown[];
+}
+
+export function createDependencyModel(data: {
+  name: string;
+  version: string;
+  kind?: "production" | "development" | "peer" | "optional";
+  manifestPath?: string;
+}): DependencyModel {
+  return {
+    kind: "production",
+    ...data,
+  };
 }
 
 export function createDirectoryModel(data: {
