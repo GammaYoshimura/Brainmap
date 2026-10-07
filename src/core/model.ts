@@ -3,6 +3,7 @@
  */
 
 export * from "./paths.js";
+export * from "./serialization.js";
 
 export interface FileModel {
   path: string;
