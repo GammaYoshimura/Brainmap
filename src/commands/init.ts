@@ -22,6 +22,14 @@ export function ensureBrainDirectory(targetDir: string): string {
   return brainPath;
 }
 
+export function createBrainIndexFile(brainDir: string): string {
+  const indexPath = path.join(brainDir, "index.md");
+  if (!fs.existsSync(indexPath)) {
+    fs.writeFileSync(indexPath, "# Brain Index\n\nGlobal router for project knowledge.\n", "utf8");
+  }
+  return indexPath;
+}
+
 export function initCommand(args: string[] = []): number {
   const targetDir = resolveProjectDirectory(args[0]);
   const exists = brainExists(targetDir);
@@ -32,6 +40,7 @@ export function initCommand(args: string[] = []): number {
   }
 
   console.log(`Initializing Brainmap in ${targetDir}...`);
-  ensureBrainDirectory(targetDir);
+  const brainDir = ensureBrainDirectory(targetDir);
+  createBrainIndexFile(brainDir);
   return INIT_SUCCESS;
 }
