@@ -38,6 +38,14 @@ export function createBrainArchitectureFile(brainDir: string): string {
   return archPath;
 }
 
+export function createBrainStateFile(brainDir: string): string {
+  const statePath = path.join(brainDir, "state.md");
+  if (!fs.existsSync(statePath)) {
+    fs.writeFileSync(statePath, "# Project State\n\nCurrent project state.\n", "utf8");
+  }
+  return statePath;
+}
+
 export function initCommand(args: string[] = []): number {
   const targetDir = resolveProjectDirectory(args[0]);
   const exists = brainExists(targetDir);
@@ -51,5 +59,6 @@ export function initCommand(args: string[] = []): number {
   const brainDir = ensureBrainDirectory(targetDir);
   createBrainIndexFile(brainDir);
   createBrainArchitectureFile(brainDir);
+  createBrainStateFile(brainDir);
   return INIT_SUCCESS;
 }
