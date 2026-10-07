@@ -37,6 +37,14 @@ export interface BrainDocumentModel {
   outgoingLinks: string[];
 }
 
+export interface DiagnosticModel {
+  level: "info" | "warning" | "error";
+  code: string;
+  message: string;
+  targetPath?: string;
+  rule?: string;
+}
+
 export interface ProjectModel {
   name: string;
   rootPath: string;
@@ -46,7 +54,20 @@ export interface ProjectModel {
   directories: DirectoryModel[];
   dependencies: DependencyModel[];
   brainDocuments: BrainDocumentModel[];
-  diagnostics: unknown[];
+  diagnostics: DiagnosticModel[];
+}
+
+export function createDiagnosticModel(data: {
+  level?: "info" | "warning" | "error";
+  code: string;
+  message: string;
+  targetPath?: string;
+  rule?: string;
+}): DiagnosticModel {
+  return {
+    level: "warning",
+    ...data,
+  };
 }
 
 export function createBrainDocumentModel(data: {
