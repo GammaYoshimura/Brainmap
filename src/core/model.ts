@@ -27,6 +27,14 @@ export interface DependencyModel {
   manifestPath?: string;
 }
 
+export interface BrainDocumentModel {
+  path: string;
+  relativePath: string;
+  title: string;
+  role: "router" | "constitution" | "state" | "handoff" | "decision" | "subsystem" | "specialized";
+  outgoingLinks: string[];
+}
+
 export interface ProjectModel {
   name: string;
   rootPath: string;
@@ -35,8 +43,21 @@ export interface ProjectModel {
   files: FileModel[];
   directories: DirectoryModel[];
   dependencies: DependencyModel[];
-  brainDocuments: unknown[];
+  brainDocuments: BrainDocumentModel[];
   diagnostics: unknown[];
+}
+
+export function createBrainDocumentModel(data: {
+  path: string;
+  relativePath: string;
+  title: string;
+  role: "router" | "constitution" | "state" | "handoff" | "decision" | "subsystem" | "specialized";
+  outgoingLinks?: string[];
+}): BrainDocumentModel {
+  return {
+    outgoingLinks: [],
+    ...data,
+  };
 }
 
 export function createDependencyModel(data: {
