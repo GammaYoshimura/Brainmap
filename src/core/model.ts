@@ -12,16 +12,38 @@ export interface FileModel {
   isEntrypoint?: boolean;
 }
 
+export interface DirectoryModel {
+  path: string;
+  relativePath: string;
+  name: string;
+  fileCount: number;
+  subdirectories: string[];
+}
+
 export interface ProjectModel {
   name: string;
   rootPath: string;
   createdAt: string;
   version: string;
   files: FileModel[];
-  directories: unknown[];
+  directories: DirectoryModel[];
   dependencies: unknown[];
   brainDocuments: unknown[];
   diagnostics: unknown[];
+}
+
+export function createDirectoryModel(data: {
+  path: string;
+  relativePath: string;
+  name: string;
+  fileCount?: number;
+  subdirectories?: string[];
+}): DirectoryModel {
+  return {
+    fileCount: 0,
+    subdirectories: [],
+    ...data,
+  };
 }
 
 export function createFileModel(data: {
