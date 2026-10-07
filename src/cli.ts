@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
-export function main(): void {
-  // CLI entry point
+export function run(args: string[] = process.argv.slice(2)): void {
+  console.log("Brainmap");
 }
 
-main();
+run();
