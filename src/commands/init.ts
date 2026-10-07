@@ -14,15 +14,24 @@ export function brainExists(targetDir: string): boolean {
   return fs.existsSync(brainPath) && fs.statSync(brainPath).isDirectory();
 }
 
+export function ensureBrainDirectory(targetDir: string): string {
+  const brainPath = path.join(targetDir, ".brain");
+  if (!fs.existsSync(brainPath)) {
+    fs.mkdirSync(brainPath, { recursive: true });
+  }
+  return brainPath;
+}
+
 export function initCommand(args: string[] = []): number {
   const targetDir = resolveProjectDirectory(args[0]);
   const exists = brainExists(targetDir);
 
   if (exists) {
     console.log(`.brain already exists in ${targetDir}`);
-  } else {
-    console.log(`Initializing Brainmap in ${targetDir}...`);
+    return INIT_SUCCESS;
   }
 
+  console.log(`Initializing Brainmap in ${targetDir}...`);
+  ensureBrainDirectory(targetDir);
   return INIT_SUCCESS;
 }
