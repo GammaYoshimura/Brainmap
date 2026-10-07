@@ -1,0 +1,32 @@
+{
+  "name": "brainmap",
+  "version": "0.1.0",
+  "description": "Model-agnostic project memory and context-routing tool for AI-assisted software development.",
+  "type": "module",
+  "main": "dist/index.js",
+  "bin": {
+    "brainmap": "dist/cli.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/cli.js",
+    "test": "node --test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GammaYoshimura/Brainmap.git"
+  },
+  "keywords": [
+    "brainmap",
+    "ai",
+    "context-routing",
+    "developer-tools",
+    "memory"
+  ],
+  "author": "Yoshimura",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20.17.0",
+    "typescript": "^5.7.0"
+  }
+}
