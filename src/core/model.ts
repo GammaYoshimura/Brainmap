@@ -2,6 +2,8 @@
  * Internal project representation and domain models for Brainmap.
  */
 
+export * from "./paths.js";
+
 export interface FileModel {
   path: string;
   relativePath: string;
