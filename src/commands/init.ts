@@ -30,6 +30,14 @@ export function createBrainIndexFile(brainDir: string): string {
   return indexPath;
 }
 
+export function createBrainArchitectureFile(brainDir: string): string {
+  const archPath = path.join(brainDir, "architecture.md");
+  if (!fs.existsSync(archPath)) {
+    fs.writeFileSync(archPath, "# Architecture\n\nGlobal architectural constitution.\n", "utf8");
+  }
+  return archPath;
+}
+
 export function initCommand(args: string[] = []): number {
   const targetDir = resolveProjectDirectory(args[0]);
   const exists = brainExists(targetDir);
@@ -42,5 +50,6 @@ export function initCommand(args: string[] = []): number {
   console.log(`Initializing Brainmap in ${targetDir}...`);
   const brainDir = ensureBrainDirectory(targetDir);
   createBrainIndexFile(brainDir);
+  createBrainArchitectureFile(brainDir);
   return INIT_SUCCESS;
 }
