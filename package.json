@@ -3,14 +3,14 @@
   "version": "0.1.0",
   "description": "Model-agnostic project memory and context-routing tool for AI-assisted software development.",
   "type": "module",
-  "main": "dist/index.js",
+  "main": "dist/src/cli.js",
   "bin": {
-    "brainmap": "dist/cli.js"
+    "brainmap": "dist/src/cli.js"
   },
   "scripts": {
     "build": "tsc",
-    "start": "node dist/cli.js",
-    "test": "node --test"
+    "start": "node dist/src/cli.js",
+    "test": "npm run build && node --test dist/tests"
   },
   "repository": {
     "type": "git",
