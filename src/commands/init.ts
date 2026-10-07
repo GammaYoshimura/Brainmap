@@ -46,6 +46,14 @@ export function createBrainStateFile(brainDir: string): string {
   return statePath;
 }
 
+export function createBrainHandoffFile(brainDir: string): string {
+  const handoffPath = path.join(brainDir, "handoff.md");
+  if (!fs.existsSync(handoffPath)) {
+    fs.writeFileSync(handoffPath, "# Handoff\n\nSession-to-session continuation document.\n", "utf8");
+  }
+  return handoffPath;
+}
+
 export function initCommand(args: string[] = []): number {
   const targetDir = resolveProjectDirectory(args[0]);
   const exists = brainExists(targetDir);
@@ -60,5 +68,6 @@ export function initCommand(args: string[] = []): number {
   createBrainIndexFile(brainDir);
   createBrainArchitectureFile(brainDir);
   createBrainStateFile(brainDir);
+  createBrainHandoffFile(brainDir);
   return INIT_SUCCESS;
 }
