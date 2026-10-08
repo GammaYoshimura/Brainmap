@@ -23,7 +23,7 @@ The handoff document ensures that any subsequent AI agent or developer session c
 ## Current Operational Handoff
 
 ### CURRENT MILESTONE
-M103: Create declared-dependency mapping.
+M104: Generate `project-map.md`.
 
 ### COMPLETED
 - Repository foundation (M001–M010).
@@ -41,28 +41,31 @@ M103: Create declared-dependency mapping.
 - M101: Created entry-point mapping with role categorization and Markdown formatting (`src/mapper/entrypoint-map.ts`).
 - M102: Created manifest mapping with package metadata, ecosystem identification, and dependency counting (`src/mapper/manifest-map.ts`).
 - M103: Created declared-dependency mapping categorized by production, development, peer, and optional scopes (`src/mapper/dependency-map.ts`).
+- M104: Synthesized project map components into `project-map.md` in `.brain/` (`src/mapper/project-map.ts`).
 
 ### IN PROGRESS
-- Completing M103.
+- Completing M104.
 
 ### CHANGED FILES
-- `src/mapper/dependency-map.ts`
+- `src/mapper/project-map.ts`
+- `src/commands/map.ts`
 - `tests/mapper.test.ts`
+- `.brain/project-map.md`
 - `.brain/state.md`
 - `.brain/handoff.md`
 
 ### TEST STATUS
-- 53/53 tests passing (`npm test`).
+- 55/55 tests passing (`npm test`).
 - TypeScript builds cleanly (`npm run build`).
 
 ### OPEN ISSUES
 - None.
 
 ### IMPORTANT DECISIONS
-- Dependencies are grouped by kind (production, development, peer, optional) and list declared version constraints and manifest origins.
+- `project-map.md` combines overview, entry points, modules, manifests, dependencies, directory tree, and file maps into a single deterministic Markdown view inside `.brain/`.
 
 ### NEXT ACTION
-- Proceed to M104: Generate `project-map.md`.
+- Proceed to M105: Add global routing from `.brain/index.md`.
 
 ### CONTEXT TO LOAD
 - `brainmap_master_prompt.md`

@@ -7,6 +7,10 @@ import { detectModules, formatModuleMap } from "../src/mapper/module-map.js";
 import { buildEntryPointMap, formatEntryPointMap, inferEntryPointKind } from "../src/mapper/entrypoint-map.js";
 import { buildManifestMap, formatManifestMap } from "../src/mapper/manifest-map.js";
 import { groupDependenciesByKind, formatDependencyMap } from "../src/mapper/dependency-map.js";
+import { generateProjectMapContent, writeProjectMap } from "../src/mapper/project-map.js";
+import fs from "node:fs";
+import os from "node:os";
+import path from "node:path";
 
 test("buildDirectoryMap sorts directories and calculates depth", () => {
   const dirs = [
@@ -184,4 +188,39 @@ test("groupDependenciesByKind and formatDependencyMap map declared dependencies"
   assert.match(formatted, /- \*\*`express`\*\* \(`\^4.18.2`\) — _package.json_/);
   assert.match(formatted, /#### Development \(1\)/);
   assert.match(formatted, /- \*\*`typescript`\*\* \(`\^5.0.0`\) — _package.json_/);
+});
+
+test("generateProjectMapContent synthesizes all structural maps into project-map markdown", () => {
+  const files = [
+    createFileModel({ path: "src/cli.ts", relativePath: "src/cli.ts", name: "cli.ts", extension: ".ts", size: 1000, language: "TypeScript" }),
+  ];
+  const dirs = [
+    createDirectoryModel({ path: "src", relativePath: "src", name: "src", fileCount: 1, subdirectories: [] }),
+  ];
+
+  const content = generateProjectMapContent({
+    projectName: "sample-app",
+    projectRoot: "/fake/root",
+    files,
+    directories: dirs,
+  });
+
+  assert.match(content, /# Project Map: sample-app/);
+  assert.match(content, /## Overview/);
+  assert.match(content, /### Entry Points/);
+  assert.match(content, /### Module Map/);
+  assert.match(content, /### Directory Map/);
+  assert.match(content, /### File Map/);
+});
+
+test("writeProjectMap creates .brain/project-map.md on disk", () => {
+  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "brainmap-project-map-test-"));
+  try {
+    const saved = writeProjectMap(tmpDir, "# Test Map Content\n");
+    assert.equal(saved, path.join(tmpDir, ".brain", "project-map.md"));
+    assert.equal(fs.existsSync(saved), true);
+    assert.equal(fs.readFileSync(saved, "utf8"), "# Test Map Content\n");
+  } finally {
+    fs.rmSync(tmpDir, { recursive: true, force: true });
+  }
 });
