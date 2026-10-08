@@ -4,7 +4,7 @@ Current operational state of the Brainmap project.
 
 ## Current Milestone
 
-**M128**: Return relevant ADRs.
+**M129**: Return relevant tests.
 
 ## What is Implemented
 
@@ -72,10 +72,11 @@ Current operational state of the Brainmap project.
   - Implemented relevant Brain document router discovering all Brain files and scoring them against query criteria (`src/router/brain-doc-router.ts`).
   - Implemented relevant source file router integrating paths, filenames, subsystems, and symbol extraction (`src/router/source-file-router.ts`).
   - Implemented relevant ADR router extracting decision metadata, status, keywords, and relevance scoring (`src/router/adr-router.ts`).
+  - Implemented relevant test router linking direct test mentions and matching test files corresponding to relevant source files (`src/router/test-router.ts`).
 
 ## What is In Progress
 
-- Completing M128: Return relevant ADRs.
+- Completing M129: Return relevant tests.
 
 ## Known Blockers
 
@@ -85,8 +86,8 @@ Current operational state of the Brainmap project.
 
 - Environment: Node.js v20+, TypeScript 5+, zero runtime dependencies.
 - Git repository synced with remote (`https://github.com/GammaYoshimura/Brainmap`).
-- 135 passing tests across the test suite.
+- 138 passing tests across the test suite.
 
 ## Immediate Next Work
 
-- Next milestone: **M129: Return relevant tests**.
+- Next milestone: **M130: Return relevant dependencies**.

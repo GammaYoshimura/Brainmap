@@ -23,7 +23,7 @@ The handoff document ensures that any subsequent AI agent or developer session c
 ## Current Operational Handoff
 
 ### CURRENT MILESTONE
-M128: Return relevant ADRs.
+M129: Return relevant tests.
 
 ### COMPLETED
 - Repository foundation (M001–M010).
@@ -48,34 +48,35 @@ M128: Return relevant ADRs.
   - M126: Implemented relevant Brain document router (`src/router/brain-doc-router.ts`, `tests/route-brain-doc-router.test.ts`).
   - M127: Implemented relevant source file router integrating paths, filenames, subsystems, and symbols (`src/router/source-file-router.ts`, `tests/route-source-file-router.test.ts`).
   - M128: Implemented relevant ADR router (`src/router/adr-router.ts`, `tests/route-adr-router.test.ts`).
+  - M129: Implemented relevant test router linking direct test mentions and matching test files corresponding to relevant source files (`src/router/test-router.ts`, `tests/route-test-router.test.ts`).
 
 ### IN PROGRESS
-- Completing M128: Return relevant ADRs.
+- Completing M129: Return relevant tests.
 
 ### CHANGED FILES
-- `src/router/adr-router.ts`
+- `src/router/test-router.ts`
 - `src/router/index.ts`
-- `tests/route-adr-router.test.ts`
+- `tests/route-test-router.test.ts`
 - `.brain/project-map.md`
 - `.brain/state.md`
 - `.brain/handoff.md`
 
 ### TEST STATUS
-- 135/135 tests passing (`npm test`).
+- 138/138 tests passing (`npm test`).
 - TypeScript builds cleanly (`npm run build`).
 
 ### OPEN ISSUES
 - None.
 
 ### IMPORTANT DECISIONS
-- ADRs are parsed from `.brain/decisions/*.md`, matched by ID, title, and query keywords, and boosted when decision/ADR intent is detected.
+- Relevant tests are identified via direct mentions as well as bidirectional correspondence to matched relevant source files.
 
 ### NEXT ACTION
-- Implement M129: Return relevant tests.
+- Implement M130: Return relevant dependencies.
 
 ### CONTEXT TO LOAD
 - `.brain/index.md`
 - `.brain/state.md`
 - `.brain/handoff.md`
 - `src/router/query.ts`
-- `src/router/adr-router.ts`
+- `src/router/test-router.ts`
