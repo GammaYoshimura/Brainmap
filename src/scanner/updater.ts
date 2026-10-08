@@ -3,6 +3,7 @@ import path from "node:path";
 import { FileModel, DirectoryModel, DependencyModel, ProjectModel, createDependencyModel } from "../core/model.js";
 import { toRelativePath } from "../core/paths.js";
 import { PersistedScanState, ProjectScanSummary } from "./scanner.js";
+import { recordDeclaredDependencies } from "../detector/manifests.js";
 
 export function getPersistedScanPath(projectRoot: string): string {
   return path.join(projectRoot, ".brain", "scan.json");
@@ -116,37 +117,7 @@ export function extractFileDependencies(
   filePath: string,
   rootPath: string
 ): DependencyModel[] {
-  if (!fs.existsSync(filePath)) {
-    return [];
-  }
-
-  const fileName = path.basename(filePath);
-  const relPath = toRelativePath(rootPath, filePath);
-
-  if (fileName === "package.json") {
-    try {
-      const content = JSON.parse(fs.readFileSync(filePath, "utf8"));
-      const deps: DependencyModel[] = [];
-
-      for (const [name, version] of Object.entries(content.dependencies ?? {})) {
-        deps.push(createDependencyModel({ name, version: String(version), kind: "production", manifestPath: relPath }));
-      }
-      for (const [name, version] of Object.entries(content.devDependencies ?? {})) {
-        deps.push(createDependencyModel({ name, version: String(version), kind: "development", manifestPath: relPath }));
-      }
-      for (const [name, version] of Object.entries(content.peerDependencies ?? {})) {
-        deps.push(createDependencyModel({ name, version: String(version), kind: "peer", manifestPath: relPath }));
-      }
-      for (const [name, version] of Object.entries(content.optionalDependencies ?? {})) {
-        deps.push(createDependencyModel({ name, version: String(version), kind: "optional", manifestPath: relPath }));
-      }
-      return deps;
-    } catch {
-      return [];
-    }
-  }
-
-  return [];
+  return recordDeclaredDependencies(filePath, rootPath);
 }
 
 export function recomputeDependenciesForChangedFiles(

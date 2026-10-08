@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
-import { normalizePath } from "../core/paths.js";
-import { FileModel } from "../core/model.js";
+import { normalizePath, toRelativePath } from "../core/paths.js";
+import { FileModel, DependencyModel, createDependencyModel } from "../core/model.js";
 
 export type ManifestKind =
   | "npm"
@@ -552,4 +552,148 @@ export function detectManifests(files: (FileModel | string)[]): ManifestDescript
   }
 
   return manifests;
+}
+
+/**
+ * Extracts and records all declared dependencies from any supported manifest file.
+ */
+export function recordDeclaredDependencies(
+  filePath: string,
+  rootPath: string
+): DependencyModel[] {
+  if (!fs.existsSync(filePath)) {
+    return [];
+  }
+
+  const relPath = toRelativePath(rootPath, filePath);
+  const baseName = path.basename(filePath);
+  const deps: DependencyModel[] = [];
+
+  // 1. package.json
+  if (isPackageJson(filePath)) {
+    const pkg = parsePackageJson(filePath);
+    if (pkg) {
+      for (const [name, version] of Object.entries(pkg.dependencies ?? {})) {
+        deps.push(createDependencyModel({ name, version: String(version), kind: "production", manifestPath: relPath }));
+      }
+      for (const [name, version] of Object.entries(pkg.devDependencies ?? {})) {
+        deps.push(createDependencyModel({ name, version: String(version), kind: "development", manifestPath: relPath }));
+      }
+      for (const [name, version] of Object.entries(pkg.peerDependencies ?? {})) {
+        deps.push(createDependencyModel({ name, version: String(version), kind: "peer", manifestPath: relPath }));
+      }
+      for (const [name, version] of Object.entries(pkg.optionalDependencies ?? {})) {
+        deps.push(createDependencyModel({ name, version: String(version), kind: "optional", manifestPath: relPath }));
+      }
+    }
+    return deps;
+  }
+
+  // 2. pubspec.yaml / pubspec.yml
+  if (isPubspecYaml(filePath)) {
+    const pub = parsePubspecYaml(filePath);
+    if (pub) {
+      for (const [name, version] of Object.entries(pub.dependencies ?? {})) {
+        deps.push(createDependencyModel({ name, version: String(version), kind: "production", manifestPath: relPath }));
+      }
+      for (const [name, version] of Object.entries(pub.devDependencies ?? {})) {
+        deps.push(createDependencyModel({ name, version: String(version), kind: "development", manifestPath: relPath }));
+      }
+    }
+    return deps;
+  }
+
+  // 3. composer.json
+  if (isComposerJson(filePath)) {
+    const composer = parseComposerJson(filePath);
+    if (composer) {
+      for (const [name, version] of Object.entries(composer.require ?? {})) {
+        deps.push(createDependencyModel({ name, version: String(version), kind: "production", manifestPath: relPath }));
+      }
+      for (const [name, version] of Object.entries(composer.requireDev ?? {})) {
+        deps.push(createDependencyModel({ name, version: String(version), kind: "development", manifestPath: relPath }));
+      }
+    }
+    return deps;
+  }
+
+  // 4. Python manifests
+  if (isPythonManifest(filePath)) {
+    if (baseName === "pyproject.toml") {
+      const pyproject = parsePyprojectToml(filePath);
+      if (pyproject) {
+        for (const [name, version] of Object.entries(pyproject.dependencies ?? {})) {
+          deps.push(createDependencyModel({ name, version: String(version), kind: "production", manifestPath: relPath }));
+        }
+        for (const [name, version] of Object.entries(pyproject.devDependencies ?? {})) {
+          deps.push(createDependencyModel({ name, version: String(version), kind: "development", manifestPath: relPath }));
+        }
+      }
+    } else if (/^requirements(-\w+)?\.txt$/i.test(baseName)) {
+      const isDev = /dev/i.test(baseName);
+      const reqs = parseRequirementsTxt(filePath);
+      for (const [name, version] of Object.entries(reqs)) {
+        deps.push(
+          createDependencyModel({
+            name,
+            version,
+            kind: isDev ? "development" : "production",
+            manifestPath: relPath,
+          })
+        );
+      }
+    }
+    return deps;
+  }
+
+  // 5. .NET manifests
+  if (isDotnetManifest(filePath)) {
+    const dotnet = parseDotnetProject(filePath);
+    if (dotnet) {
+      for (const [name, version] of Object.entries(dotnet.packageReferences ?? {})) {
+        deps.push(createDependencyModel({ name, version: String(version), kind: "production", manifestPath: relPath }));
+      }
+    }
+    return deps;
+  }
+
+  // 6. Cargo.toml
+  if (isCargoToml(filePath)) {
+    const cargo = parseCargoToml(filePath);
+    if (cargo) {
+      for (const [name, version] of Object.entries(cargo.dependencies ?? {})) {
+        deps.push(createDependencyModel({ name, version: String(version), kind: "production", manifestPath: relPath }));
+      }
+      for (const [name, version] of Object.entries(cargo.devDependencies ?? {})) {
+        deps.push(createDependencyModel({ name, version: String(version), kind: "development", manifestPath: relPath }));
+      }
+      for (const [name, version] of Object.entries(cargo.buildDependencies ?? {})) {
+        deps.push(createDependencyModel({ name, version: String(version), kind: "development", manifestPath: relPath }));
+      }
+    }
+    return deps;
+  }
+
+  return [];
+}
+
+/**
+ * Collects all declared dependencies across a set of files in a project.
+ */
+export function collectDeclaredDependencies(
+  files: (FileModel | string)[],
+  rootPath: string
+): DependencyModel[] {
+  const allDeps: DependencyModel[] = [];
+
+  for (const file of files) {
+    const relPath = typeof file === "string" ? file : file.relativePath;
+    if (isManifest(relPath)) {
+      const fullPath = path.isAbsolute(relPath) ? relPath : path.join(rootPath, relPath);
+      const deps = recordDeclaredDependencies(fullPath, rootPath);
+      allDeps.push(...deps);
+    }
+  }
+
+  return allDeps;
 }

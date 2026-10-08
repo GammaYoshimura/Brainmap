@@ -19,7 +19,80 @@ import {
   parseDotnetProject,
   isCargoToml,
   parseCargoToml,
+  recordDeclaredDependencies,
+  collectDeclaredDependencies,
 } from "../src/detector/manifests.js";
+import fs from "node:fs";
+import os from "node:os";
+import path from "node:path";
+
+test("recordDeclaredDependencies extracts dependencies across manifests", () => {
+  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "brainmap-manifest-test-"));
+
+  try {
+    // 1. package.json
+    const pkgPath = path.join(tmpDir, "package.json");
+    fs.writeFileSync(
+      pkgPath,
+      JSON.stringify({
+        dependencies: { express: "^4.18.2" },
+        devDependencies: { typescript: "^5.3.3" },
+      })
+    );
+    const npmDeps = recordDeclaredDependencies(pkgPath, tmpDir);
+    assert.equal(npmDeps.length, 2);
+    assert.ok(npmDeps.some((d) => d.name === "express" && d.kind === "production"));
+    assert.ok(npmDeps.some((d) => d.name === "typescript" && d.kind === "development"));
+
+    // 2. pubspec.yaml
+    const pubPath = path.join(tmpDir, "pubspec.yaml");
+    fs.writeFileSync(
+      pubPath,
+      "dependencies:\n  flutter:\n    sdk: flutter\n  http: ^1.2.0\ndev_dependencies:\n  lints: ^2.0.0\n"
+    );
+    const pubDeps = recordDeclaredDependencies(pubPath, tmpDir);
+    assert.ok(pubDeps.some((d) => d.name === "http" && d.version === "^1.2.0" && d.kind === "production"));
+    assert.ok(pubDeps.some((d) => d.name === "lints" && d.kind === "development"));
+
+    // 3. composer.json
+    const composerPath = path.join(tmpDir, "composer.json");
+    fs.writeFileSync(
+      composerPath,
+      JSON.stringify({
+        require: { "guzzlehttp/guzzle": "^7.8" },
+        "require-dev": { "phpunit/phpunit": "^10.0" },
+      })
+    );
+    const composerDeps = recordDeclaredDependencies(composerPath, tmpDir);
+    assert.ok(composerDeps.some((d) => d.name === "guzzlehttp/guzzle" && d.kind === "production"));
+    assert.ok(composerDeps.some((d) => d.name === "phpunit/phpunit" && d.kind === "development"));
+
+    // 4. requirements.txt
+    const reqPath = path.join(tmpDir, "requirements.txt");
+    fs.writeFileSync(reqPath, "fastapi>=0.100.0\nuvicorn==0.22.0\n");
+    const pyDeps = recordDeclaredDependencies(reqPath, tmpDir);
+    assert.ok(pyDeps.some((d) => d.name === "fastapi" && d.kind === "production"));
+
+    // 5. Cargo.toml
+    const cargoPath = path.join(tmpDir, "Cargo.toml");
+    fs.writeFileSync(
+      cargoPath,
+      "[package]\nname = \"test\"\nversion = \"0.1.0\"\n[dependencies]\nserde = \"1.0\"\n[dev-dependencies]\ntempfile = \"3.5\"\n"
+    );
+    const cargoDeps = recordDeclaredDependencies(cargoPath, tmpDir);
+    assert.ok(cargoDeps.some((d) => d.name === "serde" && d.kind === "production"));
+    assert.ok(cargoDeps.some((d) => d.name === "tempfile" && d.kind === "development"));
+
+    // 6. Test collectDeclaredDependencies
+    const all = collectDeclaredDependencies(
+      ["package.json", "pubspec.yaml", "Cargo.toml"],
+      tmpDir
+    );
+    assert.ok(all.length >= 6);
+  } finally {
+    fs.rmSync(tmpDir, { recursive: true, force: true });
+  }
+});
 
 test("detects Cargo manifests correctly", () => {
   assert.equal(isCargoToml("Cargo.toml"), true);
