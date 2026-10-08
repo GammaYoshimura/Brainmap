@@ -64,6 +64,105 @@ export const DOTNET_MANIFEST_RULE: ManifestRule = {
     fileName === "packages.config",
 };
 
+export const CARGO_MANIFEST_RULE: ManifestRule = {
+  kind: "cargo",
+  ecosystem: "Rust",
+  matches: (fileName) => fileName === "Cargo.toml",
+};
+
+/**
+ * Checks whether a given path is a Cargo.toml manifest.
+ */
+export function isCargoToml(filePath: string): boolean {
+  return path.basename(filePath) === "Cargo.toml";
+}
+
+export interface CargoManifest {
+  name?: string;
+  version?: string;
+  edition?: string;
+  dependencies?: Record<string, string>;
+  devDependencies?: Record<string, string>;
+  buildDependencies?: Record<string, string>;
+}
+
+/**
+ * Deterministically parses a Cargo.toml manifest.
+ */
+export function parseCargoToml(contentOrPath: string): CargoManifest | null {
+  try {
+    let raw = contentOrPath;
+    if (fs.existsSync(contentOrPath)) {
+      raw = fs.readFileSync(contentOrPath, "utf8");
+    }
+    const lines = raw.split(/\r?\n/);
+    const result: CargoManifest = {
+      dependencies: {},
+      devDependencies: {},
+      buildDependencies: {},
+    };
+
+    let section = "none";
+    for (const line of lines) {
+      const trimmed = line.trim();
+      if (!trimmed || trimmed.startsWith("#")) continue;
+
+      if (trimmed.startsWith("[") && trimmed.endsWith("]")) {
+        const header = trimmed.slice(1, -1).trim();
+        if (header === "package") section = "package";
+        else if (header === "dependencies") section = "dependencies";
+        else if (header === "dev-dependencies") section = "devDependencies";
+        else if (header === "build-dependencies") section = "buildDependencies";
+        else section = "other";
+        continue;
+      }
+
+      if (section === "package") {
+        const nameMatch = trimmed.match(/^name\s*=\s*["']([^"']+)["']/);
+        if (nameMatch) result.name = nameMatch[1];
+        const verMatch = trimmed.match(/^version\s*=\s*["']([^"']+)["']/);
+        if (verMatch) result.version = verMatch[1];
+        const edMatch = trimmed.match(/^edition\s*=\s*["']([^"']+)["']/);
+        if (edMatch) result.edition = edMatch[1];
+      } else if (
+        section === "dependencies" ||
+        section === "devDependencies" ||
+        section === "buildDependencies"
+      ) {
+        const kvMatch = trimmed.match(/^([a-zA-Z0-9_\-]+)\s*=\s*(.*)$/);
+        if (kvMatch) {
+          const pkgName = kvMatch[1];
+          const val = kvMatch[2].trim();
+          let ver = "*";
+
+          const simpleVerMatch = val.match(/^["']([^"']+)["']/);
+          if (simpleVerMatch) {
+            ver = simpleVerMatch[1];
+          } else {
+            const tableVerMatch = val.match(/version\s*=\s*["']([^"']+)["']/);
+            if (tableVerMatch) {
+              ver = tableVerMatch[1];
+            }
+          }
+
+          const target =
+            section === "dependencies"
+              ? result.dependencies!
+              : section === "devDependencies"
+              ? result.devDependencies!
+              : result.buildDependencies!;
+
+          target[pkgName] = ver;
+        }
+      }
+    }
+
+    return result;
+  } catch {
+    return null;
+  }
+}
+
 /**
  * Checks whether a given path is a .NET project manifest.
  */
@@ -397,6 +496,7 @@ export const MANIFEST_RULES: ManifestRule[] = [
   COMPOSER_MANIFEST_RULE,
   PYTHON_MANIFEST_RULE,
   DOTNET_MANIFEST_RULE,
+  CARGO_MANIFEST_RULE,
 ];
 
 /**

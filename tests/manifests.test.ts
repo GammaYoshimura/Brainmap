@@ -17,7 +17,45 @@ import {
   parsePyprojectToml,
   isDotnetManifest,
   parseDotnetProject,
+  isCargoToml,
+  parseCargoToml,
 } from "../src/detector/manifests.js";
+
+test("detects Cargo manifests correctly", () => {
+  assert.equal(isCargoToml("Cargo.toml"), true);
+  assert.equal(isCargoToml("crates/core/Cargo.toml"), true);
+  assert.equal(isCargoToml("Cargo.lock"), false);
+
+  assert.equal(isManifest("Cargo.toml"), true);
+
+  const descriptor = identifyManifest("Cargo.toml");
+  assert.ok(descriptor);
+  assert.equal(descriptor?.kind, "cargo");
+  assert.equal(descriptor?.ecosystem, "Rust");
+
+  const sampleCargo = `
+[package]
+name = "brainmap-core"
+version = "0.2.1"
+edition = "2021"
+
+[dependencies]
+serde = { version = "1.0", features = ["derive"] }
+tokio = "1.28.0"
+
+[dev-dependencies]
+tempfile = "3.5"
+`;
+
+  const parsed = parseCargoToml(sampleCargo);
+  assert.ok(parsed);
+  assert.equal(parsed?.name, "brainmap-core");
+  assert.equal(parsed?.version, "0.2.1");
+  assert.equal(parsed?.edition, "2021");
+  assert.equal(parsed?.dependencies?.["serde"], "1.0");
+  assert.equal(parsed?.dependencies?.["tokio"], "1.28.0");
+  assert.equal(parsed?.devDependencies?.["tempfile"], "3.5");
+});
 
 test("detects .NET manifests correctly", () => {
   assert.equal(isDotnetManifest("MyApp.csproj"), true);
