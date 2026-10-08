@@ -1,6 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
-import { FileModel, DependencyModel, createDependencyModel } from "../core/model.js";
+import { FileModel, DirectoryModel, DependencyModel, ProjectModel, createDependencyModel } from "../core/model.js";
 import { toRelativePath } from "../core/paths.js";
 import { PersistedScanState } from "./scanner.js";
 
@@ -159,4 +159,43 @@ export function recomputeDependenciesForChangedFiles(
     allDeps.push(...deps);
   }
   return allDeps;
+}
+
+export function updateProjectModelIncrementally(
+  previousModel: ProjectModel,
+  changes: {
+    addedFiles: FileModel[];
+    modifiedFiles: FileModel[];
+    removedFiles: FileModel[];
+    directories?: DirectoryModel[];
+    recomputedDependencies?: DependencyModel[];
+  }
+): ProjectModel {
+  const removedPaths = new Set(changes.removedFiles.map((f) => f.relativePath));
+  const modifiedMap = new Map(changes.modifiedFiles.map((f) => [f.relativePath, f]));
+
+  const updatedFiles: FileModel[] = previousModel.files
+    .filter((f) => !removedPaths.has(f.relativePath))
+    .map((f) => modifiedMap.get(f.relativePath) ?? f);
+
+  updatedFiles.push(...changes.addedFiles);
+  updatedFiles.sort((a, b) => a.relativePath.localeCompare(b.relativePath));
+
+  let dependencies = [...previousModel.dependencies];
+  if (changes.recomputedDependencies && changes.recomputedDependencies.length > 0) {
+    const newManifestPaths = new Set(
+      changes.recomputedDependencies.map((d) => d.manifestPath).filter(Boolean)
+    );
+    dependencies = dependencies.filter((d) => !newManifestPaths.has(d.manifestPath));
+    dependencies.push(...changes.recomputedDependencies);
+  }
+
+  const directories = changes.directories ?? previousModel.directories;
+
+  return {
+    ...previousModel,
+    files: updatedFiles,
+    directories,
+    dependencies,
+  };
 }
