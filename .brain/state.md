@@ -4,7 +4,7 @@ Current operational state of the Brainmap project.
 
 ## Current Milestone
 
-**M123**: Resolve Brain-document matches.
+**M124**: Resolve symbol matches where supported.
 
 ## What is Implemented
 
@@ -67,10 +67,11 @@ Current operational state of the Brainmap project.
   - Implemented file name and stem matching resolver against candidate project and brain paths (`src/router/filename-matcher.ts`).
   - Implemented subsystem matching resolver with identifier, name, path, and token heuristics (`src/router/subsystem-matcher.ts`).
   - Implemented Brain document matching resolver with role-intent keywords, paths, and subsystem tokens (`src/router/brain-doc-matcher.ts`).
+  - Implemented exported symbol extraction and symbol-matching resolver (`src/router/symbol-matcher.ts`).
 
 ## What is In Progress
 
-- Completing M123: Resolve Brain-document matches.
+- Completing M124: Resolve symbol matches where supported.
 
 ## Known Blockers
 
@@ -80,8 +81,8 @@ Current operational state of the Brainmap project.
 
 - Environment: Node.js v20+, TypeScript 5+, zero runtime dependencies.
 - Git repository synced with remote (`https://github.com/GammaYoshimura/Brainmap`).
-- 116 passing tests across the test suite.
+- 120 passing tests across the test suite.
 
 ## Immediate Next Work
 
-- Next milestone: **M124: Resolve symbol matches where supported**.
+- Next milestone: **M125: Create relevance ranking**.

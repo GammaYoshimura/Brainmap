@@ -23,7 +23,7 @@ The handoff document ensures that any subsequent AI agent or developer session c
 ## Current Operational Handoff
 
 ### CURRENT MILESTONE
-M123: Resolve Brain-document matches.
+M124: Resolve symbol matches where supported.
 
 ### COMPLETED
 - Repository foundation (M001–M010).
@@ -43,34 +43,35 @@ M123: Resolve Brain-document matches.
   - M121: Implemented file name and stem matching resolver against candidate paths (`src/router/filename-matcher.ts`, `tests/route-filename-matcher.test.ts`).
   - M122: Implemented subsystem matching resolver with identifier, name, path, and token heuristics (`src/router/subsystem-matcher.ts`, `tests/route-subsystem-matcher.test.ts`).
   - M123: Implemented Brain document matching resolver with role-intent keywords, exact paths, and subsystem mappings (`src/router/brain-doc-matcher.ts`, `tests/route-brain-doc-matcher.test.ts`).
+  - M124: Implemented exported symbol extraction and symbol-matching resolver with exact and case-insensitive scoring (`src/router/symbol-matcher.ts`, `tests/route-symbol-matcher.test.ts`).
 
 ### IN PROGRESS
-- Completing M123: Resolve Brain-document matches.
+- Completing M124: Resolve symbol matches where supported.
 
 ### CHANGED FILES
-- `src/router/brain-doc-matcher.ts`
+- `src/router/symbol-matcher.ts`
 - `src/router/index.ts`
-- `tests/route-brain-doc-matcher.test.ts`
+- `tests/route-symbol-matcher.test.ts`
 - `.brain/project-map.md`
 - `.brain/state.md`
 - `.brain/handoff.md`
 
 ### TEST STATUS
-- 116/116 tests passing (`npm test`).
+- 120/120 tests passing (`npm test`).
 - TypeScript builds cleanly (`npm run build`).
 
 ### OPEN ISSUES
 - None.
 
 ### IMPORTANT DECISIONS
-- Brain documents are resolved by matching role intent keywords (constitution, state, handoff, decisions), exact document paths, and subsystem tokens.
+- Symbol matching scans exported code declarations (functions, interfaces, classes, types, constants) and ranks direct case-sensitive matches higher than fuzzy token matches.
 
 ### NEXT ACTION
-- Implement M124: Resolve symbol matches where supported.
+- Implement M125: Create relevance ranking.
 
 ### CONTEXT TO LOAD
 - `.brain/index.md`
 - `.brain/state.md`
 - `.brain/handoff.md`
 - `src/router/query.ts`
-- `src/router/brain-doc-matcher.ts`
+- `src/router/symbol-matcher.ts`
