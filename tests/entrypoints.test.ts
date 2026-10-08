@@ -6,8 +6,43 @@ test("isEntryPoint detects default entry points and rejects ordinary files", () 
   assert.equal(isEntryPoint("main.ts"), true);
   assert.equal(isEntryPoint("src/main.js"), true);
   assert.equal(isEntryPoint("index.ts"), true);
-  assert.equal(isEntryPoint("src/index.py"), true);
+  assert.equal(isEntryPoint("src/cli.ts"), true);
+  assert.equal(isEntryPoint("bin/brainmap.js"), true);
 
+  // Dart / Flutter
+  assert.equal(isEntryPoint("lib/main.dart"), true);
+  assert.equal(isEntryPoint("main.dart"), true);
+
+  // Python
+  assert.equal(isEntryPoint("main.py"), true);
+  assert.equal(isEntryPoint("app.py"), true);
+  assert.equal(isEntryPoint("src/__main__.py"), true);
+  assert.equal(isEntryPoint("pkg/__main__.py"), true);
+
+  // Rust
+  assert.equal(isEntryPoint("src/main.rs"), true);
+  assert.equal(isEntryPoint("src/lib.rs"), true);
+  assert.equal(isEntryPoint("src/bin/cli.rs"), true);
+
+  // Go
+  assert.equal(isEntryPoint("main.go"), true);
+  assert.equal(isEntryPoint("cmd/server/main.go"), true);
+
+  // PHP
+  assert.equal(isEntryPoint("index.php"), true);
+  assert.equal(isEntryPoint("public/index.php"), true);
+  assert.equal(isEntryPoint("artisan"), true);
+
+  // C# / .NET
+  assert.equal(isEntryPoint("Program.cs"), true);
+  assert.equal(isEntryPoint("src/Api/Program.cs"), true);
+  assert.equal(isEntryPoint("Startup.cs"), true);
+
+  // C / C++
+  assert.equal(isEntryPoint("main.c"), true);
+  assert.equal(isEntryPoint("src/main.cpp"), true);
+
+  // Non-entrypoints
   assert.equal(isEntryPoint("utils/helper.ts"), false);
   assert.equal(isEntryPoint("src/components/button.tsx"), false);
   assert.equal(isEntryPoint("data/users.json"), false);
