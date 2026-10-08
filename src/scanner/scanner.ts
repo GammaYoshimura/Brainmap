@@ -3,6 +3,7 @@ import path from "node:path";
 import { normalizePath, toRelativePath } from "../core/paths.js";
 import { FileModel, DirectoryModel, ProjectModel, createFileModel, createDirectoryModel } from "../core/model.js";
 import { detectLanguageByExtension, detectProjectLanguages, LanguageSummary } from "./languages.js";
+import { isEntryPoint } from "../detector/entrypoints.js";
 import {
   ExclusionConfig,
   createDefaultExclusionConfig,
@@ -31,6 +32,7 @@ export function recordDiscoveredFile(fullPath: string, rootPath: string): FileMo
     extension,
     size: stat.size,
     language,
+    isEntrypoint: isEntryPoint(relPath),
   });
 }
 
