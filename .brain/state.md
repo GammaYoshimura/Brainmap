@@ -4,7 +4,7 @@ Current operational state of the Brainmap project.
 
 ## Current Milestone
 
-**M100**: Create module-map generation.
+**M101**: Create entry-point mapping.
 
 ## What is Implemented
 
@@ -37,15 +37,16 @@ Current operational state of the Brainmap project.
   - Manifest registry and detectors for `package.json`, `pubspec.yaml`, `composer.json`, Python manifests (`pyproject.toml`, `requirements.txt`), .NET manifests (`*.csproj`), and Cargo (`Cargo.toml`) (`src/detector/manifests.ts`).
   - Declared dependencies extraction across all supported manifests.
   - Comprehensive end-to-end detection test suite (`tests/detection.test.ts`).
-- **`brainmap map` (M097–M100)**:
+- **`brainmap map` (M097–M101)**:
   - Created `map` command handler (`src/commands/map.ts`) and registered `map` in CLI entry point and help text (`src/cli.ts`).
   - Created directory-map generation and Markdown formatting (`src/mapper/directory-map.ts`).
   - Created file-map generation with directory grouping, size formatting, and metadata (`src/mapper/file-map.ts`).
   - Created module-map generation with structural heuristics and Markdown formatting (`src/mapper/module-map.ts`).
+  - Created entry-point mapping with role inference (CLI, server, app, library) and Markdown formatting (`src/mapper/entrypoint-map.ts`).
 
 ## What is In Progress
 
-- Completing M100: Create module-map generation.
+- Completing M101: Create entry-point mapping.
 
 ## Known Blockers
 
@@ -55,9 +56,9 @@ Current operational state of the Brainmap project.
 
 - Environment: Node.js v20+, TypeScript 5+, zero runtime dependencies.
 - Git repository synced with remote (`https://github.com/GammaYoshimura/Brainmap`).
-- 49 passing tests across the test suite.
+- 51 passing tests across the test suite.
 
 ## Immediate Next Work
 
-- **M101**: Create entry-point mapping.
 - **M102**: Create manifest mapping.
+- **M103**: Create declared-dependency mapping.

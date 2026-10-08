@@ -23,7 +23,7 @@ The handoff document ensures that any subsequent AI agent or developer session c
 ## Current Operational Handoff
 
 ### CURRENT MILESTONE
-M100: Create module-map generation.
+M101: Create entry-point mapping.
 
 ### COMPLETED
 - Repository foundation (M001–M010).
@@ -38,28 +38,29 @@ M100: Create module-map generation.
 - M098: Created directory-map generation model and formatting (`src/mapper/directory-map.ts`).
 - M099: Created file-map generation with directory grouping and size formatting (`src/mapper/file-map.ts`).
 - M100: Created module-map generation with container inspection and language aggregation (`src/mapper/module-map.ts`).
+- M101: Created entry-point mapping with role categorization and Markdown formatting (`src/mapper/entrypoint-map.ts`).
 
 ### IN PROGRESS
-- Completing M100.
+- Completing M101.
 
 ### CHANGED FILES
-- `src/mapper/module-map.ts`
+- `src/mapper/entrypoint-map.ts`
 - `tests/mapper.test.ts`
 - `.brain/state.md`
 - `.brain/handoff.md`
 
 ### TEST STATUS
-- 49/49 tests passing (`npm test`).
+- 51/51 tests passing (`npm test`).
 - TypeScript builds cleanly (`npm run build`).
 
 ### OPEN ISSUES
 - None.
 
 ### IMPORTANT DECISIONS
-- Module mapping groups cohesive directory roots (such as `src/*`, `packages/*`, top-level code folders) and lists language makeup and entry points.
+- Entry points are categorized into semantic kinds (CLI, server, app, library, generic) based on naming conventions and directory locations.
 
 ### NEXT ACTION
-- Proceed to M101: Create entry-point mapping.
+- Proceed to M102: Create manifest mapping.
 
 ### CONTEXT TO LOAD
 - `brainmap_master_prompt.md`

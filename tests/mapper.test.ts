@@ -4,6 +4,7 @@ import { createDirectoryModel, createFileModel } from "../src/core/model.js";
 import { buildDirectoryMap, formatDirectoryMap } from "../src/mapper/directory-map.js";
 import { buildFileMap, formatFileMap, formatFileSize } from "../src/mapper/file-map.js";
 import { detectModules, formatModuleMap } from "../src/mapper/module-map.js";
+import { buildEntryPointMap, formatEntryPointMap, inferEntryPointKind } from "../src/mapper/entrypoint-map.js";
 
 test("buildDirectoryMap sorts directories and calculates depth", () => {
   const dirs = [
@@ -121,4 +122,27 @@ test("formatModuleMap produces readable markdown", () => {
   assert.match(formatted, /### Module Map/);
   assert.match(formatted, /- \*\*`core`\*\* \(`src\/core\/`\) — 4 files \(TypeScript\)/);
   assert.match(formatted, /- \*\*`cli`\*\* \(`src\/`\) — 1 file \(TypeScript\) \[entry-point\]/);
+});
+
+test("inferEntryPointKind correctly categorizes entry points", () => {
+  assert.equal(inferEntryPointKind("cli.ts", "src/cli.ts").kind, "cli");
+  assert.equal(inferEntryPointKind("server.ts", "src/server.ts").kind, "server");
+  assert.equal(inferEntryPointKind("main.dart", "lib/main.dart").kind, "app");
+  assert.equal(inferEntryPointKind("index.ts", "src/index.ts").kind, "library");
+});
+
+test("buildEntryPointMap and formatEntryPointMap map entry points to markdown", () => {
+  const files = [
+    createFileModel({ path: "src/cli.ts", relativePath: "src/cli.ts", name: "cli.ts", extension: ".ts", size: 1000, language: "TypeScript" }),
+    createFileModel({ path: "README.md", relativePath: "README.md", name: "README.md", extension: ".md", size: 500, language: "Markdown" }),
+  ];
+
+  const map = buildEntryPointMap(files);
+  assert.equal(map.length, 1);
+  assert.equal(map[0].relativePath, "src/cli.ts");
+  assert.equal(map[0].kind, "cli");
+
+  const formatted = formatEntryPointMap(map);
+  assert.match(formatted, /### Entry Points/);
+  assert.match(formatted, /- \*\*`src\/cli.ts`\*\* \[CLI\] — TypeScript, Command-Line Interface entry point/);
 });
