@@ -1,3 +1,4 @@
+import fs from "node:fs";
 import path from "node:path";
 import {
   traverseProject,
@@ -5,6 +6,7 @@ import {
   recordDiscoveredDirectories,
   generateProjectSummary,
   formatProjectSummary,
+  persistScanResults,
 } from "../scanner/scanner.js";
 
 export const SCAN_SUCCESS = 0;
@@ -24,5 +26,12 @@ export function scanCommand(args: string[] = []): number {
   const summary = generateProjectSummary(traversal.rootPath, files, directories);
 
   console.log(formatProjectSummary(summary));
+
+  const brainDir = path.join(targetDir, ".brain");
+  if (fs.existsSync(brainDir) && fs.statSync(brainDir).isDirectory()) {
+    const savedPath = persistScanResults(brainDir, summary);
+    console.log(`Scan results persisted to ${savedPath}`);
+  }
+
   return SCAN_SUCCESS;
 }

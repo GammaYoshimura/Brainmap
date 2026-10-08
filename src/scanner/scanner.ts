@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { normalizePath, toRelativePath } from "../core/paths.js";
-import { FileModel, DirectoryModel, createFileModel, createDirectoryModel } from "../core/model.js";
+import { FileModel, DirectoryModel, ProjectModel, createFileModel, createDirectoryModel } from "../core/model.js";
 import { detectLanguageByExtension, detectProjectLanguages, LanguageSummary } from "./languages.js";
 import {
   ExclusionConfig,
@@ -193,4 +193,27 @@ export function formatProjectSummary(summary: ProjectScanSummary): string {
   }
 
   return lines.join("\n");
+}
+
+export function persistScanResults(
+  targetDirOrBrainDir: string,
+  summary: ProjectScanSummary,
+  model?: ProjectModel
+): string {
+  const isBrainDir = path.basename(targetDirOrBrainDir) === ".brain";
+  const brainDir = isBrainDir ? targetDirOrBrainDir : path.join(targetDirOrBrainDir, ".brain");
+
+  if (!fs.existsSync(brainDir)) {
+    fs.mkdirSync(brainDir, { recursive: true });
+  }
+
+  const outputPath = path.join(brainDir, "scan.json");
+  const payload = {
+    summary,
+    scannedAt: new Date().toISOString(),
+    ...(model ? { model } : {}),
+  };
+
+  fs.writeFileSync(outputPath, JSON.stringify(payload, null, 2), "utf8");
+  return outputPath;
 }
