@@ -7,7 +7,7 @@ import { detectModules, formatModuleMap } from "../src/mapper/module-map.js";
 import { buildEntryPointMap, formatEntryPointMap, inferEntryPointKind } from "../src/mapper/entrypoint-map.js";
 import { buildManifestMap, formatManifestMap } from "../src/mapper/manifest-map.js";
 import { groupDependenciesByKind, formatDependencyMap } from "../src/mapper/dependency-map.js";
-import { generateProjectMapContent, writeProjectMap, ensureProjectMapRoutingInIndex } from "../src/mapper/project-map.js";
+import { generateProjectMapContent, writeProjectMap, ensureProjectMapRoutingInIndex, updateProjectMapIncrementally } from "../src/mapper/project-map.js";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
@@ -241,6 +241,27 @@ test("ensureProjectMapRoutingInIndex adds routing link to .brain/index.md", () =
     // Idempotent
     const secondCall = ensureProjectMapRoutingInIndex(brainDir);
     assert.equal(secondCall, false);
+  } finally {
+    fs.rmSync(tmpDir, { recursive: true, force: true });
+  }
+});
+
+test("updateProjectMapIncrementally refreshes project-map.md when present", () => {
+  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "brainmap-inc-map-test-"));
+  try {
+    const brainDir = path.join(tmpDir, ".brain");
+    fs.mkdirSync(brainDir, { recursive: true });
+    const mapPath = path.join(brainDir, "project-map.md");
+    fs.writeFileSync(mapPath, "# Old Map\n", "utf8");
+
+    const file1 = createFileModel({ path: path.join(tmpDir, "new-file.ts"), relativePath: "new-file.ts", name: "new-file.ts", extension: ".ts", size: 50 });
+    const dir1 = createDirectoryModel({ path: tmpDir, relativePath: ".", name: "root" });
+
+    const result = updateProjectMapIncrementally(tmpDir, { name: "test-app", files: [file1] }, [dir1]);
+    assert.equal(result.updated, true);
+
+    const refreshed = fs.readFileSync(mapPath, "utf8");
+    assert.match(refreshed, /new-file\.ts/);
   } finally {
     fs.rmSync(tmpDir, { recursive: true, force: true });
   }

@@ -90,3 +90,25 @@ export function writeProjectMap(projectRoot: string, content: string): string {
   ensureProjectMapRoutingInIndex(brainDir);
   return mapPath;
 }
+
+export function updateProjectMapIncrementally(
+  projectRoot: string,
+  model: { name?: string; files: FileModel[]; dependencies?: DependencyModel[] },
+  directories: DirectoryModel[]
+): { updated: boolean; path: string } {
+  const mapPath = path.join(projectRoot, ".brain", "project-map.md");
+  if (!fs.existsSync(mapPath)) {
+    return { updated: false, path: mapPath };
+  }
+
+  const content = generateProjectMapContent({
+    projectName: model.name || path.basename(projectRoot),
+    projectRoot,
+    files: model.files,
+    directories,
+    dependencies: model.dependencies,
+  });
+
+  writeProjectMap(projectRoot, content);
+  return { updated: true, path: mapPath };
+}

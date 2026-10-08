@@ -14,6 +14,7 @@ import {
   updateProjectModelIncrementally,
   persistUpdatedState,
 } from "../scanner/updater.js";
+import { updateProjectMapIncrementally } from "../mapper/project-map.js";
 
 export const UPDATE_SUCCESS = 0;
 export const UPDATE_FAILURE = 1;
@@ -62,6 +63,11 @@ export function updateCommand(args: string[] = []): number {
 
   const summary = generateProjectSummary(traversal.rootPath, updatedModel.files, directories);
   persistUpdatedState(targetDir, updatedModel, summary);
+
+  const mapResult = updateProjectMapIncrementally(targetDir, updatedModel, directories);
+  if (mapResult.updated) {
+    console.log(`Incrementally updated project map in ${mapResult.path}`);
+  }
 
   console.log(formatUpdateSummary(diff));
   console.log(`Successfully updated project state in ${targetDir}`);

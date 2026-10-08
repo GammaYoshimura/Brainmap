@@ -4,7 +4,7 @@ Current operational state of the Brainmap project.
 
 ## Current Milestone
 
-**M105**: Add global routing from `.brain/index.md`.
+**M106**: Support incremental map updates.
 
 ## What is Implemented
 
@@ -37,7 +37,7 @@ Current operational state of the Brainmap project.
   - Manifest registry and detectors for `package.json`, `pubspec.yaml`, `composer.json`, Python manifests (`pyproject.toml`, `requirements.txt`), .NET manifests (`*.csproj`), and Cargo (`Cargo.toml`) (`src/detector/manifests.ts`).
   - Declared dependencies extraction across all supported manifests.
   - Comprehensive end-to-end detection test suite (`tests/detection.test.ts`).
-- **`brainmap map` (M097–M105)**:
+- **`brainmap map` (M097–M106)**:
   - Created `map` command handler (`src/commands/map.ts`) and registered `map` in CLI entry point and help text (`src/cli.ts`).
   - Created directory-map generation and Markdown formatting (`src/mapper/directory-map.ts`).
   - Created file-map generation with directory grouping, size formatting, and metadata (`src/mapper/file-map.ts`).
@@ -47,10 +47,11 @@ Current operational state of the Brainmap project.
   - Created declared-dependency mapping categorized by production, development, peer, and optional scopes (`src/mapper/dependency-map.ts`).
   - Implemented `project-map.md` synthesis engine and file generator (`src/mapper/project-map.ts`).
   - Added global routing link from `.brain/index.md` and automated template routing (`.brain/index.md`, `src/commands/init.ts`).
+  - Implemented incremental map updates synchronized with `brainmap update` workflow (`src/mapper/project-map.ts`, `src/commands/update.ts`).
 
 ## What is In Progress
 
-- Completing M105: Add global routing from `.brain/index.md`.
+- Completing M106: Support incremental map updates.
 
 ## Known Blockers
 
@@ -60,9 +61,9 @@ Current operational state of the Brainmap project.
 
 - Environment: Node.js v20+, TypeScript 5+, zero runtime dependencies.
 - Git repository synced with remote (`https://github.com/GammaYoshimura/Brainmap`).
-- 56 passing tests across the test suite.
+- 57 passing tests across the test suite.
 
 ## Immediate Next Work
 
-- **M106**: Support incremental map updates.
 - **M107**: Detect relevant project changes.
+- **M108**: Add mapper tests.

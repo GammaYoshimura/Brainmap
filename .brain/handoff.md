@@ -23,7 +23,7 @@ The handoff document ensures that any subsequent AI agent or developer session c
 ## Current Operational Handoff
 
 ### CURRENT MILESTONE
-M105: Add global routing from `.brain/index.md`.
+M106: Support incremental map updates.
 
 ### COMPLETED
 - Repository foundation (M001–M010).
@@ -43,30 +43,30 @@ M105: Add global routing from `.brain/index.md`.
 - M103: Created declared-dependency mapping categorized by production, development, peer, and optional scopes (`src/mapper/dependency-map.ts`).
 - M104: Synthesized project map components into `project-map.md` in `.brain/` (`src/mapper/project-map.ts`).
 - M105: Added global routing link from `.brain/index.md` and automated routing integration in `ensureProjectMapRoutingInIndex`.
+- M106: Supported incremental map updates in `updateProjectMapIncrementally` invoked by `brainmap update`.
 
 ### IN PROGRESS
-- Completing M105.
+- Completing M106.
 
 ### CHANGED FILES
-- `.brain/index.md`
-- `src/commands/init.ts`
 - `src/mapper/project-map.ts`
+- `src/commands/update.ts`
 - `tests/mapper.test.ts`
 - `.brain/state.md`
 - `.brain/handoff.md`
 
 ### TEST STATUS
-- 56/56 tests passing (`npm test`).
+- 57/57 tests passing (`npm test`).
 - TypeScript builds cleanly (`npm run build`).
 
 ### OPEN ISSUES
 - None.
 
 ### IMPORTANT DECISIONS
-- `.brain/index.md` acts as the global router and directly indexes `project-map.md` for AI agent discovery.
+- `updateCommand` triggers incremental regeneration of `project-map.md` when changes are detected and `.brain/project-map.md` exists.
 
 ### NEXT ACTION
-- Proceed to M106: Support incremental map updates.
+- Proceed to M107: Detect relevant project changes.
 
 ### CONTEXT TO LOAD
 - `brainmap_master_prompt.md`
