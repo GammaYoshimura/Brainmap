@@ -2,6 +2,7 @@
 
 import { initCommand } from "./commands/init.js";
 import { scanCommand } from "./commands/scan.js";
+import { updateCommand } from "./commands/update.js";
 
 export const HELP_TEXT = `Brainmap - Project memory and context-routing tool
 
@@ -11,6 +12,7 @@ Usage:
 Commands:
   init           Initialize Brain structure in current project
   scan           Scan project files and structure
+  update         Incrementally update project state and memory
 
 Options:
   -h, --help     Show this help message
@@ -33,6 +35,10 @@ export function run(args: string[] = process.argv.slice(2)): number {
 
   if (command === "scan") {
     return scanCommand(args.slice(1));
+  }
+
+  if (command === "update") {
+    return updateCommand(args.slice(1));
   }
 
   if (args.length > 0 && args[0].startsWith("-")) {
