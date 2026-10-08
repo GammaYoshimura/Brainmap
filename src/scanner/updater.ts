@@ -27,3 +27,20 @@ export function detectAddedFiles(
   const persistedPaths = new Set(persistedFiles.map((f) => f.relativePath));
   return currentFiles.filter((f) => !persistedPaths.has(f.relativePath));
 }
+
+export function detectModifiedFiles(
+  currentFiles: FileModel[],
+  persistedFiles: FileModel[]
+): FileModel[] {
+  const persistedMap = new Map(persistedFiles.map((f) => [f.relativePath, f]));
+  const modified: FileModel[] = [];
+
+  for (const current of currentFiles) {
+    const previous = persistedMap.get(current.relativePath);
+    if (previous && current.size !== previous.size) {
+      modified.push(current);
+    }
+  }
+
+  return modified;
+}
