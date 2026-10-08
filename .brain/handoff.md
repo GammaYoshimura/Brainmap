@@ -23,7 +23,7 @@ The handoff document ensures that any subsequent AI agent or developer session c
 ## Current Operational Handoff
 
 ### CURRENT MILESTONE
-M098: Create directory-map generation.
+M099: Create file-map generation.
 
 ### COMPLETED
 - Repository foundation (M001–M010).
@@ -36,28 +36,29 @@ M098: Create directory-map generation.
 - Project Structure Detection (M086–M096).
 - M097: Created `map` command handler and registered CLI entrypoint with help text.
 - M098: Created directory-map generation model and formatting (`src/mapper/directory-map.ts`).
+- M099: Created file-map generation with directory grouping and size formatting (`src/mapper/file-map.ts`).
 
 ### IN PROGRESS
-- Completing M098.
+- Completing M099.
 
 ### CHANGED FILES
-- `src/mapper/directory-map.ts`
+- `src/mapper/file-map.ts`
 - `tests/mapper.test.ts`
 - `.brain/state.md`
 - `.brain/handoff.md`
 
 ### TEST STATUS
-- 44/44 tests passing (`npm test`).
+- 47/47 tests passing (`npm test`).
 - TypeScript builds cleanly (`npm run build`).
 
 ### OPEN ISSUES
 - None.
 
 ### IMPORTANT DECISIONS
-- Directory mapping computes tree depth deterministically and formats relative paths into clean hierarchical markdown lists with file and subdirectory counts.
+- File map groups files by directory with readable size descriptions (B, KB, MB) and entry-point indicators.
 
 ### NEXT ACTION
-- Proceed to M099: Create file-map generation.
+- Proceed to M100: Create module-map generation.
 
 ### CONTEXT TO LOAD
 - `brainmap_master_prompt.md`
