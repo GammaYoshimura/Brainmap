@@ -115,10 +115,47 @@ export function createBrainStateFile(brainDir: string): string {
   return statePath;
 }
 
+export const DEFAULT_HANDOFF_TEMPLATE = `# Handoff
+
+Session-to-session continuation document.
+
+### CURRENT MILESTONE
+Initial project setup.
+
+### COMPLETED
+- Initialized Brain structure via brainmap init.
+
+### IN PROGRESS
+- Initial project configuration.
+
+### CHANGED FILES
+- .brain/index.md
+- .brain/architecture.md
+- .brain/state.md
+- .brain/handoff.md
+
+### TEST STATUS
+- Not run yet.
+
+### OPEN ISSUES
+- None.
+
+### IMPORTANT DECISIONS
+- None.
+
+### NEXT ACTION
+- Define initial subsystem boundaries and specifications.
+
+### CONTEXT TO LOAD
+- .brain/index.md
+- .brain/architecture.md
+- .brain/state.md
+`;
+
 export function createBrainHandoffFile(brainDir: string): string {
   const handoffPath = path.join(brainDir, "handoff.md");
   if (!fs.existsSync(handoffPath)) {
-    fs.writeFileSync(handoffPath, "# Handoff\n\nSession-to-session continuation document.\n", "utf8");
+    fs.writeFileSync(handoffPath, DEFAULT_HANDOFF_TEMPLATE, "utf8");
   }
   return handoffPath;
 }
