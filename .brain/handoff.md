@@ -23,7 +23,7 @@ The handoff document ensures that any subsequent AI agent or developer session c
 ## Current Operational Handoff
 
 ### CURRENT MILESTONE
-M122: Resolve subsystem matches.
+M123: Resolve Brain-document matches.
 
 ### COMPLETED
 - Repository foundation (M001–M010).
@@ -42,34 +42,35 @@ M122: Resolve subsystem matches.
   - M120: Implemented exact path matching resolver against project and brain files (`src/router/path-matcher.ts`, `tests/route-path-matcher.test.ts`).
   - M121: Implemented file name and stem matching resolver against candidate paths (`src/router/filename-matcher.ts`, `tests/route-filename-matcher.test.ts`).
   - M122: Implemented subsystem matching resolver with identifier, name, path, and token heuristics (`src/router/subsystem-matcher.ts`, `tests/route-subsystem-matcher.test.ts`).
+  - M123: Implemented Brain document matching resolver with role-intent keywords, exact paths, and subsystem mappings (`src/router/brain-doc-matcher.ts`, `tests/route-brain-doc-matcher.test.ts`).
 
 ### IN PROGRESS
-- Completing M122: Resolve subsystem matches.
+- Completing M123: Resolve Brain-document matches.
 
 ### CHANGED FILES
-- `src/router/subsystem-matcher.ts`
+- `src/router/brain-doc-matcher.ts`
 - `src/router/index.ts`
-- `tests/route-subsystem-matcher.test.ts`
+- `tests/route-brain-doc-matcher.test.ts`
 - `.brain/project-map.md`
 - `.brain/state.md`
 - `.brain/handoff.md`
 
 ### TEST STATUS
-- 109/109 tests passing (`npm test`).
+- 116/116 tests passing (`npm test`).
 - TypeScript builds cleanly (`npm run build`).
 
 ### OPEN ISSUES
 - None.
 
 ### IMPORTANT DECISIONS
-- Subsystem matching matches by id, full name, directory path, or partial tokens, assigning deterministic scoring weights.
+- Brain documents are resolved by matching role intent keywords (constitution, state, handoff, decisions), exact document paths, and subsystem tokens.
 
 ### NEXT ACTION
-- Implement M123: Resolve Brain-document matches.
+- Implement M124: Resolve symbol matches where supported.
 
 ### CONTEXT TO LOAD
-- `brainmap_master_prompt.md`
+- `.brain/index.md`
 - `.brain/state.md`
 - `.brain/handoff.md`
 - `src/router/query.ts`
-- `src/router/subsystem-matcher.ts`
+- `src/router/brain-doc-matcher.ts`
