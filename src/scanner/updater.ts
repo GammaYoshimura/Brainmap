@@ -253,3 +253,24 @@ export function computeProjectDiff(
     hasChanges,
   };
 }
+
+export function formatUpdateSummary(diff: ProjectDiff): string {
+  const lines: string[] = ["Project Update Summary:"];
+
+  lines.push(`  Added: ${diff.added.length} file(s)`);
+  for (const file of diff.added) {
+    lines.push(`    + ${file.relativePath}`);
+  }
+
+  lines.push(`  Modified: ${diff.modified.length} file(s)`);
+  for (const file of diff.modified) {
+    lines.push(`    ~ ${file.relativePath}`);
+  }
+
+  lines.push(`  Removed: ${diff.removed.length} file(s)`);
+  for (const file of diff.removed) {
+    lines.push(`    - ${file.relativePath}`);
+  }
+
+  return lines.join("\n");
+}

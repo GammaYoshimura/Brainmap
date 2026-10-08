@@ -1,6 +1,19 @@
 import path from "node:path";
-import { traverseProject, recordDiscoveredFiles } from "../scanner/scanner.js";
-import { loadPersistedScanState, computeProjectDiff } from "../scanner/updater.js";
+import { createProjectModel } from "../core/model.js";
+import {
+  traverseProject,
+  recordDiscoveredFiles,
+  recordDiscoveredDirectories,
+  generateProjectSummary,
+} from "../scanner/scanner.js";
+import {
+  loadPersistedScanState,
+  computeProjectDiff,
+  formatUpdateSummary,
+  recomputeDependenciesForChangedFiles,
+  updateProjectModelIncrementally,
+  persistUpdatedState,
+} from "../scanner/updater.js";
 
 export const UPDATE_SUCCESS = 0;
 export const UPDATE_FAILURE = 1;
@@ -28,5 +41,27 @@ export function updateCommand(args: string[] = []): number {
     return UPDATE_SUCCESS;
   }
 
+  const directories = recordDiscoveredDirectories(traversal.directories, traversal.rootPath, traversal.files);
+  const recomputedDeps = recomputeDependenciesForChangedFiles(
+    [...diff.added, ...diff.modified],
+    traversal.rootPath
+  );
+
+  const baseModel =
+    previousState.model ?? createProjectModel(path.basename(targetDir), traversal.rootPath);
+
+  const updatedModel = updateProjectModelIncrementally(baseModel, {
+    addedFiles: diff.added,
+    modifiedFiles: diff.modified,
+    removedFiles: diff.removed,
+    directories,
+    recomputedDependencies: recomputedDeps,
+  });
+
+  const summary = generateProjectSummary(traversal.rootPath, updatedModel.files, directories);
+  persistUpdatedState(targetDir, updatedModel, summary);
+
+  console.log(formatUpdateSummary(diff));
+  console.log(`Successfully updated project state in ${targetDir}`);
   return UPDATE_SUCCESS;
 }
