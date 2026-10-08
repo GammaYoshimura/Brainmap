@@ -2,7 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { normalizePath, toRelativePath } from "../core/paths.js";
 import { FileModel, DirectoryModel, createFileModel, createDirectoryModel } from "../core/model.js";
-import { detectLanguageByExtension } from "./languages.js";
+import { detectLanguageByExtension, detectProjectLanguages, LanguageSummary } from "./languages.js";
 import {
   ExclusionConfig,
   createDefaultExclusionConfig,
@@ -145,4 +145,52 @@ export function countFilesByExtension(files: (FileModel | string)[]): Record<str
     counts[ext] = (counts[ext] ?? 0) + 1;
   }
   return counts;
+}
+
+export interface ProjectScanSummary {
+  rootPath: string;
+  totalFiles: number;
+  totalDirectories: number;
+  totalBytes: number;
+  extensions: Record<string, number>;
+  languages: LanguageSummary[];
+}
+
+export function generateProjectSummary(
+  rootPath: string,
+  files: FileModel[],
+  directories: DirectoryModel[]
+): ProjectScanSummary {
+  const totalFiles = files.length;
+  const totalDirectories = directories.length;
+  const totalBytes = files.reduce((sum, f) => sum + f.size, 0);
+  const extensions = countFilesByExtension(files);
+  const languages = detectProjectLanguages(files);
+
+  return {
+    rootPath: normalizePath(rootPath),
+    totalFiles,
+    totalDirectories,
+    totalBytes,
+    extensions,
+    languages,
+  };
+}
+
+export function formatProjectSummary(summary: ProjectScanSummary): string {
+  const lines: string[] = [
+    `Project: ${summary.rootPath}`,
+    `Files: ${summary.totalFiles}`,
+    `Directories: ${summary.totalDirectories}`,
+    `Total Size: ${summary.totalBytes} bytes`,
+  ];
+
+  if (summary.languages.length > 0) {
+    lines.push("Languages:");
+    for (const lang of summary.languages) {
+      lines.push(`  - ${lang.name}: ${lang.fileCount} files (${lang.percentage}%)`);
+    }
+  }
+
+  return lines.join("\n");
 }
