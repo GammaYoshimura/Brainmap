@@ -23,7 +23,7 @@ The handoff document ensures that any subsequent AI agent or developer session c
 ## Current Operational Handoff
 
 ### CURRENT MILESTONE
-M107: Detect relevant project changes.
+M108: Add mapper tests.
 
 ### COMPLETED
 - Repository foundation (M001–M010).
@@ -34,39 +34,40 @@ M107: Detect relevant project changes.
 - `brainmap scan` command (M062–M073).
 - `brainmap update` command (M074–M085).
 - Project Structure Detection (M086–M096).
-- M097: Created `map` command handler and registered CLI entrypoint with help text.
-- M098: Created directory-map generation model and formatting (`src/mapper/directory-map.ts`).
-- M099: Created file-map generation with directory grouping and size formatting (`src/mapper/file-map.ts`).
-- M100: Created module-map generation with container inspection and language aggregation (`src/mapper/module-map.ts`).
-- M101: Created entry-point mapping with role categorization and Markdown formatting (`src/mapper/entrypoint-map.ts`).
-- M102: Created manifest mapping with package metadata, ecosystem identification, and dependency counting (`src/mapper/manifest-map.ts`).
-- M103: Created declared-dependency mapping categorized by production, development, peer, and optional scopes (`src/mapper/dependency-map.ts`).
-- M104: Synthesized project map components into `project-map.md` in `.brain/` (`src/mapper/project-map.ts`).
-- M105: Added global routing link from `.brain/index.md` and automated routing integration in `ensureProjectMapRoutingInIndex`.
-- M106: Supported incremental map updates in `updateProjectMapIncrementally` invoked by `brainmap update`.
-- M107: Created change-relevance detector evaluating structural, manifest, entry-point, and module impacts of diffs (`src/mapper/change-detector.ts`).
+- `brainmap map` block (M097–M108):
+  - M097: Created `map` command handler and registered CLI entrypoint with help text.
+  - M098: Created directory-map generation model and formatting (`src/mapper/directory-map.ts`).
+  - M099: Created file-map generation with directory grouping and size formatting (`src/mapper/file-map.ts`).
+  - M100: Created module-map generation with container inspection and language aggregation (`src/mapper/module-map.ts`).
+  - M101: Created entry-point mapping with role categorization and Markdown formatting (`src/mapper/entrypoint-map.ts`).
+  - M102: Created manifest mapping with package metadata, ecosystem identification, and dependency counting (`src/mapper/manifest-map.ts`).
+  - M103: Created declared-dependency mapping categorized by production, development, peer, and optional scopes (`src/mapper/dependency-map.ts`).
+  - M104: Synthesized project map components into `project-map.md` in `.brain/` (`src/mapper/project-map.ts`).
+  - M105: Added global routing link from `.brain/index.md` and automated routing integration in `ensureProjectMapRoutingInIndex`.
+  - M106: Supported incremental map updates in `updateProjectMapIncrementally` invoked by `brainmap update`.
+  - M107: Created change-relevance detector evaluating structural, manifest, entry-point, and module impacts of diffs (`src/mapper/change-detector.ts`).
+  - M108: Added comprehensive mapper test suite with multi-stack fixtures and edge cases.
 
 ### IN PROGRESS
-- Completing M107.
+- Completing M108 and finishing block `brainmap map`.
 
 ### CHANGED FILES
-- `src/mapper/change-detector.ts`
 - `tests/mapper.test.ts`
 - `.brain/state.md`
 - `.brain/handoff.md`
 
 ### TEST STATUS
-- 58/58 tests passing (`npm test`).
+- 60/60 tests passing (`npm test`).
 - TypeScript builds cleanly (`npm run build`).
 
 ### OPEN ISSUES
 - None.
 
 ### IMPORTANT DECISIONS
-- Change relevance detection distinguishes between benign content modifications and changes that require structural map refreshes (entrypoints, manifests, directories, modules).
+- The entire `map` subsystem operates deterministically with zero runtime dependencies, providing comprehensive architectural overviews in markdown.
 
 ### NEXT ACTION
-- Proceed to M108: Add mapper tests.
+- Proceed to next block: **Specialized Documentation** (M109–M117).
 
 ### CONTEXT TO LOAD
 - `brainmap_master_prompt.md`

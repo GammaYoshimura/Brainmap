@@ -9,6 +9,7 @@ import { buildManifestMap, formatManifestMap } from "../src/mapper/manifest-map.
 import { groupDependenciesByKind, formatDependencyMap } from "../src/mapper/dependency-map.js";
 import { generateProjectMapContent, writeProjectMap, ensureProjectMapRoutingInIndex, updateProjectMapIncrementally } from "../src/mapper/project-map.js";
 import { detectRelevantProjectChanges, isMapUpdateRequired } from "../src/mapper/change-detector.js";
+import { mapCommand, MAP_SUCCESS, resolveMapDirectory } from "../src/commands/map.js";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
@@ -309,4 +310,71 @@ test("detectRelevantProjectChanges identifies structural impact of project diff"
   const rel3 = detectRelevantProjectChanges(diffEmpty);
   assert.equal(rel3.hasStructuralChanges, false);
   assert.equal(isMapUpdateRequired(rel3), false);
+});
+
+test("mapCommand runs end-to-end on multi-stack project and writes project-map.md", () => {
+  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "brainmap-map-e2e-"));
+  try {
+    fs.mkdirSync(path.join(tmpDir, "src", "core"), { recursive: true });
+    fs.mkdirSync(path.join(tmpDir, "python_app"), { recursive: true });
+
+    // Node package.json and CLI entrypoint
+    fs.writeFileSync(
+      path.join(tmpDir, "package.json"),
+      JSON.stringify({ name: "multi-project", version: "1.0.0", dependencies: { express: "^4.18.0" } }),
+      "utf8"
+    );
+    fs.writeFileSync(path.join(tmpDir, "src", "cli.ts"), "console.log('cli');", "utf8");
+    fs.writeFileSync(path.join(tmpDir, "src", "core", "logic.ts"), "export const x = 1;", "utf8");
+
+    // Python requirements and script
+    fs.writeFileSync(path.join(tmpDir, "python_app", "requirements.txt"), "requests>=2.28.0\npytest==7.0.0\n", "utf8");
+    fs.writeFileSync(path.join(tmpDir, "python_app", "main.py"), "print('hello')", "utf8");
+
+    const exitCode = mapCommand([tmpDir]);
+    assert.equal(exitCode, MAP_SUCCESS);
+
+    const mapPath = path.join(tmpDir, ".brain", "project-map.md");
+    assert.equal(fs.existsSync(mapPath), true);
+
+    const content = fs.readFileSync(mapPath, "utf8");
+    assert.match(content, /# Project Map:/);
+    assert.match(content, /### Entry Points/);
+    assert.match(content, /src\/cli\.ts/);
+    assert.match(content, /python_app\/main\.py/);
+    assert.match(content, /### Module Map/);
+    assert.match(content, /### Manifests/);
+    assert.match(content, /package\.json/);
+    assert.match(content, /requirements\.txt/);
+    assert.match(content, /### Declared Dependencies/);
+    assert.match(content, /express/);
+    assert.match(content, /requests/);
+    assert.match(content, /### Directory Map/);
+    assert.match(content, /### File Map/);
+
+    // Verify index.md was created and links to project-map.md
+    const indexPath = path.join(tmpDir, ".brain", "index.md");
+    if (fs.existsSync(indexPath)) {
+      const indexContent = fs.readFileSync(indexPath, "utf8");
+      assert.match(indexContent, /project-map\.md/);
+    }
+  } finally {
+    fs.rmSync(tmpDir, { recursive: true, force: true });
+  }
+});
+
+test("mapCommand succeeds on empty directory", () => {
+  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "brainmap-empty-map-"));
+  try {
+    const exitCode = mapCommand([tmpDir]);
+    assert.equal(exitCode, MAP_SUCCESS);
+
+    const mapPath = path.join(tmpDir, ".brain", "project-map.md");
+    assert.equal(fs.existsSync(mapPath), true);
+    const content = fs.readFileSync(mapPath, "utf8");
+    assert.match(content, /No entry points detected/);
+    assert.match(content, /No manifests detected/);
+  } finally {
+    fs.rmSync(tmpDir, { recursive: true, force: true });
+  }
 });
