@@ -221,3 +221,35 @@ export function persistUpdatedState(
   fs.writeFileSync(outputPath, JSON.stringify(payload, null, 2), "utf8");
   return outputPath;
 }
+
+export interface ProjectDiff {
+  added: FileModel[];
+  modified: FileModel[];
+  removed: FileModel[];
+  metadataChanges: FileMetadataDelta[];
+  hasChanges: boolean;
+}
+
+export function computeProjectDiff(
+  currentFiles: FileModel[],
+  persistedFiles: FileModel[]
+): ProjectDiff {
+  const added = detectAddedFiles(currentFiles, persistedFiles);
+  const modified = detectModifiedFiles(currentFiles, persistedFiles);
+  const removed = detectRemovedFiles(currentFiles, persistedFiles);
+  const metadataChanges = detectMetadataChanges(currentFiles, persistedFiles);
+
+  const hasChanges =
+    added.length > 0 ||
+    modified.length > 0 ||
+    removed.length > 0 ||
+    metadataChanges.length > 0;
+
+  return {
+    added,
+    modified,
+    removed,
+    metadataChanges,
+    hasChanges,
+  };
+}
