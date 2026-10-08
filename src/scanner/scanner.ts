@@ -2,6 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { normalizePath, toRelativePath } from "../core/paths.js";
 import { FileModel, DirectoryModel, createFileModel, createDirectoryModel } from "../core/model.js";
+import { detectLanguageByExtension } from "./languages.js";
 import {
   ExclusionConfig,
   createDefaultExclusionConfig,
@@ -21,6 +22,7 @@ export function recordDiscoveredFile(fullPath: string, rootPath: string): FileMo
   const name = path.basename(fullPath);
   const extension = path.extname(fullPath).toLowerCase();
   const stat = fs.statSync(fullPath);
+  const language = detectLanguageByExtension(extension);
 
   return createFileModel({
     path: normPath,
@@ -28,6 +30,7 @@ export function recordDiscoveredFile(fullPath: string, rootPath: string): FileMo
     name,
     extension,
     size: stat.size,
+    language,
   });
 }
 
