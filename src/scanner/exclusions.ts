@@ -87,9 +87,6 @@ export function matchGitignorePattern(
   const matchesDirectoryOnly = pattern.endsWith("/");
   if (matchesDirectoryOnly) {
     pattern = pattern.slice(0, -1);
-    if (!isDirectory && !normalizedRelativePath.includes("/")) {
-      return false;
-    }
   }
 
   const anchored = pattern.startsWith("/");
@@ -104,11 +101,26 @@ export function matchGitignorePattern(
     .replace(/\?/g, "[^/]")
     .replace(/\{\{GLOBSTAR\}\}/g, ".*");
 
+  const trailingSlashRule = matchesDirectoryOnly && !isDirectory ? "/.+" : "(/.*)?";
   const regex = anchored || pattern.includes("/")
-    ? new RegExp(`^${regexStr}(/.*)?$`)
-    : new RegExp(`(^|/)${regexStr}(/.*)?$`);
+    ? new RegExp(`^${regexStr}${trailingSlashRule}$`)
+    : new RegExp(`(^|/)${regexStr}${trailingSlashRule}$`);
 
   return regex.test(normalizedRelativePath);
+}
+
+export function filterIgnoredFiles(
+  filePaths: string[],
+  config: ExclusionConfig,
+  rootPath: string
+): string[] {
+  const gitignorePatterns = config.useGitignore ? loadGitignorePatterns(rootPath) : [];
+  return filePaths.filter((filePath) => {
+    const relPath = path.isAbsolute(filePath)
+      ? path.relative(rootPath, filePath).replace(/\\/g, "/")
+      : filePath.replace(/\\/g, "/");
+    return !shouldExclude(relPath, config, gitignorePatterns, false);
+  });
 }
 
 export function isGitignored(
