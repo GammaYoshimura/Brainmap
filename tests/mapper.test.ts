@@ -5,6 +5,7 @@ import { buildDirectoryMap, formatDirectoryMap } from "../src/mapper/directory-m
 import { buildFileMap, formatFileMap, formatFileSize } from "../src/mapper/file-map.js";
 import { detectModules, formatModuleMap } from "../src/mapper/module-map.js";
 import { buildEntryPointMap, formatEntryPointMap, inferEntryPointKind } from "../src/mapper/entrypoint-map.js";
+import { buildManifestMap, formatManifestMap } from "../src/mapper/manifest-map.js";
 
 test("buildDirectoryMap sorts directories and calculates depth", () => {
   const dirs = [
@@ -145,4 +146,21 @@ test("buildEntryPointMap and formatEntryPointMap map entry points to markdown", 
   const formatted = formatEntryPointMap(map);
   assert.match(formatted, /### Entry Points/);
   assert.match(formatted, /- \*\*`src\/cli.ts`\*\* \[CLI\] — TypeScript, Command-Line Interface entry point/);
+});
+
+test("buildManifestMap and formatManifestMap map project manifests", () => {
+  const files = [
+    createFileModel({ path: "package.json", relativePath: "package.json", name: "package.json", extension: ".json", size: 500 }),
+    createFileModel({ path: "src/cli.ts", relativePath: "src/cli.ts", name: "cli.ts", extension: ".ts", size: 1000 }),
+  ];
+
+  const map = buildManifestMap(files, process.cwd());
+  assert.equal(map.length, 1);
+  assert.equal(map[0].fileName, "package.json");
+  assert.equal(map[0].ecosystem, "Node.js");
+  assert.equal(map[0].packageName, "brainmap");
+
+  const formatted = formatManifestMap(map);
+  assert.match(formatted, /### Manifests/);
+  assert.match(formatted, /- \*\*`package.json`\*\* \(Node.js\) — `brainmap`/);
 });

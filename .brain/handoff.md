@@ -23,7 +23,7 @@ The handoff document ensures that any subsequent AI agent or developer session c
 ## Current Operational Handoff
 
 ### CURRENT MILESTONE
-M101: Create entry-point mapping.
+M102: Create manifest mapping.
 
 ### COMPLETED
 - Repository foundation (M001–M010).
@@ -39,28 +39,29 @@ M101: Create entry-point mapping.
 - M099: Created file-map generation with directory grouping and size formatting (`src/mapper/file-map.ts`).
 - M100: Created module-map generation with container inspection and language aggregation (`src/mapper/module-map.ts`).
 - M101: Created entry-point mapping with role categorization and Markdown formatting (`src/mapper/entrypoint-map.ts`).
+- M102: Created manifest mapping with package metadata, ecosystem identification, and dependency counting (`src/mapper/manifest-map.ts`).
 
 ### IN PROGRESS
-- Completing M101.
+- Completing M102.
 
 ### CHANGED FILES
-- `src/mapper/entrypoint-map.ts`
+- `src/mapper/manifest-map.ts`
 - `tests/mapper.test.ts`
 - `.brain/state.md`
 - `.brain/handoff.md`
 
 ### TEST STATUS
-- 51/51 tests passing (`npm test`).
+- 52/52 tests passing (`npm test`).
 - TypeScript builds cleanly (`npm run build`).
 
 ### OPEN ISSUES
 - None.
 
 ### IMPORTANT DECISIONS
-- Entry points are categorized into semantic kinds (CLI, server, app, library, generic) based on naming conventions and directory locations.
+- Manifest mapping maps detected manifests with ecosystem information, resolved project name/version, and total declared dependency counts.
 
 ### NEXT ACTION
-- Proceed to M102: Create manifest mapping.
+- Proceed to M103: Create declared-dependency mapping.
 
 ### CONTEXT TO LOAD
 - `brainmap_master_prompt.md`
