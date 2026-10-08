@@ -4,7 +4,7 @@ Current operational state of the Brainmap project.
 
 ## Current Milestone
 
-**M020**: Document the current project state.
+**M096**: Add detection tests.
 
 ## What is Implemented
 
@@ -15,16 +15,32 @@ Current operational state of the Brainmap project.
   - Package manifest (`package.json`, `tsconfig.json`) configured for Node.js ESM and TypeScript.
   - CLI entry point (`src/cli.ts`) with no-argument execution, minimal help output (`--help`), and exit codes (`EXIT_SUCCESS = 0`, `EXIT_FAILURE = 1`).
   - Automated test runner setup (`node:test`) with passing test suite (`tests/cli.test.ts`).
-- **Brain Foundation (M011–M019)**:
+- **Brain Foundation (M011–M025)**:
   - Hierarchical `.brain/` directory structure created.
-  - Core documents created: `index.md`, `architecture.md`, `state.md`, `handoff.md`.
-  - Directories created: `decisions/`, `subsystems/`.
-  - Documented role of each root Brain file in `index.md`.
-  - Documented initial global architectural principles, boundaries, and rules in `architecture.md`.
+  - Core documents: `index.md`, `architecture.md`, `state.md`, `handoff.md`, `routing.md`.
+  - Directories: `decisions/`, `subsystems/`.
+  - ADR 0001 created and ADR format documented.
+  - Basic Brain structure validation (`src/core/brain-validator.ts`).
+- **Internal Project Model (M026–M035)**:
+  - Project, file, directory, dependency, brain document, and diagnostic models.
+  - JSON serialization and deserialization with roundtrip validation.
+- **`brainmap init` (M036–M052)**:
+  - Deterministic and idempotent project initialization CLI command.
+- **Ignore Rules & Traversal (M053–M061)**:
+  - Gitignore parser, exclusion configuration, and standard ignore filtering.
+- **`brainmap scan` (M062–M073)**:
+  - Recursive traversal, language detection, project scan summary, and state persistence.
+- **`brainmap update` (M074–M085)**:
+  - Incremental project updates, change detection (added, modified, removed files), diff formatting.
+- **Project Structure Detection (M086–M096)**:
+  - Entry-point detection mechanism and ecosystem patterns (`src/detector/entrypoints.ts`).
+  - Manifest registry and detectors for `package.json`, `pubspec.yaml`, `composer.json`, Python manifests (`pyproject.toml`, `requirements.txt`), .NET manifests (`*.csproj`), and Cargo (`Cargo.toml`) (`src/detector/manifests.ts`).
+  - Declared dependencies extraction across all supported manifests.
+  - Comprehensive end-to-end detection test suite (`tests/detection.test.ts`).
 
 ## What is In Progress
 
-- Completing M020: Documenting the current project state.
+- Completing M096: Add detection tests.
 
 ## Known Blockers
 
@@ -34,11 +50,10 @@ Current operational state of the Brainmap project.
 
 - Environment: Node.js v20+, TypeScript 5+, zero runtime dependencies.
 - Git repository synced with remote (`https://github.com/GammaYoshimura/Brainmap`).
+- 40 passing tests across the test suite.
 
 ## Immediate Next Work
 
-- **M021**: Create the first ADR (`0001-use-typescript-and-builtin-node-runner.md`).
-- **M022**: Document the ADR format.
-- **M023**: Document the handoff format.
-- **M024**: Document the routing principles.
-- **M025**: Add a basic validation that the Brain structure exists.
+- **M097**: Create the `map` command.
+- **M098**: Create directory-map generation.
+- **M099**: Create file-map generation.

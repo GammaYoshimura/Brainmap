@@ -23,34 +23,51 @@ The handoff document ensures that any subsequent AI agent or developer session c
 ## Current Operational Handoff
 
 ### CURRENT MILESTONE
-M023: Document the handoff format.
+M096: Add detection tests.
 
 ### COMPLETED
 - Repository foundation (M001–M010).
-- Brain structure and root documents (M011–M022).
-- ADR 0001 and ADR format documentation.
+- Brain structure and root documents (M011–M025).
+- Internal project model & serialization (M026–M035).
+- `brainmap init` command (M036–M052).
+- Ignore rules & scan exclusions (M053–M061).
+- `brainmap scan` command (M062–M073).
+- `brainmap update` command (M074–M085).
+- Project Structure Detection (M086–M096):
+  - Entry-point detection across JavaScript/TypeScript, Dart/Flutter, Python, Rust, Go, PHP, .NET, C/C++.
+  - Manifest detectors and parsers for npm (`package.json`), pubspec (`pubspec.yaml`), Composer (`composer.json`), Python (`pyproject.toml`, `requirements.txt`), .NET (`*.csproj`), Cargo (`Cargo.toml`).
+  - Declared dependency extraction across manifests into unified `DependencyModel[]`.
+  - Comprehensive multi-stack test fixtures and end-to-end detection tests.
 
 ### IN PROGRESS
-- Completing M023.
+- Completing M096 and preparing for next block (`brainmap map`).
 
 ### CHANGED FILES
+- `src/detector/entrypoints.ts`
+- `src/detector/manifests.ts`
+- `src/scanner/scanner.ts`
+- `src/scanner/updater.ts`
+- `tests/entrypoints.test.ts`
+- `tests/manifests.test.ts`
+- `tests/detection.test.ts`
+- `.brain/state.md`
 - `.brain/handoff.md`
 
 ### TEST STATUS
-- 3/3 tests passing (`npm test`).
+- 40/40 tests passing (`npm test`).
 - TypeScript builds cleanly (`npm run build`).
 
 ### OPEN ISSUES
 - None.
 
 ### IMPORTANT DECISIONS
-- ADR 0001: Pure TypeScript + Node.js ESM + native `node:test` runner.
+- Zero external dependencies for parsing manifests (regex and deterministic line-based parsing for YAML, TOML, XML).
+- Universal entry-point matching supporting root as well as nested packages and monorepo folders.
 
 ### NEXT ACTION
-- Implement M024: Document the routing principles.
+- Begin next block: `brainmap map` starting with M097 (Create the `map` command).
 
 ### CONTEXT TO LOAD
-- `.brain/index.md`
-- `.brain/architecture.md`
+- `brainmap_master_prompt.md`
 - `.brain/state.md`
 - `.brain/handoff.md`
