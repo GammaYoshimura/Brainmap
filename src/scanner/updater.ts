@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
-import { FileModel } from "../core/model.js";
+import { FileModel, DependencyModel, createDependencyModel } from "../core/model.js";
+import { toRelativePath } from "../core/paths.js";
 import { PersistedScanState } from "./scanner.js";
 
 export function getPersistedScanPath(projectRoot: string): string {
@@ -109,4 +110,53 @@ export function detectMetadataChanges(
   }
 
   return deltas;
+}
+
+export function extractFileDependencies(
+  filePath: string,
+  rootPath: string
+): DependencyModel[] {
+  if (!fs.existsSync(filePath)) {
+    return [];
+  }
+
+  const fileName = path.basename(filePath);
+  const relPath = toRelativePath(rootPath, filePath);
+
+  if (fileName === "package.json") {
+    try {
+      const content = JSON.parse(fs.readFileSync(filePath, "utf8"));
+      const deps: DependencyModel[] = [];
+
+      for (const [name, version] of Object.entries(content.dependencies ?? {})) {
+        deps.push(createDependencyModel({ name, version: String(version), kind: "production", manifestPath: relPath }));
+      }
+      for (const [name, version] of Object.entries(content.devDependencies ?? {})) {
+        deps.push(createDependencyModel({ name, version: String(version), kind: "development", manifestPath: relPath }));
+      }
+      for (const [name, version] of Object.entries(content.peerDependencies ?? {})) {
+        deps.push(createDependencyModel({ name, version: String(version), kind: "peer", manifestPath: relPath }));
+      }
+      for (const [name, version] of Object.entries(content.optionalDependencies ?? {})) {
+        deps.push(createDependencyModel({ name, version: String(version), kind: "optional", manifestPath: relPath }));
+      }
+      return deps;
+    } catch {
+      return [];
+    }
+  }
+
+  return [];
+}
+
+export function recomputeDependenciesForChangedFiles(
+  changedFiles: FileModel[],
+  rootPath: string
+): DependencyModel[] {
+  const allDeps: DependencyModel[] = [];
+  for (const file of changedFiles) {
+    const deps = extractFileDependencies(file.path, rootPath);
+    allDeps.push(...deps);
+  }
+  return allDeps;
 }
