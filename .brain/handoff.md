@@ -23,7 +23,7 @@ The handoff document ensures that any subsequent AI agent or developer session c
 ## Current Operational Handoff
 
 ### CURRENT MILESTONE
-M115: Record related Brain documents.
+M116: Add subsystem routing.
 
 ### COMPLETED
 - Repository foundation (M001–M010).
@@ -43,29 +43,29 @@ M115: Record related Brain documents.
   - M113: Implemented subsystem entry point recording (`src/subsystems/entrypoints.ts`), capturing executable entry points, module export facades, and handler dispatchers.
   - M114: Implemented subsystem dependency recording (`src/subsystems/dependencies.ts`), statically resolving internal cross-subsystem imports, declared external package dependencies, and standard library runtimes.
   - M115: Implemented related Brain documents recording (`src/subsystems/related-brain-docs.ts`), establishing links to constitution, router, project map, specialized documents, and ADRs.
+  - M116: Implemented subsystem routing integration (`src/subsystems/routing.ts`), synchronizing subsystem router links into `.brain/index.md` and generating the master `.brain/subsystems/index.md`.
 
 ### IN PROGRESS
-- Completing M115: Record related Brain documents.
+- Completing M116: Add subsystem routing.
 
 ### CHANGED FILES
-- `src/subsystems/related-brain-docs.ts`
-- `src/subsystems/generator.ts`
-- `tests/subsystem-related-docs.test.ts`
+- `src/subsystems/routing.ts`
+- `tests/subsystem-routing.test.ts`
 - `.brain/state.md`
 - `.brain/handoff.md`
 
 ### TEST STATUS
-- 81/81 tests passing (`npm test`).
+- 84/84 tests passing (`npm test`).
 - TypeScript builds cleanly (`npm run build`).
 
 ### OPEN ISSUES
 - None.
 
 ### IMPORTANT DECISIONS
-- Related Brain documents link the subsystem back up to the architectural constitution and across to ADRs, preserving context hierarchy.
+- Subsystem routing is automatically registered in `.brain/index.md` under `subsystems/`, maintaining the single global entry point.
 
 ### NEXT ACTION
-- Proceed to M116: Add subsystem routing.
+- Proceed to M117: Add documentation-generation tests.
 
 ### CONTEXT TO LOAD
 - `brainmap_master_prompt.md`
