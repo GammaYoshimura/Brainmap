@@ -23,7 +23,7 @@ The handoff document ensures that any subsequent AI agent or developer session c
 ## Current Operational Handoff
 
 ### CURRENT MILESTONE
-M110: Detect natural subsystem groupings.
+M111: Generate a document for each detected subsystem.
 
 ### COMPLETED
 - Repository foundation (M001–M010).
@@ -38,28 +38,29 @@ M110: Detect natural subsystem groupings.
 - Specialized Documentation block:
   - M109: Created subsystem index generation (`src/subsystems/subsystem-index.ts`) for single subsystem indices and the master `.brain/subsystems/index.md`.
   - M110: Implemented natural subsystem grouping detection (`src/subsystems/groupings.ts`) from file hierarchy, architectural containers, entrypoints, and flat structures.
+  - M111: Implemented subsystem document generation (`src/subsystems/generator.ts`) generating comprehensive Markdown documentation per detected subsystem grouping into `.brain/subsystems/<id>/index.md`.
 
 ### IN PROGRESS
-- Completing M110: Detect natural subsystem groupings.
+- Completing M111: Generate a document for each detected subsystem.
 
 ### CHANGED FILES
-- `src/subsystems/groupings.ts`
-- `tests/subsystem-groupings.test.ts`
+- `src/subsystems/generator.ts`
+- `tests/subsystem-generator.test.ts`
 - `.brain/state.md`
 - `.brain/handoff.md`
 
 ### TEST STATUS
-- 70/70 tests passing (`npm test`).
+- 72/72 tests passing (`npm test`).
 - TypeScript builds cleanly (`npm run build`).
 
 ### OPEN ISSUES
 - None.
 
 ### IMPORTANT DECISIONS
-- Subsystem detection relies on deterministic structural heuristics across common multi-language conventions, assigning confidence scores and clear detection rationale.
+- Subsystem documentation follows hierarchical routing, rendering cohesive overviews and linking to global constitution and routing files.
 
 ### NEXT ACTION
-- Proceed to M111: Generate a document for each detected subsystem.
+- Proceed to M112: Record important subsystem files.
 
 ### CONTEXT TO LOAD
 - `brainmap_master_prompt.md`

@@ -4,7 +4,7 @@ Current operational state of the Brainmap project.
 
 ## Current Milestone
 
-**M110**: Detect natural subsystem groupings.
+**M111**: Generate a document for each detected subsystem.
 
 ## What is Implemented
 
@@ -53,10 +53,11 @@ Current operational state of the Brainmap project.
 - **Specialized Documentation (M109–M117)**:
   - Created subsystem index generation (`src/subsystems/subsystem-index.ts`) supporting individual subsystem index generation (`generateSubsystemIndex`) and master subsystems index generation (`generateSubsystemsIndex`).
   - Implemented natural subsystem grouping detection (`src/subsystems/groupings.ts`) analyzing container prefixes (`src/`, `lib/`, `packages/`), top-level architectural domain folders, entry-point groupings, and flat-structure fallbacks.
+  - Implemented subsystem document generation (`src/subsystems/generator.ts`) generating comprehensive Markdown documentation per detected subsystem grouping into `.brain/subsystems/<id>/index.md`.
 
 ## What is In Progress
 
-- Completing M110: Detect natural subsystem groupings.
+- Completing M111: Generate a document for each detected subsystem.
 
 ## Known Blockers
 
@@ -66,8 +67,8 @@ Current operational state of the Brainmap project.
 
 - Environment: Node.js v20+, TypeScript 5+, zero runtime dependencies.
 - Git repository synced with remote (`https://github.com/GammaYoshimura/Brainmap`).
-- 70 passing tests across the test suite.
+- 72 passing tests across the test suite.
 
 ## Immediate Next Work
 
-- Next milestone: **M111**: Generate a document for each detected subsystem.
+- Next milestone: **M112**: Record important subsystem files.
