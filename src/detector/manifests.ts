@@ -44,6 +44,129 @@ export const COMPOSER_MANIFEST_RULE: ManifestRule = {
   matches: (fileName) => fileName === "composer.json",
 };
 
+export const PYTHON_MANIFEST_RULE: ManifestRule = {
+  kind: "python",
+  ecosystem: "Python",
+  matches: (fileName) =>
+    fileName === "pyproject.toml" ||
+    /^requirements(-\w+)?\.txt$/i.test(fileName) ||
+    fileName === "setup.py" ||
+    fileName === "setup.cfg" ||
+    fileName === "Pipfile",
+};
+
+/**
+ * Checks whether a given path is a common Python manifest.
+ */
+export function isPythonManifest(filePath: string): boolean {
+  const fileName = path.basename(filePath);
+  return (
+    fileName === "pyproject.toml" ||
+    /^requirements(-\w+)?\.txt$/i.test(fileName) ||
+    fileName === "setup.py" ||
+    fileName === "setup.cfg" ||
+    fileName === "Pipfile"
+  );
+}
+
+export interface PythonManifest {
+  name?: string;
+  version?: string;
+  manifestType: "requirements.txt" | "pyproject.toml" | "setup.py" | "setup.cfg" | "Pipfile";
+  dependencies?: Record<string, string>;
+  devDependencies?: Record<string, string>;
+}
+
+/**
+ * Parses requirements.txt format.
+ */
+export function parseRequirementsTxt(contentOrPath: string): Record<string, string> {
+  try {
+    let raw = contentOrPath;
+    if (fs.existsSync(contentOrPath)) {
+      raw = fs.readFileSync(contentOrPath, "utf8");
+    }
+    const deps: Record<string, string> = {};
+    const lines = raw.split(/\r?\n/);
+
+    for (const line of lines) {
+      const trimmed = line.trim();
+      if (!trimmed || trimmed.startsWith("#") || trimmed.startsWith("-")) {
+        continue;
+      }
+      const match = trimmed.match(/^([a-zA-Z0-9_\-\.]+)(?:\[[^\]]+\])?\s*([<>=!~].*)?$/);
+      if (match) {
+        const name = match[1];
+        const spec = match[2]?.trim() || "*";
+        deps[name] = spec;
+      }
+    }
+    return deps;
+  } catch {
+    return {};
+  }
+}
+
+/**
+ * Deterministically parses a pyproject.toml manifest.
+ */
+export function parsePyprojectToml(contentOrPath: string): PythonManifest | null {
+  try {
+    let raw = contentOrPath;
+    if (fs.existsSync(contentOrPath)) {
+      raw = fs.readFileSync(contentOrPath, "utf8");
+    }
+    const lines = raw.split(/\r?\n/);
+    const result: PythonManifest = {
+      manifestType: "pyproject.toml",
+      dependencies: {},
+      devDependencies: {},
+    };
+
+    let section = "none";
+    for (const line of lines) {
+      const trimmed = line.trim();
+      if (!trimmed || trimmed.startsWith("#")) continue;
+
+      if (trimmed.startsWith("[") && trimmed.endsWith("]")) {
+        const header = trimmed.slice(1, -1).trim();
+        if (header === "project") section = "project";
+        else if (header === "project.dependencies" || header === "tool.poetry.dependencies") section = "dependencies";
+        else if (header === "project.optional-dependencies" || header === "tool.poetry.group.dev.dependencies" || header === "tool.poetry.dev-dependencies") section = "devDependencies";
+        else section = "other";
+        continue;
+      }
+
+      if (section === "project") {
+        const nameMatch = trimmed.match(/^name\s*=\s*["']([^"']+)["']/);
+        if (nameMatch) result.name = nameMatch[1];
+        const verMatch = trimmed.match(/^version\s*=\s*["']([^"']+)["']/);
+        if (verMatch) result.version = verMatch[1];
+      } else if (section === "dependencies" || section === "devDependencies") {
+        const arrayItemMatch = trimmed.match(/^["']([a-zA-Z0-9_\-\.]+)(?:\[[^\]]+\])?\s*([<>=!~].*)?["']/);
+        if (arrayItemMatch) {
+          const name = arrayItemMatch[1];
+          const ver = arrayItemMatch[2]?.trim() || "*";
+          const target = section === "dependencies" ? result.dependencies! : result.devDependencies!;
+          target[name] = ver;
+        } else {
+          const kvMatch = trimmed.match(/^([a-zA-Z0-9_\-\.]+)\s*=\s*["']?([^"']+)["']?/);
+          if (kvMatch && kvMatch[1].toLowerCase() !== "python") {
+            const name = kvMatch[1];
+            const ver = kvMatch[2].trim();
+            const target = section === "dependencies" ? result.dependencies! : result.devDependencies!;
+            target[name] = ver;
+          }
+        }
+      }
+    }
+
+    return result;
+  } catch {
+    return null;
+  }
+}
+
 /**
  * Checks whether a given path is a composer.json manifest.
  */
@@ -196,6 +319,7 @@ export const MANIFEST_RULES: ManifestRule[] = [
   NPM_MANIFEST_RULE,
   PUBSPEC_MANIFEST_RULE,
   COMPOSER_MANIFEST_RULE,
+  PYTHON_MANIFEST_RULE,
 ];
 
 /**

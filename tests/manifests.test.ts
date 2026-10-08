@@ -12,7 +12,62 @@ import {
   parsePubspecYaml,
   isComposerJson,
   parseComposerJson,
+  isPythonManifest,
+  parseRequirementsTxt,
+  parsePyprojectToml,
 } from "../src/detector/manifests.js";
+
+test("detects common Python manifests correctly", () => {
+  assert.equal(isPythonManifest("pyproject.toml"), true);
+  assert.equal(isPythonManifest("requirements.txt"), true);
+  assert.equal(isPythonManifest("requirements-dev.txt"), true);
+  assert.equal(isPythonManifest("setup.py"), true);
+  assert.equal(isPythonManifest("setup.cfg"), true);
+  assert.equal(isPythonManifest("Pipfile"), true);
+  assert.equal(isPythonManifest("requirements.in"), false);
+
+  assert.equal(isManifest("pyproject.toml"), true);
+  assert.equal(isManifest("requirements.txt"), true);
+
+  const descriptor = identifyManifest("pyproject.toml");
+  assert.ok(descriptor);
+  assert.equal(descriptor?.kind, "python");
+  assert.equal(descriptor?.ecosystem, "Python");
+
+  const sampleReqs = `
+# Core dependencies
+fastapi>=0.100.0
+uvicorn[standard]==0.22.0
+requests
+# Dev dependencies
+pytest>=7.0.0
+`;
+  const reqs = parseRequirementsTxt(sampleReqs);
+  assert.equal(reqs["fastapi"], ">=0.100.0");
+  assert.equal(reqs["uvicorn"], "==0.22.0");
+  assert.equal(reqs["requests"], "*");
+  assert.equal(reqs["pytest"], ">=7.0.0");
+
+  const samplePyproject = `
+[project]
+name = "my-fastapi-app"
+version = "0.1.0"
+
+[project.dependencies]
+fastapi = ">=0.100.0"
+httpx = "^0.24.0"
+
+[project.optional-dependencies]
+pytest = ">=7.4.0"
+`;
+  const pyproject = parsePyprojectToml(samplePyproject);
+  assert.ok(pyproject);
+  assert.equal(pyproject?.name, "my-fastapi-app");
+  assert.equal(pyproject?.version, "0.1.0");
+  assert.equal(pyproject?.dependencies?.["fastapi"], ">=0.100.0");
+  assert.equal(pyproject?.dependencies?.["httpx"], "^0.24.0");
+  assert.equal(pyproject?.devDependencies?.["pytest"], ">=7.4.0");
+});
 
 test("detects composer.json correctly", () => {
   assert.equal(isComposerJson("composer.json"), true);
