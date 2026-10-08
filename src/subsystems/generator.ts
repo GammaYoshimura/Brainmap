@@ -12,6 +12,12 @@ import {
   formatSubsystemEntryPoints,
   SubsystemEntryPoint,
 } from "./entrypoints.js";
+import {
+  recordSubsystemDependencies,
+  formatSubsystemDependencies,
+  SubsystemDependencyRecord,
+} from "./dependencies.js";
+import { DependencyModel } from "../core/model.js";
 
 /**
  * Result of generating a document for a subsystem.
@@ -31,6 +37,9 @@ export interface SubsystemDocOptions {
   importantFiles?: string[];
   entryPoints?: string[];
   dependencies?: string[];
+  allGroupings?: SubsystemGrouping[];
+  declaredDependencies?: DependencyModel[];
+  projectRoot?: string;
   relatedBrainDocs?: Array<{ name: string; path: string }>;
 }
 
@@ -87,7 +96,7 @@ export function generateSubsystemDocument(
   }
   lines.push("");
 
-  // Dependencies section (extended in M114)
+  // Dependencies section (M114)
   lines.push("## Subsystem Dependencies");
   lines.push("");
   if (options.dependencies && options.dependencies.length > 0) {
@@ -95,7 +104,13 @@ export function generateSubsystemDocument(
       lines.push(`- ${dep}`);
     }
   } else {
-    lines.push("_Dependencies not analyzed yet._");
+    const deps = recordSubsystemDependencies(
+      grouping,
+      options.allGroupings || [],
+      options.declaredDependencies || [],
+      options.projectRoot
+    );
+    lines.push(...formatSubsystemDependencies(deps));
   }
   lines.push("");
 
@@ -133,7 +148,10 @@ export function generateDocumentsForSubsystems(
     }
 
     const filePath = path.join(targetDir, "index.md");
-    const options = optionsMap[grouping.id] || {};
+    const options = {
+      allGroupings: groupings,
+      ...optionsMap[grouping.id],
+    };
     const content = generateSubsystemDocument(grouping, options);
 
     fs.writeFileSync(filePath, content, "utf8");
