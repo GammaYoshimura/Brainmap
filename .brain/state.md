@@ -4,7 +4,7 @@ Current operational state of the Brainmap project.
 
 ## Current Milestone
 
-**M118**: Create `brainmap route`.
+**M119**: Accept a natural-language task query.
 
 ## What is Implemented
 
@@ -62,10 +62,11 @@ Current operational state of the Brainmap project.
   - Added specialized documentation end-to-end integration and edge-case test suite (`tests/docgen-e2e.test.ts`).
 - **Routing (M118–M132)**:
   - Created `route` command handler (`src/commands/route.ts`) and registered `route` command in CLI entry point and help text (`src/cli.ts`).
+  - Implemented task query parser, query normalization, tokenization, and CLI argument handling (`src/router/query.ts`, `src/commands/route.ts`).
 
 ## What is In Progress
 
-- Completing M118: Create `brainmap route`.
+- Completing M119: Accept a natural-language task query.
 
 ## Known Blockers
 
@@ -75,8 +76,8 @@ Current operational state of the Brainmap project.
 
 - Environment: Node.js v20+, TypeScript 5+, zero runtime dependencies.
 - Git repository synced with remote (`https://github.com/GammaYoshimura/Brainmap`).
-- 87 passing tests across the test suite.
+- 93 passing tests across the test suite.
 
 ## Immediate Next Work
 
-- Next milestone: **M119: Accept a natural-language task query**.
+- Next milestone: **M120: Resolve exact path matches**.

@@ -17,9 +17,14 @@ test("cli dispatches map command successfully", () => {
   assert.equal(code, EXIT_SUCCESS);
 });
 
-test("cli dispatches route command successfully", () => {
-  const code = run(["route"]);
+test("cli dispatches route command successfully with query", () => {
+  const code = run(["route", "Add refresh-token support to authentication"]);
   assert.equal(code, EXIT_SUCCESS);
+});
+
+test("cli fails when route is invoked without query", () => {
+  const code = run(["route"]);
+  assert.equal(code, EXIT_FAILURE);
 });
 
 test("cli returns failure on unknown option", () => {

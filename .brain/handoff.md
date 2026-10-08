@@ -23,7 +23,7 @@ The handoff document ensures that any subsequent AI agent or developer session c
 ## Current Operational Handoff
 
 ### CURRENT MILESTONE
-M118: Create `brainmap route`.
+M119: Accept a natural-language task query.
 
 ### COMPLETED
 - Repository foundation (M001–M010).
@@ -36,36 +36,38 @@ M118: Create `brainmap route`.
 - Project Structure Detection (M086–M096).
 - `brainmap map` block (M097–M108).
 - Specialized Documentation block (M109–M117).
-- Routing block initiated:
-  - M118: Created `route` command handler (`src/commands/route.ts`), wired command dispatch and help description in CLI entry point (`src/cli.ts`), and verified with test suite.
+- Routing block:
+  - M118: Created `route` command handler (`src/commands/route.ts`), wired command dispatch and help description in CLI entry point (`src/cli.ts`).
+  - M119: Implemented natural-language task query parsing, normalization, tokenization, and CLI argument integration (`src/router/query.ts`, `src/commands/route.ts`, `tests/route-query.test.ts`).
 
 ### IN PROGRESS
-- Completing M118: Create `brainmap route`.
+- Completing M119: Accept a natural-language task query.
 
 ### CHANGED FILES
+- `src/router/query.ts`
 - `src/commands/route.ts`
-- `src/cli.ts`
 - `tests/cli.test.ts`
+- `tests/route-query.test.ts`
 - `.brain/project-map.md`
 - `.brain/state.md`
 - `.brain/handoff.md`
 
 ### TEST STATUS
-- 87/87 tests passing (`npm test`).
+- 93/93 tests passing (`npm test`).
 - TypeScript builds cleanly (`npm run build`).
 
 ### OPEN ISSUES
 - None.
 
 ### IMPORTANT DECISIONS
-- `route` command accepts CLI arguments for upcoming task query processing, starting with a clean modular command handler following existing CLI conventions.
+- Task queries are parsed deterministically into raw query, normalized query, and extracted unique tokens.
 
 ### NEXT ACTION
-- Implement M119: Accept a natural-language task query.
+- Implement M120: Resolve exact path matches.
 
 ### CONTEXT TO LOAD
 - `brainmap_master_prompt.md`
 - `.brain/state.md`
 - `.brain/handoff.md`
+- `src/router/query.ts`
 - `src/commands/route.ts`
-- `src/cli.ts`
