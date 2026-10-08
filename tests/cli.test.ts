@@ -12,6 +12,11 @@ test("cli returns success and shows help on --help", () => {
   assert.equal(code, EXIT_SUCCESS);
 });
 
+test("cli dispatches map command successfully", () => {
+  const code = run(["map"]);
+  assert.equal(code, EXIT_SUCCESS);
+});
+
 test("cli returns failure on unknown option", () => {
   const code = run(["--unknown-flag"]);
   assert.equal(code, EXIT_FAILURE);

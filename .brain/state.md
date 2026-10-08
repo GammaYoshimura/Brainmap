@@ -4,7 +4,7 @@ Current operational state of the Brainmap project.
 
 ## Current Milestone
 
-**M096**: Add detection tests.
+**M097**: Create the `map` command.
 
 ## What is Implemented
 
@@ -37,10 +37,12 @@ Current operational state of the Brainmap project.
   - Manifest registry and detectors for `package.json`, `pubspec.yaml`, `composer.json`, Python manifests (`pyproject.toml`, `requirements.txt`), .NET manifests (`*.csproj`), and Cargo (`Cargo.toml`) (`src/detector/manifests.ts`).
   - Declared dependencies extraction across all supported manifests.
   - Comprehensive end-to-end detection test suite (`tests/detection.test.ts`).
+- **`brainmap map` (M097)**:
+  - Created `map` command handler (`src/commands/map.ts`) and registered `map` in CLI entry point and help text (`src/cli.ts`).
 
 ## What is In Progress
 
-- Completing M096: Add detection tests.
+- Completing M097: Create the `map` command.
 
 ## Known Blockers
 
@@ -50,10 +52,9 @@ Current operational state of the Brainmap project.
 
 - Environment: Node.js v20+, TypeScript 5+, zero runtime dependencies.
 - Git repository synced with remote (`https://github.com/GammaYoshimura/Brainmap`).
-- 40 passing tests across the test suite.
+- 41 passing tests across the test suite.
 
 ## Immediate Next Work
 
-- **M097**: Create the `map` command.
 - **M098**: Create directory-map generation.
 - **M099**: Create file-map generation.
