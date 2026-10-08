@@ -23,7 +23,7 @@ The handoff document ensures that any subsequent AI agent or developer session c
 ## Current Operational Handoff
 
 ### CURRENT MILESTONE
-M130: Return relevant dependencies.
+M131: Add structured output.
 
 ### COMPLETED
 - Repository foundation (M001–M010).
@@ -50,34 +50,36 @@ M130: Return relevant dependencies.
   - M128: Implemented relevant ADR router (`src/router/adr-router.ts`, `tests/route-adr-router.test.ts`).
   - M129: Implemented relevant test router linking direct test mentions and matching test files corresponding to relevant source files (`src/router/test-router.ts`, `tests/route-test-router.test.ts`).
   - M130: Implemented relevant dependency router matching declared manifest packages against task queries (`src/router/dependency-router.ts`, `tests/route-dependency-router.test.ts`).
+  - M131: Implemented structured routing pipeline and output formatters for human-readable text and structured JSON (`src/router/route-pipeline.ts`, `src/commands/route.ts`, `tests/route-pipeline.test.ts`).
 
 ### IN PROGRESS
-- Completing M130: Return relevant dependencies.
+- Completing M131: Add structured output.
 
 ### CHANGED FILES
-- `src/router/dependency-router.ts`
+- `src/router/route-pipeline.ts`
+- `src/commands/route.ts`
 - `src/router/index.ts`
-- `tests/route-dependency-router.test.ts`
+- `tests/route-pipeline.test.ts`
 - `.brain/project-map.md`
 - `.brain/state.md`
 - `.brain/handoff.md`
 
 ### TEST STATUS
-- 141/141 tests passing (`npm test`).
+- 144/144 tests passing (`npm test`).
 - TypeScript builds cleanly (`npm run build`).
 
 ### OPEN ISSUES
 - None.
 
 ### IMPORTANT DECISIONS
-- Declared dependencies are extracted across all supported project manifests and ranked against package names, unscoped names, and components.
+- The routing pipeline consolidates all matchers and routers into `RouteResult`, with human-readable CLI formatting by default and JSON output with `--json`.
 
 ### NEXT ACTION
-- Implement M131: Add structured output.
+- Implement M132: Add routing tests.
 
 ### CONTEXT TO LOAD
 - `.brain/index.md`
 - `.brain/state.md`
 - `.brain/handoff.md`
 - `src/router/query.ts`
-- `src/router/dependency-router.ts`
+- `src/router/route-pipeline.ts`

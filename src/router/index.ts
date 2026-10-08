@@ -10,3 +10,4 @@ export * from "./source-file-router.js";
 export * from "./adr-router.js";
 export * from "./test-router.js";
 export * from "./dependency-router.js";
+export * from "./route-pipeline.js";

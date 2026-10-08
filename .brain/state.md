@@ -4,7 +4,7 @@ Current operational state of the Brainmap project.
 
 ## Current Milestone
 
-**M130**: Return relevant dependencies.
+**M131**: Add structured output.
 
 ## What is Implemented
 
@@ -74,10 +74,11 @@ Current operational state of the Brainmap project.
   - Implemented relevant ADR router extracting decision metadata, status, keywords, and relevance scoring (`src/router/adr-router.ts`).
   - Implemented relevant test router linking direct test mentions and matching test files corresponding to relevant source files (`src/router/test-router.ts`).
   - Implemented relevant dependency router matching declared manifest packages against task queries (`src/router/dependency-router.ts`).
+  - Implemented structured routing pipeline and output formatters for text and JSON (`src/router/route-pipeline.ts`, `src/commands/route.ts`).
 
 ## What is In Progress
 
-- Completing M130: Return relevant dependencies.
+- Completing M131: Add structured output.
 
 ## Known Blockers
 
@@ -87,8 +88,8 @@ Current operational state of the Brainmap project.
 
 - Environment: Node.js v20+, TypeScript 5+, zero runtime dependencies.
 - Git repository synced with remote (`https://github.com/GammaYoshimura/Brainmap`).
-- 141 passing tests across the test suite.
+- 144 passing tests across the test suite.
 
 ## Immediate Next Work
 
-- Next milestone: **M131: Add structured output**.
+- Next milestone: **M132: Add routing tests**.
