@@ -121,3 +121,16 @@ export function traverseProject(
     directories,
   };
 }
+
+export function extractFileExtension(filePath: string): string {
+  return path.extname(filePath).toLowerCase();
+}
+
+export function collectFileExtensions(files: (FileModel | string)[]): string[] {
+  const extensions = new Set<string>();
+  for (const item of files) {
+    const ext = typeof item === "string" ? extractFileExtension(item) : item.extension;
+    extensions.add(ext);
+  }
+  return Array.from(extensions).sort();
+}
