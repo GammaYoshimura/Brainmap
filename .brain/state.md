@@ -4,7 +4,7 @@ Current operational state of the Brainmap project.
 
 ## Current Milestone
 
-**M108**: Add mapper tests.
+**M109**: Create subsystem index generation.
 
 ## What is Implemented
 
@@ -51,9 +51,12 @@ Current operational state of the Brainmap project.
   - Created change-relevance detector evaluating structural, manifest, entry-point, and module impacts of diffs (`src/mapper/change-detector.ts`).
   - Created comprehensive unit, edge-case, and end-to-end test suite for mapping across multi-stack fixtures (`tests/mapper.test.ts`).
 
+- **Specialized Documentation (M109–M117)**:
+  - Created subsystem index generation (`src/subsystems/subsystem-index.ts`) supporting individual subsystem index generation (`generateSubsystemIndex`) and master subsystems index generation (`generateSubsystemsIndex`).
+
 ## What is In Progress
 
-- Completing M108: Add mapper tests.
+- Completing M109: Create subsystem index generation.
 
 ## Known Blockers
 
@@ -63,8 +66,8 @@ Current operational state of the Brainmap project.
 
 - Environment: Node.js v20+, TypeScript 5+, zero runtime dependencies.
 - Git repository synced with remote (`https://github.com/GammaYoshimura/Brainmap`).
-- 60 passing tests across the test suite.
+- 65 passing tests across the test suite.
 
 ## Immediate Next Work
 
-- Next block: **Specialized Documentation** (M109: Create subsystem index generation).
+- Next milestone: **M110**: Detect natural subsystem groupings.
