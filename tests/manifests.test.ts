@@ -8,7 +8,49 @@ import {
   MANIFEST_RULES,
   isPackageJson,
   parsePackageJson,
+  isPubspecYaml,
+  parsePubspecYaml,
 } from "../src/detector/manifests.js";
+
+test("detects pubspec.yaml correctly", () => {
+  assert.equal(isPubspecYaml("pubspec.yaml"), true);
+  assert.equal(isPubspecYaml("pubspec.yml"), true);
+  assert.equal(isPubspecYaml("packages/app/pubspec.yaml"), true);
+  assert.equal(isPubspecYaml("pubspec.lock"), false);
+
+  assert.equal(isManifest("pubspec.yaml"), true);
+
+  const descriptor = identifyManifest("pubspec.yaml");
+  assert.ok(descriptor);
+  assert.equal(descriptor?.kind, "pubspec");
+  assert.equal(descriptor?.ecosystem, "Dart/Flutter");
+
+  const sampleYaml = `
+name: flutter_weather
+description: A weather flutter app.
+version: 1.0.0+1
+
+dependencies:
+  flutter:
+    sdk: flutter
+  http: ^1.2.0
+  provider: ^6.1.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+`;
+
+  const parsed = parsePubspecYaml(sampleYaml);
+  assert.ok(parsed);
+  assert.equal(parsed?.name, "flutter_weather");
+  assert.equal(parsed?.version, "1.0.0+1");
+  assert.equal(parsed?.description, "A weather flutter app.");
+  assert.equal(parsed?.dependencies?.["http"], "^1.2.0");
+  assert.equal(parsed?.dependencies?.["provider"], "^6.1.1");
+  assert.equal(parsed?.devDependencies?.["flutter_lints"], "^3.0.0");
+});
 
 test("detects package.json correctly", () => {
   assert.equal(isPackageJson("package.json"), true);
