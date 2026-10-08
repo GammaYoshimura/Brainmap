@@ -23,7 +23,7 @@ The handoff document ensures that any subsequent AI agent or developer session c
 ## Current Operational Handoff
 
 ### CURRENT MILESTONE
-M119: Accept a natural-language task query.
+M120: Resolve exact path matches.
 
 ### COMPLETED
 - Repository foundation (M001–M010).
@@ -39,35 +39,35 @@ M119: Accept a natural-language task query.
 - Routing block:
   - M118: Created `route` command handler (`src/commands/route.ts`), wired command dispatch and help description in CLI entry point (`src/cli.ts`).
   - M119: Implemented natural-language task query parsing, normalization, tokenization, and CLI argument integration (`src/router/query.ts`, `src/commands/route.ts`, `tests/route-query.test.ts`).
+  - M120: Implemented exact path matching resolver against project and brain files (`src/router/path-matcher.ts`, `tests/route-path-matcher.test.ts`).
 
 ### IN PROGRESS
-- Completing M119: Accept a natural-language task query.
+- Completing M120: Resolve exact path matches.
 
 ### CHANGED FILES
-- `src/router/query.ts`
-- `src/commands/route.ts`
-- `tests/cli.test.ts`
-- `tests/route-query.test.ts`
+- `src/router/path-matcher.ts`
+- `src/router/index.ts`
+- `tests/route-path-matcher.test.ts`
 - `.brain/project-map.md`
 - `.brain/state.md`
 - `.brain/handoff.md`
 
 ### TEST STATUS
-- 93/93 tests passing (`npm test`).
+- 98/98 tests passing (`npm test`).
 - TypeScript builds cleanly (`npm run build`).
 
 ### OPEN ISSUES
 - None.
 
 ### IMPORTANT DECISIONS
-- Task queries are parsed deterministically into raw query, normalized query, and extracted unique tokens.
+- Exact path matching resolves path references appearing as direct tokens or path substrings, normalizing path separators for cross-platform portability.
 
 ### NEXT ACTION
-- Implement M120: Resolve exact path matches.
+- Implement M121: Resolve file-name matches.
 
 ### CONTEXT TO LOAD
 - `brainmap_master_prompt.md`
 - `.brain/state.md`
 - `.brain/handoff.md`
 - `src/router/query.ts`
-- `src/commands/route.ts`
+- `src/router/path-matcher.ts`
