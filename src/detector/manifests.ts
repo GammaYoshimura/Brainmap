@@ -55,6 +55,82 @@ export const PYTHON_MANIFEST_RULE: ManifestRule = {
     fileName === "Pipfile",
 };
 
+export const DOTNET_MANIFEST_RULE: ManifestRule = {
+  kind: "dotnet",
+  ecosystem: ".NET",
+  matches: (fileName) =>
+    /\.(csproj|fsproj|vbproj)$/i.test(fileName) ||
+    fileName === "Directory.Build.props" ||
+    fileName === "packages.config",
+};
+
+/**
+ * Checks whether a given path is a .NET project manifest.
+ */
+export function isDotnetManifest(filePath: string): boolean {
+  const fileName = path.basename(filePath);
+  return (
+    /\.(csproj|fsproj|vbproj)$/i.test(fileName) ||
+    fileName === "Directory.Build.props" ||
+    fileName === "packages.config"
+  );
+}
+
+export interface DotnetManifest {
+  projectName?: string;
+  targetFramework?: string;
+  packageReferences?: Record<string, string>;
+}
+
+/**
+ * Deterministically parses a .NET project file.
+ */
+export function parseDotnetProject(contentOrPath: string): DotnetManifest | null {
+  try {
+    let raw = contentOrPath;
+    let fileName = "";
+    if (fs.existsSync(contentOrPath)) {
+      raw = fs.readFileSync(contentOrPath, "utf8");
+      fileName = path.basename(contentOrPath);
+    }
+
+    const packageReferences: Record<string, string> = {};
+
+    const tfMatch = raw.match(/<TargetFramework>(.*?)<\/TargetFramework>/i);
+    const targetFramework = tfMatch ? tfMatch[1].trim() : undefined;
+
+    const packageRefRegex = /<PackageReference\s+[^>]*Include=["']([^"']+)["'][^>]*?(?:\/>|>([\s\S]*?)<\/PackageReference>)/gi;
+    let match: RegExpExecArray | null;
+
+    while ((match = packageRefRegex.exec(raw)) !== null) {
+      const pkgName = match[1];
+      const fullTag = match[0];
+      const innerContent = match[2] || "";
+
+      let version = "*";
+      const verAttrMatch = fullTag.match(/Version=["']([^"']+)["']/i);
+      if (verAttrMatch) {
+        version = verAttrMatch[1];
+      } else {
+        const verTagMatch = innerContent.match(/<Version>(.*?)<\/Version>/i);
+        if (verTagMatch) {
+          version = verTagMatch[1].trim();
+        }
+      }
+
+      packageReferences[pkgName] = version;
+    }
+
+    return {
+      projectName: fileName ? fileName.replace(/\.[^.]+$/, "") : undefined,
+      targetFramework,
+      packageReferences,
+    };
+  } catch {
+    return null;
+  }
+}
+
 /**
  * Checks whether a given path is a common Python manifest.
  */
@@ -320,6 +396,7 @@ export const MANIFEST_RULES: ManifestRule[] = [
   PUBSPEC_MANIFEST_RULE,
   COMPOSER_MANIFEST_RULE,
   PYTHON_MANIFEST_RULE,
+  DOTNET_MANIFEST_RULE,
 ];
 
 /**

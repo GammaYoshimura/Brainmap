@@ -15,7 +15,51 @@ import {
   isPythonManifest,
   parseRequirementsTxt,
   parsePyprojectToml,
+  isDotnetManifest,
+  parseDotnetProject,
 } from "../src/detector/manifests.js";
+
+test("detects .NET manifests correctly", () => {
+  assert.equal(isDotnetManifest("MyApp.csproj"), true);
+  assert.equal(isDotnetManifest("src/Api/Api.csproj"), true);
+  assert.equal(isDotnetManifest("Library.fsproj"), true);
+  assert.equal(isDotnetManifest("Legacy.vbproj"), true);
+  assert.equal(isDotnetManifest("Directory.Build.props"), true);
+  assert.equal(isDotnetManifest("packages.config"), true);
+  assert.equal(isDotnetManifest("MyApp.sln"), false);
+
+  assert.equal(isManifest("MyApp.csproj"), true);
+  assert.equal(isManifest("src/Api.csproj"), true);
+
+  const descriptor = identifyManifest("src/Api.csproj");
+  assert.ok(descriptor);
+  assert.equal(descriptor?.kind, "dotnet");
+  assert.equal(descriptor?.ecosystem, ".NET");
+
+  const sampleCsproj = `
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.0" />
+    <PackageReference Include="Serilog">
+      <Version>3.1.1</Version>
+    </PackageReference>
+  </ItemGroup>
+</Project>
+`;
+
+  const parsed = parseDotnetProject(sampleCsproj);
+  assert.ok(parsed);
+  assert.equal(parsed?.targetFramework, "net8.0");
+  assert.equal(parsed?.packageReferences?.["Newtonsoft.Json"], "13.0.3");
+  assert.equal(parsed?.packageReferences?.["Microsoft.AspNetCore.OpenApi"], "8.0.0");
+  assert.equal(parsed?.packageReferences?.["Serilog"], "3.1.1");
+});
 
 test("detects common Python manifests correctly", () => {
   assert.equal(isPythonManifest("pyproject.toml"), true);
