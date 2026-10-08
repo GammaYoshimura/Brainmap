@@ -4,7 +4,7 @@ Current operational state of the Brainmap project.
 
 ## Current Milestone
 
-**M124**: Resolve symbol matches where supported.
+**M125**: Create relevance ranking.
 
 ## What is Implemented
 
@@ -68,10 +68,11 @@ Current operational state of the Brainmap project.
   - Implemented subsystem matching resolver with identifier, name, path, and token heuristics (`src/router/subsystem-matcher.ts`).
   - Implemented Brain document matching resolver with role-intent keywords, paths, and subsystem tokens (`src/router/brain-doc-matcher.ts`).
   - Implemented exported symbol extraction and symbol-matching resolver (`src/router/symbol-matcher.ts`).
+  - Implemented relevance ranking engine with score aggregation, reason tracking, and category weighting (`src/router/ranking.ts`).
 
 ## What is In Progress
 
-- Completing M124: Resolve symbol matches where supported.
+- Completing M125: Create relevance ranking.
 
 ## Known Blockers
 
@@ -81,8 +82,8 @@ Current operational state of the Brainmap project.
 
 - Environment: Node.js v20+, TypeScript 5+, zero runtime dependencies.
 - Git repository synced with remote (`https://github.com/GammaYoshimura/Brainmap`).
-- 120 passing tests across the test suite.
+- 125 passing tests across the test suite.
 
 ## Immediate Next Work
 
-- Next milestone: **M125: Create relevance ranking**.
+- Next milestone: **M126: Return relevant Brain documents**.
