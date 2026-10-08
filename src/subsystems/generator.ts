@@ -2,6 +2,11 @@ import fs from "node:fs";
 import path from "node:path";
 import { SubsystemGrouping } from "./groupings.js";
 import { normalizePath } from "../core/paths.js";
+import {
+  identifyImportantSubsystemFiles,
+  formatImportantFiles,
+  ImportantSubsystemFile,
+} from "./important-files.js";
 
 /**
  * Result of generating a document for a subsystem.
@@ -51,7 +56,7 @@ export function generateSubsystemDocument(
   lines.push(`- **Detection Confidence**: ${grouping.confidence} (${grouping.reason})`);
   lines.push("");
 
-  // Important Files section (extended in M112)
+  // Important Files section (M112)
   lines.push("## Important Files");
   lines.push("");
   if (options.importantFiles && options.importantFiles.length > 0) {
@@ -59,15 +64,8 @@ export function generateSubsystemDocument(
       lines.push(`- \`${normalizePath(f)}\``);
     }
   } else {
-    // Show sample files from grouping if available
-    const samples = grouping.files.slice(0, 5);
-    if (samples.length > 0) {
-      for (const f of samples) {
-        lines.push(`- \`${normalizePath(f.relativePath)}\``);
-      }
-    } else {
-      lines.push("_No files discovered._");
-    }
+    const important = identifyImportantSubsystemFiles(grouping);
+    lines.push(...formatImportantFiles(important));
   }
   lines.push("");
 
