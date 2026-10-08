@@ -10,7 +10,42 @@ import {
   parsePackageJson,
   isPubspecYaml,
   parsePubspecYaml,
+  isComposerJson,
+  parseComposerJson,
 } from "../src/detector/manifests.js";
+
+test("detects composer.json correctly", () => {
+  assert.equal(isComposerJson("composer.json"), true);
+  assert.equal(isComposerJson("backend/composer.json"), true);
+  assert.equal(isComposerJson("composer.lock"), false);
+
+  assert.equal(isManifest("composer.json"), true);
+
+  const descriptor = identifyManifest("composer.json");
+  assert.ok(descriptor);
+  assert.equal(descriptor?.kind, "composer");
+  assert.equal(descriptor?.ecosystem, "PHP");
+
+  const sampleComposer = JSON.stringify({
+    name: "laravel/laravel",
+    description: "The skeleton application for the Laravel framework.",
+    type: "project",
+    require: {
+      "php": "^8.2",
+      "laravel/framework": "^11.0",
+    },
+    "require-dev": {
+      "phpunit/phpunit": "^11.0.1",
+    },
+  });
+
+  const parsed = parseComposerJson(sampleComposer);
+  assert.ok(parsed);
+  assert.equal(parsed?.name, "laravel/laravel");
+  assert.equal(parsed?.type, "project");
+  assert.equal(parsed?.require?.["laravel/framework"], "^11.0");
+  assert.equal(parsed?.requireDev?.["phpunit/phpunit"], "^11.0.1");
+});
 
 test("detects pubspec.yaml correctly", () => {
   assert.equal(isPubspecYaml("pubspec.yaml"), true);

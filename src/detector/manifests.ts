@@ -38,6 +38,51 @@ export const PUBSPEC_MANIFEST_RULE: ManifestRule = {
   matches: (fileName) => fileName === "pubspec.yaml" || fileName === "pubspec.yml",
 };
 
+export const COMPOSER_MANIFEST_RULE: ManifestRule = {
+  kind: "composer",
+  ecosystem: "PHP",
+  matches: (fileName) => fileName === "composer.json",
+};
+
+/**
+ * Checks whether a given path is a composer.json manifest.
+ */
+export function isComposerJson(filePath: string): boolean {
+  return path.basename(filePath) === "composer.json";
+}
+
+export interface ComposerManifest {
+  name?: string;
+  description?: string;
+  version?: string;
+  type?: string;
+  require?: Record<string, string>;
+  requireDev?: Record<string, string>;
+}
+
+/**
+ * Parses a composer.json file content or path.
+ */
+export function parseComposerJson(contentOrPath: string): ComposerManifest | null {
+  try {
+    let raw = contentOrPath;
+    if (fs.existsSync(contentOrPath)) {
+      raw = fs.readFileSync(contentOrPath, "utf8");
+    }
+    const json = JSON.parse(raw);
+    return {
+      name: json.name,
+      description: json.description,
+      version: json.version,
+      type: json.type,
+      require: json.require ?? {},
+      requireDev: json["require-dev"] ?? {},
+    };
+  } catch {
+    return null;
+  }
+}
+
 /**
  * Checks whether a given path is a pubspec.yaml manifest.
  */
@@ -150,6 +195,7 @@ export function parsePackageJson(contentOrPath: string): NpmPackageManifest | nu
 export const MANIFEST_RULES: ManifestRule[] = [
   NPM_MANIFEST_RULE,
   PUBSPEC_MANIFEST_RULE,
+  COMPOSER_MANIFEST_RULE,
 ];
 
 /**
