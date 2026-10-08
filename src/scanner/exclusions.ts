@@ -96,3 +96,23 @@ export function isGitignored(
 
   return ignored;
 }
+
+export function isGitDirectory(relativePath: string): boolean {
+  const normalized = relativePath.replace(/\\/g, "/").replace(/^\/+|\/+$/g, "");
+  return normalized === ".git" || normalized.startsWith(".git/") || normalized.includes("/.git/") || normalized.endsWith("/.git");
+}
+
+export function shouldExclude(
+  relativePath: string,
+  config: ExclusionConfig,
+  gitignorePatterns: string[] = [],
+  isDirectory = false
+): boolean {
+  if (config.excludeGit && isGitDirectory(relativePath)) {
+    return true;
+  }
+  if (config.useGitignore && gitignorePatterns.length > 0 && isGitignored(relativePath, gitignorePatterns, isDirectory)) {
+    return true;
+  }
+  return false;
+}
