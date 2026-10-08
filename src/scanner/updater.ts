@@ -2,7 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { FileModel, DirectoryModel, DependencyModel, ProjectModel, createDependencyModel } from "../core/model.js";
 import { toRelativePath } from "../core/paths.js";
-import { PersistedScanState } from "./scanner.js";
+import { PersistedScanState, ProjectScanSummary } from "./scanner.js";
 
 export function getPersistedScanPath(projectRoot: string): string {
   return path.join(projectRoot, ".brain", "scan.json");
@@ -198,4 +198,26 @@ export function updateProjectModelIncrementally(
     directories,
     dependencies,
   };
+}
+
+export function persistUpdatedState(
+  projectRoot: string,
+  model: ProjectModel,
+  summary: ProjectScanSummary
+): string {
+  const brainDir = path.join(projectRoot, ".brain");
+  if (!fs.existsSync(brainDir)) {
+    fs.mkdirSync(brainDir, { recursive: true });
+  }
+
+  const outputPath = getPersistedScanPath(projectRoot);
+  const payload: PersistedScanState = {
+    summary,
+    scannedAt: new Date().toISOString(),
+    files: model.files,
+    model,
+  };
+
+  fs.writeFileSync(outputPath, JSON.stringify(payload, null, 2), "utf8");
+  return outputPath;
 }
