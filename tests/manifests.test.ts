@@ -6,7 +6,33 @@ import {
   detectManifests,
   registerManifestRule,
   MANIFEST_RULES,
+  isPackageJson,
+  parsePackageJson,
 } from "../src/detector/manifests.js";
+
+test("detects package.json correctly", () => {
+  assert.equal(isPackageJson("package.json"), true);
+  assert.equal(isPackageJson("packages/core/package.json"), true);
+  assert.equal(isPackageJson("package.json.bak"), false);
+
+  assert.equal(isManifest("package.json"), true);
+  assert.equal(isManifest("nested/package.json"), true);
+
+  const descriptor = identifyManifest("package.json");
+  assert.ok(descriptor);
+  assert.equal(descriptor?.kind, "npm");
+  assert.equal(descriptor?.ecosystem, "Node.js");
+
+  const parsed = parsePackageJson(JSON.stringify({
+    name: "my-package",
+    version: "1.2.3",
+    dependencies: { "express": "^4.18.2" },
+  }));
+  assert.ok(parsed);
+  assert.equal(parsed?.name, "my-package");
+  assert.equal(parsed?.version, "1.2.3");
+  assert.equal(parsed?.dependencies?.["express"], "^4.18.2");
+});
 
 test("manifest detection foundation registers and matches rules", () => {
   // Initially or with test rule

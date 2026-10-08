@@ -1,3 +1,4 @@
+import fs from "node:fs";
 import path from "node:path";
 import { normalizePath } from "../core/paths.js";
 import { FileModel } from "../core/model.js";
@@ -25,10 +26,52 @@ export interface ManifestRule {
   matches: (fileName: string, relativePath: string) => boolean;
 }
 
+export const NPM_MANIFEST_RULE: ManifestRule = {
+  kind: "npm",
+  ecosystem: "Node.js",
+  matches: (fileName) => fileName === "package.json",
+};
+
+/**
+ * Checks whether a given path is a package.json manifest.
+ */
+export function isPackageJson(filePath: string): boolean {
+  return path.basename(filePath) === "package.json";
+}
+
+export interface NpmPackageManifest {
+  name?: string;
+  version?: string;
+  description?: string;
+  main?: string;
+  scripts?: Record<string, string>;
+  dependencies?: Record<string, string>;
+  devDependencies?: Record<string, string>;
+  peerDependencies?: Record<string, string>;
+  optionalDependencies?: Record<string, string>;
+}
+
+/**
+ * Parses a package.json file content or path.
+ */
+export function parsePackageJson(contentOrPath: string): NpmPackageManifest | null {
+  try {
+    let raw = contentOrPath;
+    if (fs.existsSync(contentOrPath)) {
+      raw = fs.readFileSync(contentOrPath, "utf8");
+    }
+    return JSON.parse(raw) as NpmPackageManifest;
+  } catch {
+    return null;
+  }
+}
+
 /**
  * Manifest detection rules registry.
  */
-export const MANIFEST_RULES: ManifestRule[] = [];
+export const MANIFEST_RULES: ManifestRule[] = [
+  NPM_MANIFEST_RULE,
+];
 
 /**
  * Register a manifest rule into the registry.
