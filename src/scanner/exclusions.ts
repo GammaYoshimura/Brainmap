@@ -154,6 +154,18 @@ export function shouldExclude(
   if (config.excludeBuildOutputs && isBuildDirectory(relativePath)) {
     return true;
   }
+  if (config.ignoredDirectories && config.ignoredDirectories.length > 0) {
+    const normalized = relativePath.replace(/\\/g, "/").replace(/^\/+|\/+$/g, "");
+    const segments = normalized.split("/");
+    if (segments.some((seg) => config.ignoredDirectories.includes(seg))) {
+      return true;
+    }
+  }
+  if (config.customPatterns && config.customPatterns.length > 0) {
+    if (isGitignored(relativePath, config.customPatterns, isDirectory)) {
+      return true;
+    }
+  }
   if (config.useGitignore && gitignorePatterns.length > 0 && isGitignored(relativePath, gitignorePatterns, isDirectory)) {
     return true;
   }
