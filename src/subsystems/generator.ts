@@ -17,7 +17,12 @@ import {
   formatSubsystemDependencies,
   SubsystemDependencyRecord,
 } from "./dependencies.js";
-import { DependencyModel } from "../core/model.js";
+import {
+  recordRelatedBrainDocuments,
+  formatRelatedBrainDocuments,
+  RelatedBrainDocRef,
+} from "./related-brain-docs.js";
+import { DependencyModel, BrainDocumentModel } from "../core/model.js";
 
 /**
  * Result of generating a document for a subsystem.
@@ -40,6 +45,8 @@ export interface SubsystemDocOptions {
   allGroupings?: SubsystemGrouping[];
   declaredDependencies?: DependencyModel[];
   projectRoot?: string;
+  brainDir?: string;
+  brainDocuments?: BrainDocumentModel[];
   relatedBrainDocs?: Array<{ name: string; path: string }>;
 }
 
@@ -114,7 +121,7 @@ export function generateSubsystemDocument(
   }
   lines.push("");
 
-  // Related Brain Documents section (extended in M115)
+  // Related Brain Documents section (M115)
   lines.push("## Related Brain Documents");
   lines.push("");
   if (options.relatedBrainDocs && options.relatedBrainDocs.length > 0) {
@@ -122,8 +129,12 @@ export function generateSubsystemDocument(
       lines.push(`- [${doc.name}](${normalizePath(doc.path)})`);
     }
   } else {
-    lines.push("- [Architecture Constitution](../../architecture.md)");
-    lines.push("- [Global Routing](../../index.md)");
+    const related = recordRelatedBrainDocuments(
+      grouping.id,
+      options.brainDir,
+      options.brainDocuments
+    );
+    lines.push(...formatRelatedBrainDocuments(related));
   }
   lines.push("");
 
