@@ -178,14 +178,8 @@ export function createBrainSubsystemsDirectory(brainDir: string): string {
 
 export function initCommand(args: string[] = []): number {
   const targetDir = resolveProjectDirectory(args[0]);
-  const exists = brainExists(targetDir);
+  const alreadyExisted = brainExists(targetDir);
 
-  if (exists) {
-    console.log(`.brain already exists in ${targetDir}`);
-    return INIT_SUCCESS;
-  }
-
-  console.log(`Initializing Brainmap in ${targetDir}...`);
   const brainDir = ensureBrainDirectory(targetDir);
   createBrainIndexFile(brainDir);
   createBrainArchitectureFile(brainDir);
@@ -193,6 +187,12 @@ export function initCommand(args: string[] = []): number {
   createBrainHandoffFile(brainDir);
   createBrainDecisionsDirectory(brainDir);
   createBrainSubsystemsDirectory(brainDir);
-  console.log(`Successfully initialized Brain in ${brainDir}`);
+
+  if (alreadyExisted) {
+    console.log(`Brain already exists in ${targetDir} (verified structure).`);
+  } else {
+    console.log(`Successfully initialized Brain in ${brainDir}`);
+  }
+
   return INIT_SUCCESS;
 }
