@@ -77,10 +77,40 @@ export function createBrainArchitectureFile(brainDir: string): string {
   return archPath;
 }
 
+export const DEFAULT_STATE_TEMPLATE = `# Project State
+
+Current project state and development status.
+
+## Current Milestone
+
+- Initial setup
+
+## What is Implemented
+
+- Initial project structure initialized.
+
+## What is In Progress
+
+- Project configuration and architecture design.
+
+## Known Blockers
+
+- None.
+
+## Relevant Current Conditions
+
+- Brain initialized.
+
+## Immediate Next Work
+
+- Define core domain models and modules.
+- Set up automated testing pipeline.
+`;
+
 export function createBrainStateFile(brainDir: string): string {
   const statePath = path.join(brainDir, "state.md");
   if (!fs.existsSync(statePath)) {
-    fs.writeFileSync(statePath, "# Project State\n\nCurrent project state.\n", "utf8");
+    fs.writeFileSync(statePath, DEFAULT_STATE_TEMPLATE, "utf8");
   }
   return statePath;
 }
