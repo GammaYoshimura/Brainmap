@@ -44,3 +44,11 @@ export function detectModifiedFiles(
 
   return modified;
 }
+
+export function detectRemovedFiles(
+  currentFiles: FileModel[],
+  persistedFiles: FileModel[]
+): FileModel[] {
+  const currentPaths = new Set(currentFiles.map((f) => f.relativePath));
+  return persistedFiles.filter((f) => !currentPaths.has(f.relativePath));
+}
