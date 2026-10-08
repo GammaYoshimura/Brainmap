@@ -4,7 +4,7 @@ Current operational state of the Brainmap project.
 
 ## Current Milestone
 
-**M120**: Resolve exact path matches.
+**M121**: Resolve file-name matches.
 
 ## What is Implemented
 
@@ -64,10 +64,11 @@ Current operational state of the Brainmap project.
   - Created `route` command handler (`src/commands/route.ts`) and registered `route` command in CLI entry point and help text (`src/cli.ts`).
   - Implemented task query parser, query normalization, tokenization, and CLI argument handling (`src/router/query.ts`, `src/commands/route.ts`).
   - Implemented exact path matching resolver against candidate project and brain paths (`src/router/path-matcher.ts`).
+  - Implemented file name and stem matching resolver against candidate project and brain paths (`src/router/filename-matcher.ts`).
 
 ## What is In Progress
 
-- Completing M120: Resolve exact path matches.
+- Completing M121: Resolve file-name matches.
 
 ## Known Blockers
 
@@ -77,8 +78,8 @@ Current operational state of the Brainmap project.
 
 - Environment: Node.js v20+, TypeScript 5+, zero runtime dependencies.
 - Git repository synced with remote (`https://github.com/GammaYoshimura/Brainmap`).
-- 98 passing tests across the test suite.
+- 103 passing tests across the test suite.
 
 ## Immediate Next Work
 
-- Next milestone: **M121: Resolve file-name matches**.
+- Next milestone: **M122: Resolve subsystem matches**.
