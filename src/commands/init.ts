@@ -22,10 +22,23 @@ export function ensureBrainDirectory(targetDir: string): string {
   return brainPath;
 }
 
+export const DEFAULT_INDEX_TEMPLATE = `# Brain Index
+
+Global router for project knowledge.
+
+## Root Brain Documents
+
+- [architecture.md](architecture.md): Global architectural constitution, principles, and invariants.
+- [state.md](state.md): Current project state, implemented features, and immediate next steps.
+- [handoff.md](handoff.md): Session continuation document for AI agents and developers.
+- [decisions/](decisions/): Directory of Architectural Decision Records (ADRs).
+- [subsystems/](subsystems/): Directory of subsystem-specific indexes and documentation.
+`;
+
 export function createBrainIndexFile(brainDir: string): string {
   const indexPath = path.join(brainDir, "index.md");
   if (!fs.existsSync(indexPath)) {
-    fs.writeFileSync(indexPath, "# Brain Index\n\nGlobal router for project knowledge.\n", "utf8");
+    fs.writeFileSync(indexPath, DEFAULT_INDEX_TEMPLATE, "utf8");
   }
   return indexPath;
 }
