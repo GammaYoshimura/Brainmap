@@ -23,7 +23,7 @@ The handoff document ensures that any subsequent AI agent or developer session c
 ## Current Operational Handoff
 
 ### CURRENT MILESTONE
-M106: Support incremental map updates.
+M107: Detect relevant project changes.
 
 ### COMPLETED
 - Repository foundation (M001–M010).
@@ -44,29 +44,29 @@ M106: Support incremental map updates.
 - M104: Synthesized project map components into `project-map.md` in `.brain/` (`src/mapper/project-map.ts`).
 - M105: Added global routing link from `.brain/index.md` and automated routing integration in `ensureProjectMapRoutingInIndex`.
 - M106: Supported incremental map updates in `updateProjectMapIncrementally` invoked by `brainmap update`.
+- M107: Created change-relevance detector evaluating structural, manifest, entry-point, and module impacts of diffs (`src/mapper/change-detector.ts`).
 
 ### IN PROGRESS
-- Completing M106.
+- Completing M107.
 
 ### CHANGED FILES
-- `src/mapper/project-map.ts`
-- `src/commands/update.ts`
+- `src/mapper/change-detector.ts`
 - `tests/mapper.test.ts`
 - `.brain/state.md`
 - `.brain/handoff.md`
 
 ### TEST STATUS
-- 57/57 tests passing (`npm test`).
+- 58/58 tests passing (`npm test`).
 - TypeScript builds cleanly (`npm run build`).
 
 ### OPEN ISSUES
 - None.
 
 ### IMPORTANT DECISIONS
-- `updateCommand` triggers incremental regeneration of `project-map.md` when changes are detected and `.brain/project-map.md` exists.
+- Change relevance detection distinguishes between benign content modifications and changes that require structural map refreshes (entrypoints, manifests, directories, modules).
 
 ### NEXT ACTION
-- Proceed to M107: Detect relevant project changes.
+- Proceed to M108: Add mapper tests.
 
 ### CONTEXT TO LOAD
 - `brainmap_master_prompt.md`

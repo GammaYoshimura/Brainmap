@@ -8,6 +8,7 @@ import { buildEntryPointMap, formatEntryPointMap, inferEntryPointKind } from "..
 import { buildManifestMap, formatManifestMap } from "../src/mapper/manifest-map.js";
 import { groupDependenciesByKind, formatDependencyMap } from "../src/mapper/dependency-map.js";
 import { generateProjectMapContent, writeProjectMap, ensureProjectMapRoutingInIndex, updateProjectMapIncrementally } from "../src/mapper/project-map.js";
+import { detectRelevantProjectChanges, isMapUpdateRequired } from "../src/mapper/change-detector.js";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
@@ -265,4 +266,47 @@ test("updateProjectMapIncrementally refreshes project-map.md when present", () =
   } finally {
     fs.rmSync(tmpDir, { recursive: true, force: true });
   }
+});
+
+test("detectRelevantProjectChanges identifies structural impact of project diff", () => {
+  const fileEntry = createFileModel({ path: "src/cli.ts", relativePath: "src/cli.ts", name: "cli.ts", extension: ".ts", size: 100, isEntrypoint: true });
+  const fileManifest = createFileModel({ path: "package.json", relativePath: "package.json", name: "package.json", extension: ".json", size: 200 });
+
+  const diffWithEntrypoint = {
+    added: [fileEntry],
+    modified: [],
+    removed: [],
+    metadataChanges: [],
+    hasChanges: true,
+  };
+
+  const rel1 = detectRelevantProjectChanges(diffWithEntrypoint);
+  assert.equal(rel1.hasStructuralChanges, true);
+  assert.equal(rel1.affectsEntryPoints, true);
+  assert.equal(rel1.affectsModules, true);
+  assert.equal(isMapUpdateRequired(rel1), true);
+
+  const diffWithManifest = {
+    added: [],
+    modified: [fileManifest],
+    removed: [],
+    metadataChanges: [],
+    hasChanges: true,
+  };
+
+  const rel2 = detectRelevantProjectChanges(diffWithManifest);
+  assert.equal(rel2.hasStructuralChanges, true);
+  assert.equal(rel2.affectsManifestsOrDependencies, true);
+
+  const diffEmpty = {
+    added: [],
+    modified: [],
+    removed: [],
+    metadataChanges: [],
+    hasChanges: false,
+  };
+
+  const rel3 = detectRelevantProjectChanges(diffEmpty);
+  assert.equal(rel3.hasStructuralChanges, false);
+  assert.equal(isMapUpdateRequired(rel3), false);
 });
