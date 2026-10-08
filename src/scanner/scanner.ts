@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { normalizePath, toRelativePath } from "../core/paths.js";
+import { FileModel, createFileModel } from "../core/model.js";
 import {
   ExclusionConfig,
   createDefaultExclusionConfig,
@@ -12,6 +13,26 @@ export interface TraversalResult {
   rootPath: string;
   files: string[];
   directories: string[];
+}
+
+export function recordDiscoveredFile(fullPath: string, rootPath: string): FileModel {
+  const normPath = normalizePath(fullPath);
+  const relPath = toRelativePath(rootPath, fullPath);
+  const name = path.basename(fullPath);
+  const extension = path.extname(fullPath).toLowerCase();
+  const stat = fs.statSync(fullPath);
+
+  return createFileModel({
+    path: normPath,
+    relativePath: relPath,
+    name,
+    extension,
+    size: stat.size,
+  });
+}
+
+export function recordDiscoveredFiles(filePaths: string[], rootPath: string): FileModel[] {
+  return filePaths.map((filePath) => recordDiscoveredFile(filePath, rootPath));
 }
 
 export function traverseProject(
