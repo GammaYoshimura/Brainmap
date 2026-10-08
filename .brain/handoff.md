@@ -23,7 +23,7 @@ The handoff document ensures that any subsequent AI agent or developer session c
 ## Current Operational Handoff
 
 ### CURRENT MILESTONE
-M121: Resolve file-name matches.
+M122: Resolve subsystem matches.
 
 ### COMPLETED
 - Repository foundation (M001–M010).
@@ -41,35 +41,35 @@ M121: Resolve file-name matches.
   - M119: Implemented natural-language task query parsing, normalization, tokenization, and CLI argument integration (`src/router/query.ts`, `src/commands/route.ts`, `tests/route-query.test.ts`).
   - M120: Implemented exact path matching resolver against project and brain files (`src/router/path-matcher.ts`, `tests/route-path-matcher.test.ts`).
   - M121: Implemented file name and stem matching resolver against candidate paths (`src/router/filename-matcher.ts`, `tests/route-filename-matcher.test.ts`).
+  - M122: Implemented subsystem matching resolver with identifier, name, path, and token heuristics (`src/router/subsystem-matcher.ts`, `tests/route-subsystem-matcher.test.ts`).
 
 ### IN PROGRESS
-- Completing M121: Resolve file-name matches.
+- Completing M122: Resolve subsystem matches.
 
 ### CHANGED FILES
-- `src/router/filename-matcher.ts`
+- `src/router/subsystem-matcher.ts`
 - `src/router/index.ts`
-- `tests/route-filename-matcher.test.ts`
+- `tests/route-subsystem-matcher.test.ts`
 - `.brain/project-map.md`
 - `.brain/state.md`
 - `.brain/handoff.md`
 
 ### TEST STATUS
-- 103/103 tests passing (`npm test`).
+- 109/109 tests passing (`npm test`).
 - TypeScript builds cleanly (`npm run build`).
 
 ### OPEN ISSUES
 - None.
 
 ### IMPORTANT DECISIONS
-- Filename matching distinguishes exact file names from file stems, with exact filename matches prioritized over partial or stem matches.
+- Subsystem matching matches by id, full name, directory path, or partial tokens, assigning deterministic scoring weights.
 
 ### NEXT ACTION
-- Implement M122: Resolve subsystem matches.
+- Implement M123: Resolve Brain-document matches.
 
 ### CONTEXT TO LOAD
 - `brainmap_master_prompt.md`
 - `.brain/state.md`
 - `.brain/handoff.md`
 - `src/router/query.ts`
-- `src/router/path-matcher.ts`
-- `src/router/filename-matcher.ts`
+- `src/router/subsystem-matcher.ts`
