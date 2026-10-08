@@ -23,7 +23,7 @@ The handoff document ensures that any subsequent AI agent or developer session c
 ## Current Operational Handoff
 
 ### CURRENT MILESTONE
-M129: Return relevant tests.
+M130: Return relevant dependencies.
 
 ### COMPLETED
 - Repository foundation (M001–M010).
@@ -49,34 +49,35 @@ M129: Return relevant tests.
   - M127: Implemented relevant source file router integrating paths, filenames, subsystems, and symbols (`src/router/source-file-router.ts`, `tests/route-source-file-router.test.ts`).
   - M128: Implemented relevant ADR router (`src/router/adr-router.ts`, `tests/route-adr-router.test.ts`).
   - M129: Implemented relevant test router linking direct test mentions and matching test files corresponding to relevant source files (`src/router/test-router.ts`, `tests/route-test-router.test.ts`).
+  - M130: Implemented relevant dependency router matching declared manifest packages against task queries (`src/router/dependency-router.ts`, `tests/route-dependency-router.test.ts`).
 
 ### IN PROGRESS
-- Completing M129: Return relevant tests.
+- Completing M130: Return relevant dependencies.
 
 ### CHANGED FILES
-- `src/router/test-router.ts`
+- `src/router/dependency-router.ts`
 - `src/router/index.ts`
-- `tests/route-test-router.test.ts`
+- `tests/route-dependency-router.test.ts`
 - `.brain/project-map.md`
 - `.brain/state.md`
 - `.brain/handoff.md`
 
 ### TEST STATUS
-- 138/138 tests passing (`npm test`).
+- 141/141 tests passing (`npm test`).
 - TypeScript builds cleanly (`npm run build`).
 
 ### OPEN ISSUES
 - None.
 
 ### IMPORTANT DECISIONS
-- Relevant tests are identified via direct mentions as well as bidirectional correspondence to matched relevant source files.
+- Declared dependencies are extracted across all supported project manifests and ranked against package names, unscoped names, and components.
 
 ### NEXT ACTION
-- Implement M130: Return relevant dependencies.
+- Implement M131: Add structured output.
 
 ### CONTEXT TO LOAD
 - `.brain/index.md`
 - `.brain/state.md`
 - `.brain/handoff.md`
 - `src/router/query.ts`
-- `src/router/test-router.ts`
+- `src/router/dependency-router.ts`
