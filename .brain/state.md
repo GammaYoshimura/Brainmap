@@ -4,7 +4,7 @@ Current operational state of the Brainmap project.
 
 ## Current Milestone
 
-**M131**: Add structured output.
+**M132**: Add routing tests.
 
 ## What is Implemented
 
@@ -75,10 +75,11 @@ Current operational state of the Brainmap project.
   - Implemented relevant test router linking direct test mentions and matching test files corresponding to relevant source files (`src/router/test-router.ts`).
   - Implemented relevant dependency router matching declared manifest packages against task queries (`src/router/dependency-router.ts`).
   - Implemented structured routing pipeline and output formatters for text and JSON (`src/router/route-pipeline.ts`, `src/commands/route.ts`).
+  - Added routing end-to-end integration test suite verifying documents, ADRs, source files, tests, and dependencies across fixtures (`tests/routing-e2e.test.ts`).
 
 ## What is In Progress
 
-- Completing M131: Add structured output.
+- Completing Routing block (M118–M132).
 
 ## Known Blockers
 
@@ -88,8 +89,8 @@ Current operational state of the Brainmap project.
 
 - Environment: Node.js v20+, TypeScript 5+, zero runtime dependencies.
 - Git repository synced with remote (`https://github.com/GammaYoshimura/Brainmap`).
-- 144 passing tests across the test suite.
+- 147 passing tests across the test suite.
 
 ## Immediate Next Work
 
-- Next milestone: **M132: Add routing tests**.
+- Next block: **Context** (M133: Create `brainmap context`).

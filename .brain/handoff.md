@@ -23,7 +23,7 @@ The handoff document ensures that any subsequent AI agent or developer session c
 ## Current Operational Handoff
 
 ### CURRENT MILESTONE
-M131: Add structured output.
+M132: Add routing tests.
 
 ### COMPLETED
 - Repository foundation (M001–M010).
@@ -36,7 +36,7 @@ M131: Add structured output.
 - Project Structure Detection (M086–M096).
 - `brainmap map` block (M097–M108).
 - Specialized Documentation block (M109–M117).
-- Routing block:
+- Routing block (M118–M132) complete:
   - M118: Created `route` command handler (`src/commands/route.ts`), wired command dispatch and help description in CLI entry point (`src/cli.ts`).
   - M119: Implemented natural-language task query parsing, normalization, tokenization, and CLI argument integration (`src/router/query.ts`, `src/commands/route.ts`, `tests/route-query.test.ts`).
   - M120: Implemented exact path matching resolver against project and brain files (`src/router/path-matcher.ts`, `tests/route-path-matcher.test.ts`).
@@ -51,35 +51,33 @@ M131: Add structured output.
   - M129: Implemented relevant test router linking direct test mentions and matching test files corresponding to relevant source files (`src/router/test-router.ts`, `tests/route-test-router.test.ts`).
   - M130: Implemented relevant dependency router matching declared manifest packages against task queries (`src/router/dependency-router.ts`, `tests/route-dependency-router.test.ts`).
   - M131: Implemented structured routing pipeline and output formatters for human-readable text and structured JSON (`src/router/route-pipeline.ts`, `src/commands/route.ts`, `tests/route-pipeline.test.ts`).
+  - M132: Added comprehensive routing integration and CLI end-to-end test suite (`tests/routing-e2e.test.ts`).
 
 ### IN PROGRESS
-- Completing M131: Add structured output.
+- Concluding Routing block (M118–M132).
 
 ### CHANGED FILES
-- `src/router/route-pipeline.ts`
-- `src/commands/route.ts`
-- `src/router/index.ts`
-- `tests/route-pipeline.test.ts`
+- `tests/routing-e2e.test.ts`
 - `.brain/project-map.md`
 - `.brain/state.md`
 - `.brain/handoff.md`
 
 ### TEST STATUS
-- 144/144 tests passing (`npm test`).
+- 147/147 tests passing (`npm test`).
 - TypeScript builds cleanly (`npm run build`).
 
 ### OPEN ISSUES
 - None.
 
 ### IMPORTANT DECISIONS
-- The routing pipeline consolidates all matchers and routers into `RouteResult`, with human-readable CLI formatting by default and JSON output with `--json`.
+- The entire routing engine is deterministic, requires zero external services or front-end LLMs, and correctly maps queries to documents, code, tests, ADRs, and dependencies.
 
 ### NEXT ACTION
-- Implement M132: Add routing tests.
+- Proceed to next block: **Context** (M133: Create `brainmap context`).
 
 ### CONTEXT TO LOAD
 - `.brain/index.md`
 - `.brain/state.md`
 - `.brain/handoff.md`
-- `src/router/query.ts`
+- `src/router/index.ts`
 - `src/router/route-pipeline.ts`
