@@ -10,3 +10,4 @@ Global router for Brainmap project knowledge.
 - **[routing.md](routing.md)**: Routing principles, context selection dimensions, and token efficiency heuristics.
 - **[decisions/](decisions/)**: Directory of Architectural Decision Records (ADRs) recording architecturally significant choices, rationale, and consequences.
 - **[subsystems/](subsystems/)**: Directory of subsystem-specific indexes, contracts, and specialized documentation.
+  - **[subsystems/scanner/](subsystems/scanner/)**: Scanner subsystem routing and exclusion behavior specifications.
