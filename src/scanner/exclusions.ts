@@ -11,10 +11,22 @@ export const COMMON_DEPENDENCY_DIRECTORIES: readonly string[] = [
   "env",
 ];
 
+export const COMMON_BUILD_DIRECTORIES: readonly string[] = [
+  "dist",
+  "build",
+  "out",
+  "target",
+  "bin",
+  "obj",
+  ".dart_tool",
+  "coverage",
+];
+
 export interface ExclusionConfig {
   useGitignore: boolean;
   excludeGit: boolean;
   excludeDependencies: boolean;
+  excludeBuildOutputs: boolean;
   ignoredDirectories: string[];
   customPatterns: string[];
 }
@@ -24,7 +36,8 @@ export function createDefaultExclusionConfig(): ExclusionConfig {
     useGitignore: true,
     excludeGit: true,
     excludeDependencies: true,
-    ignoredDirectories: [...COMMON_DEPENDENCY_DIRECTORIES],
+    excludeBuildOutputs: true,
+    ignoredDirectories: [...COMMON_DEPENDENCY_DIRECTORIES, ...COMMON_BUILD_DIRECTORIES],
     customPatterns: [],
   };
 }
@@ -33,6 +46,12 @@ export function isDependencyDirectory(relativePath: string): boolean {
   const normalized = relativePath.replace(/\\/g, "/").replace(/^\/+|\/+$/g, "");
   const segments = normalized.split("/");
   return segments.some((segment) => COMMON_DEPENDENCY_DIRECTORIES.includes(segment));
+}
+
+export function isBuildDirectory(relativePath: string): boolean {
+  const normalized = relativePath.replace(/\\/g, "/").replace(/^\/+|\/+$/g, "");
+  const segments = normalized.split("/");
+  return segments.some((segment) => COMMON_BUILD_DIRECTORIES.includes(segment));
 }
 
 export function detectGitignore(projectRoot: string): string | null {
@@ -130,6 +149,9 @@ export function shouldExclude(
     return true;
   }
   if (config.excludeDependencies && isDependencyDirectory(relativePath)) {
+    return true;
+  }
+  if (config.excludeBuildOutputs && isBuildDirectory(relativePath)) {
     return true;
   }
   if (config.useGitignore && gitignorePatterns.length > 0 && isGitignored(relativePath, gitignorePatterns, isDirectory)) {
