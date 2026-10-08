@@ -4,7 +4,7 @@ Current operational state of the Brainmap project.
 
 ## Current Milestone
 
-**M104**: Generate `project-map.md`.
+**M105**: Add global routing from `.brain/index.md`.
 
 ## What is Implemented
 
@@ -37,7 +37,7 @@ Current operational state of the Brainmap project.
   - Manifest registry and detectors for `package.json`, `pubspec.yaml`, `composer.json`, Python manifests (`pyproject.toml`, `requirements.txt`), .NET manifests (`*.csproj`), and Cargo (`Cargo.toml`) (`src/detector/manifests.ts`).
   - Declared dependencies extraction across all supported manifests.
   - Comprehensive end-to-end detection test suite (`tests/detection.test.ts`).
-- **`brainmap map` (M097–M104)**:
+- **`brainmap map` (M097–M105)**:
   - Created `map` command handler (`src/commands/map.ts`) and registered `map` in CLI entry point and help text (`src/cli.ts`).
   - Created directory-map generation and Markdown formatting (`src/mapper/directory-map.ts`).
   - Created file-map generation with directory grouping, size formatting, and metadata (`src/mapper/file-map.ts`).
@@ -46,10 +46,11 @@ Current operational state of the Brainmap project.
   - Created manifest mapping with package metadata, ecosystem identification, and dependency counting (`src/mapper/manifest-map.ts`).
   - Created declared-dependency mapping categorized by production, development, peer, and optional scopes (`src/mapper/dependency-map.ts`).
   - Implemented `project-map.md` synthesis engine and file generator (`src/mapper/project-map.ts`).
+  - Added global routing link from `.brain/index.md` and automated template routing (`.brain/index.md`, `src/commands/init.ts`).
 
 ## What is In Progress
 
-- Completing M104: Generate `project-map.md`.
+- Completing M105: Add global routing from `.brain/index.md`.
 
 ## Known Blockers
 
@@ -59,9 +60,9 @@ Current operational state of the Brainmap project.
 
 - Environment: Node.js v20+, TypeScript 5+, zero runtime dependencies.
 - Git repository synced with remote (`https://github.com/GammaYoshimura/Brainmap`).
-- 55 passing tests across the test suite.
+- 56 passing tests across the test suite.
 
 ## Immediate Next Work
 
-- **M105**: Add global routing from `.brain/index.md`.
 - **M106**: Support incremental map updates.
+- **M107**: Detect relevant project changes.

@@ -7,7 +7,7 @@ import { detectModules, formatModuleMap } from "../src/mapper/module-map.js";
 import { buildEntryPointMap, formatEntryPointMap, inferEntryPointKind } from "../src/mapper/entrypoint-map.js";
 import { buildManifestMap, formatManifestMap } from "../src/mapper/manifest-map.js";
 import { groupDependenciesByKind, formatDependencyMap } from "../src/mapper/dependency-map.js";
-import { generateProjectMapContent, writeProjectMap } from "../src/mapper/project-map.js";
+import { generateProjectMapContent, writeProjectMap, ensureProjectMapRoutingInIndex } from "../src/mapper/project-map.js";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
@@ -220,6 +220,27 @@ test("writeProjectMap creates .brain/project-map.md on disk", () => {
     assert.equal(saved, path.join(tmpDir, ".brain", "project-map.md"));
     assert.equal(fs.existsSync(saved), true);
     assert.equal(fs.readFileSync(saved, "utf8"), "# Test Map Content\n");
+  } finally {
+    fs.rmSync(tmpDir, { recursive: true, force: true });
+  }
+});
+
+test("ensureProjectMapRoutingInIndex adds routing link to .brain/index.md", () => {
+  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "brainmap-index-routing-test-"));
+  try {
+    const brainDir = path.join(tmpDir, ".brain");
+    fs.mkdirSync(brainDir, { recursive: true });
+    const indexPath = path.join(brainDir, "index.md");
+    fs.writeFileSync(indexPath, "# Brain Index\n\n## Root Brain Documents\n\n- [architecture.md](architecture.md)\n", "utf8");
+
+    const added = ensureProjectMapRoutingInIndex(brainDir);
+    assert.equal(added, true);
+    const updated = fs.readFileSync(indexPath, "utf8");
+    assert.match(updated, /project-map\.md/);
+
+    // Idempotent
+    const secondCall = ensureProjectMapRoutingInIndex(brainDir);
+    assert.equal(secondCall, false);
   } finally {
     fs.rmSync(tmpDir, { recursive: true, force: true });
   }

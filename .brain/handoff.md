@@ -23,7 +23,7 @@ The handoff document ensures that any subsequent AI agent or developer session c
 ## Current Operational Handoff
 
 ### CURRENT MILESTONE
-M104: Generate `project-map.md`.
+M105: Add global routing from `.brain/index.md`.
 
 ### COMPLETED
 - Repository foundation (M001–M010).
@@ -42,30 +42,31 @@ M104: Generate `project-map.md`.
 - M102: Created manifest mapping with package metadata, ecosystem identification, and dependency counting (`src/mapper/manifest-map.ts`).
 - M103: Created declared-dependency mapping categorized by production, development, peer, and optional scopes (`src/mapper/dependency-map.ts`).
 - M104: Synthesized project map components into `project-map.md` in `.brain/` (`src/mapper/project-map.ts`).
+- M105: Added global routing link from `.brain/index.md` and automated routing integration in `ensureProjectMapRoutingInIndex`.
 
 ### IN PROGRESS
-- Completing M104.
+- Completing M105.
 
 ### CHANGED FILES
+- `.brain/index.md`
+- `src/commands/init.ts`
 - `src/mapper/project-map.ts`
-- `src/commands/map.ts`
 - `tests/mapper.test.ts`
-- `.brain/project-map.md`
 - `.brain/state.md`
 - `.brain/handoff.md`
 
 ### TEST STATUS
-- 55/55 tests passing (`npm test`).
+- 56/56 tests passing (`npm test`).
 - TypeScript builds cleanly (`npm run build`).
 
 ### OPEN ISSUES
 - None.
 
 ### IMPORTANT DECISIONS
-- `project-map.md` combines overview, entry points, modules, manifests, dependencies, directory tree, and file maps into a single deterministic Markdown view inside `.brain/`.
+- `.brain/index.md` acts as the global router and directly indexes `project-map.md` for AI agent discovery.
 
 ### NEXT ACTION
-- Proceed to M105: Add global routing from `.brain/index.md`.
+- Proceed to M106: Support incremental map updates.
 
 ### CONTEXT TO LOAD
 - `brainmap_master_prompt.md`

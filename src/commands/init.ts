@@ -31,6 +31,7 @@ Global router for project knowledge.
 - [architecture.md](architecture.md): Global architectural constitution, principles, and invariants.
 - [state.md](state.md): Current project state, implemented features, and immediate next steps.
 - [handoff.md](handoff.md): Session continuation document for AI agents and developers.
+- [project-map.md](project-map.md): Structural project map with files, directories, modules, and dependencies.
 - [decisions/](decisions/): Directory of Architectural Decision Records (ADRs).
 - [subsystems/](subsystems/): Directory of subsystem-specific indexes and documentation.
 `;

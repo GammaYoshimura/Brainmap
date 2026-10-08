@@ -59,6 +59,27 @@ export function generateProjectMapContent(data: ProjectMapData): string {
   return sections.join("\n");
 }
 
+export function ensureProjectMapRoutingInIndex(brainDir: string): boolean {
+  const indexPath = path.join(brainDir, "index.md");
+  if (!fs.existsSync(indexPath)) {
+    return false;
+  }
+  const content = fs.readFileSync(indexPath, "utf8");
+  if (content.includes("project-map.md")) {
+    return false;
+  }
+
+  const link = "- **[project-map.md](project-map.md)**: Generated map of project files, directories, modules, entry points, manifests, and declared dependencies.\n";
+  let updated: string;
+  if (content.includes("## Root Brain Documents\n\n")) {
+    updated = content.replace("## Root Brain Documents\n\n", `## Root Brain Documents\n\n${link}`);
+  } else {
+    updated = `${content.trim()}\n\n${link}`;
+  }
+  fs.writeFileSync(indexPath, updated, "utf8");
+  return true;
+}
+
 export function writeProjectMap(projectRoot: string, content: string): string {
   const brainDir = path.join(projectRoot, ".brain");
   if (!fs.existsSync(brainDir)) {
@@ -66,5 +87,6 @@ export function writeProjectMap(projectRoot: string, content: string): string {
   }
   const mapPath = path.join(brainDir, "project-map.md");
   fs.writeFileSync(mapPath, content, "utf8");
+  ensureProjectMapRoutingInIndex(brainDir);
   return mapPath;
 }
