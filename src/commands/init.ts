@@ -193,5 +193,6 @@ export function initCommand(args: string[] = []): number {
   createBrainHandoffFile(brainDir);
   createBrainDecisionsDirectory(brainDir);
   createBrainSubsystemsDirectory(brainDir);
+  console.log(`Successfully initialized Brain in ${brainDir}`);
   return INIT_SUCCESS;
 }
