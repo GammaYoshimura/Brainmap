@@ -4,7 +4,7 @@ Current operational state of the Brainmap project.
 
 ## Current Milestone
 
-**M117**: Add documentation-generation tests.
+**M118**: Create `brainmap route`.
 
 ## What is Implemented
 
@@ -60,10 +60,12 @@ Current operational state of the Brainmap project.
   - Implemented related Brain documents recording (`src/subsystems/related-brain-docs.ts`), establishing two-way links between subsystems and architectural constitution, global routers, project maps, and relevant ADRs.
   - Implemented subsystem routing integration (`src/subsystems/routing.ts`), synchronizing subsystem router links into `.brain/index.md` and generating the master `.brain/subsystems/index.md`.
   - Added specialized documentation end-to-end integration and edge-case test suite (`tests/docgen-e2e.test.ts`).
+- **Routing (M118–M132)**:
+  - Created `route` command handler (`src/commands/route.ts`) and registered `route` command in CLI entry point and help text (`src/cli.ts`).
 
 ## What is In Progress
 
-- Completing M117: Add documentation-generation tests.
+- Completing M118: Create `brainmap route`.
 
 ## Known Blockers
 
@@ -73,8 +75,8 @@ Current operational state of the Brainmap project.
 
 - Environment: Node.js v20+, TypeScript 5+, zero runtime dependencies.
 - Git repository synced with remote (`https://github.com/GammaYoshimura/Brainmap`).
-- 86 passing tests across the test suite.
+- 87 passing tests across the test suite.
 
 ## Immediate Next Work
 
-- Next block: **Routing** (M118: Create `brainmap route`).
+- Next milestone: **M119: Accept a natural-language task query**.

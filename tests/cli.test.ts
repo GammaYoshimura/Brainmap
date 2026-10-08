@@ -17,6 +17,11 @@ test("cli dispatches map command successfully", () => {
   assert.equal(code, EXIT_SUCCESS);
 });
 
+test("cli dispatches route command successfully", () => {
+  const code = run(["route"]);
+  assert.equal(code, EXIT_SUCCESS);
+});
+
 test("cli returns failure on unknown option", () => {
   const code = run(["--unknown-flag"]);
   assert.equal(code, EXIT_FAILURE);

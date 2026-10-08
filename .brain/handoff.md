@@ -23,7 +23,7 @@ The handoff document ensures that any subsequent AI agent or developer session c
 ## Current Operational Handoff
 
 ### CURRENT MILESTONE
-M117: Add documentation-generation tests.
+M118: Create `brainmap route`.
 
 ### COMPLETED
 - Repository foundation (M001–M010).
@@ -35,40 +35,37 @@ M117: Add documentation-generation tests.
 - `brainmap update` command (M074–M085).
 - Project Structure Detection (M086–M096).
 - `brainmap map` block (M097–M108).
-- Specialized Documentation block (M109–M117) complete:
-  - M109: Created subsystem index generation (`src/subsystems/subsystem-index.ts`) for single subsystem indices and master `.brain/subsystems/index.md`.
-  - M110: Implemented natural subsystem grouping detection (`src/subsystems/groupings.ts`) from file hierarchy, architectural containers, entrypoints, and flat structures.
-  - M111: Implemented subsystem document generation (`src/subsystems/generator.ts`) generating comprehensive Markdown documentation per detected subsystem grouping into `.brain/subsystems/<id>/index.md`.
-  - M112: Created important subsystem file identification and prioritization (`src/subsystems/important-files.ts`), scoring domain-core, index facades, contracts, configurations, and entry points.
-  - M113: Implemented subsystem entry point recording (`src/subsystems/entrypoints.ts`), capturing executable entry points, module export facades, and handler dispatchers.
-  - M114: Implemented subsystem dependency recording (`src/subsystems/dependencies.ts`), statically resolving internal cross-subsystem imports, declared external package dependencies, and standard library runtimes.
-  - M115: Implemented related Brain documents recording (`src/subsystems/related-brain-docs.ts`), establishing links to constitution, router, project map, specialized documents, and ADRs.
-  - M116: Implemented subsystem routing integration (`src/subsystems/routing.ts`), synchronizing subsystem router links into `.brain/index.md` and generating the master `.brain/subsystems/index.md`.
-  - M117: Added end-to-end integration and edge-case test suite verifying the complete specialized documentation workflow (`tests/docgen-e2e.test.ts`).
+- Specialized Documentation block (M109–M117).
+- Routing block initiated:
+  - M118: Created `route` command handler (`src/commands/route.ts`), wired command dispatch and help description in CLI entry point (`src/cli.ts`), and verified with test suite.
 
 ### IN PROGRESS
-- Completing M117 and finishing block Specialized Documentation.
+- Completing M118: Create `brainmap route`.
 
 ### CHANGED FILES
-- `src/subsystems/index.ts`
-- `tests/docgen-e2e.test.ts`
+- `src/commands/route.ts`
+- `src/cli.ts`
+- `tests/cli.test.ts`
+- `.brain/project-map.md`
 - `.brain/state.md`
 - `.brain/handoff.md`
 
 ### TEST STATUS
-- 86/86 tests passing (`npm test`).
+- 87/87 tests passing (`npm test`).
 - TypeScript builds cleanly (`npm run build`).
 
 ### OPEN ISSUES
 - None.
 
 ### IMPORTANT DECISIONS
-- The entire Specialized Documentation subsystem operates with 100% deterministic static analysis and zero external runtime dependencies.
+- `route` command accepts CLI arguments for upcoming task query processing, starting with a clean modular command handler following existing CLI conventions.
 
 ### NEXT ACTION
-- Proceed to next block: **Routing** (M118: Create `brainmap route`).
+- Implement M119: Accept a natural-language task query.
 
 ### CONTEXT TO LOAD
 - `brainmap_master_prompt.md`
 - `.brain/state.md`
 - `.brain/handoff.md`
+- `src/commands/route.ts`
+- `src/cli.ts`
