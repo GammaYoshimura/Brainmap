@@ -4,7 +4,7 @@ Current operational state of the Brainmap project.
 
 ## Current Milestone
 
-**M109**: Create subsystem index generation.
+**M110**: Detect natural subsystem groupings.
 
 ## What is Implemented
 
@@ -46,17 +46,17 @@ Current operational state of the Brainmap project.
   - Created manifest mapping with package metadata, ecosystem identification, and dependency counting (`src/mapper/manifest-map.ts`).
   - Created declared-dependency mapping categorized by production, development, peer, and optional scopes (`src/mapper/dependency-map.ts`).
   - Implemented `project-map.md` synthesis engine and file generator (`src/mapper/project-map.ts`).
-  - Added global routing link from `.brain/index.md` and automated template routing (`.brain/index.md`, `src/commands/init.ts`).
+  - Added global routing link from `.brain/index.md` and automated routing integration in `ensureProjectMapRoutingInIndex`.
   - Implemented incremental map updates synchronized with `brainmap update` workflow (`src/mapper/project-map.ts`, `src/commands/update.ts`).
   - Created change-relevance detector evaluating structural, manifest, entry-point, and module impacts of diffs (`src/mapper/change-detector.ts`).
   - Created comprehensive unit, edge-case, and end-to-end test suite for mapping across multi-stack fixtures (`tests/mapper.test.ts`).
-
 - **Specialized Documentation (M109–M117)**:
   - Created subsystem index generation (`src/subsystems/subsystem-index.ts`) supporting individual subsystem index generation (`generateSubsystemIndex`) and master subsystems index generation (`generateSubsystemsIndex`).
+  - Implemented natural subsystem grouping detection (`src/subsystems/groupings.ts`) analyzing container prefixes (`src/`, `lib/`, `packages/`), top-level architectural domain folders, entry-point groupings, and flat-structure fallbacks.
 
 ## What is In Progress
 
-- Completing M109: Create subsystem index generation.
+- Completing M110: Detect natural subsystem groupings.
 
 ## Known Blockers
 
@@ -66,8 +66,8 @@ Current operational state of the Brainmap project.
 
 - Environment: Node.js v20+, TypeScript 5+, zero runtime dependencies.
 - Git repository synced with remote (`https://github.com/GammaYoshimura/Brainmap`).
-- 65 passing tests across the test suite.
+- 70 passing tests across the test suite.
 
 ## Immediate Next Work
 
-- Next milestone: **M110**: Detect natural subsystem groupings.
+- Next milestone: **M111**: Generate a document for each detected subsystem.
