@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { normalizePath, toRelativePath } from "../core/paths.js";
-import { FileModel, createFileModel } from "../core/model.js";
+import { FileModel, DirectoryModel, createFileModel, createDirectoryModel } from "../core/model.js";
 import {
   ExclusionConfig,
   createDefaultExclusionConfig,
@@ -33,6 +33,45 @@ export function recordDiscoveredFile(fullPath: string, rootPath: string): FileMo
 
 export function recordDiscoveredFiles(filePaths: string[], rootPath: string): FileModel[] {
   return filePaths.map((filePath) => recordDiscoveredFile(filePath, rootPath));
+}
+
+export function recordDiscoveredDirectory(
+  dirPath: string,
+  rootPath: string,
+  allFiles: string[] = [],
+  allDirs: string[] = []
+): DirectoryModel {
+  const normPath = normalizePath(dirPath);
+  const relPath = toRelativePath(rootPath, dirPath);
+  const name = path.basename(dirPath) || path.basename(rootPath);
+
+  const fileCount = allFiles.filter((f) => {
+    const parent = path.dirname(f);
+    return normalizePath(parent) === normPath;
+  }).length;
+
+  const subdirectories = allDirs
+    .filter((d) => {
+      const parent = path.dirname(d);
+      return normalizePath(parent) === normPath;
+    })
+    .map((d) => toRelativePath(rootPath, d));
+
+  return createDirectoryModel({
+    path: normPath,
+    relativePath: relPath,
+    name,
+    fileCount,
+    subdirectories,
+  });
+}
+
+export function recordDiscoveredDirectories(
+  dirPaths: string[],
+  rootPath: string,
+  allFiles: string[] = []
+): DirectoryModel[] {
+  return dirPaths.map((dir) => recordDiscoveredDirectory(dir, rootPath, allFiles, dirPaths));
 }
 
 export function traverseProject(
