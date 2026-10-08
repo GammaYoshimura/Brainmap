@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 import { initCommand } from "./commands/init.js";
+import { scanCommand } from "./commands/scan.js";
 
 export const HELP_TEXT = `Brainmap - Project memory and context-routing tool
 
@@ -9,6 +10,7 @@ Usage:
 
 Commands:
   init           Initialize Brain structure in current project
+  scan           Scan project files and structure
 
 Options:
   -h, --help     Show this help message
@@ -27,6 +29,10 @@ export function run(args: string[] = process.argv.slice(2)): number {
 
   if (command === "init") {
     return initCommand(args.slice(1));
+  }
+
+  if (command === "scan") {
+    return scanCommand(args.slice(1));
   }
 
   if (args.length > 0 && args[0].startsWith("-")) {
