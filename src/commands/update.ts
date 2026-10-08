@@ -47,8 +47,10 @@ export function updateCommand(args: string[] = []): number {
     traversal.rootPath
   );
 
-  const baseModel =
-    previousState.model ?? createProjectModel(path.basename(targetDir), traversal.rootPath);
+  const baseModel = previousState.model ?? {
+    ...createProjectModel(path.basename(targetDir), traversal.rootPath),
+    files: previousState.files ?? [],
+  };
 
   const updatedModel = updateProjectModelIncrementally(baseModel, {
     addedFiles: diff.added,

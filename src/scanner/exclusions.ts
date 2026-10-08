@@ -25,6 +25,7 @@ export const COMMON_BUILD_DIRECTORIES: readonly string[] = [
 export interface ExclusionConfig {
   useGitignore: boolean;
   excludeGit: boolean;
+  excludeBrain?: boolean;
   excludeDependencies: boolean;
   excludeBuildOutputs: boolean;
   ignoredDirectories: string[];
@@ -35,11 +36,22 @@ export function createDefaultExclusionConfig(): ExclusionConfig {
   return {
     useGitignore: true,
     excludeGit: true,
+    excludeBrain: true,
     excludeDependencies: true,
     excludeBuildOutputs: true,
     ignoredDirectories: [...COMMON_DEPENDENCY_DIRECTORIES, ...COMMON_BUILD_DIRECTORIES],
     customPatterns: [],
   };
+}
+
+export function isBrainDirectory(relativePath: string): boolean {
+  const normalized = relativePath.replace(/\\/g, "/").replace(/^\/+|\/+$/g, "");
+  return (
+    normalized === ".brain" ||
+    normalized.startsWith(".brain/") ||
+    normalized.includes("/.brain/") ||
+    normalized.endsWith("/.brain")
+  );
 }
 
 export function isDependencyDirectory(relativePath: string): boolean {
@@ -158,6 +170,9 @@ export function shouldExclude(
   isDirectory = false
 ): boolean {
   if (config.excludeGit && isGitDirectory(relativePath)) {
+    return true;
+  }
+  if (config.excludeBrain && isBrainDirectory(relativePath)) {
     return true;
   }
   if (config.excludeDependencies && isDependencyDirectory(relativePath)) {
