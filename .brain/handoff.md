@@ -23,7 +23,7 @@ The handoff document ensures that any subsequent AI agent or developer session c
 ## Current Operational Handoff
 
 ### CURRENT MILESTONE
-M126: Return relevant Brain documents.
+M127: Return relevant source files.
 
 ### COMPLETED
 - Repository foundation (M001–M010).
@@ -46,35 +46,35 @@ M126: Return relevant Brain documents.
   - M124: Implemented exported symbol extraction and symbol-matching resolver with exact and case-insensitive scoring (`src/router/symbol-matcher.ts`, `tests/route-symbol-matcher.test.ts`).
   - M125: Implemented relevance ranking engine with score aggregation, reason tracking, and category weighting (`src/router/ranking.ts`, `tests/route-ranking.test.ts`).
   - M126: Implemented relevant Brain document router (`src/router/brain-doc-router.ts`, `tests/route-brain-doc-router.test.ts`).
+  - M127: Implemented relevant source file router integrating paths, filenames, subsystems, and symbols (`src/router/source-file-router.ts`, `tests/route-source-file-router.test.ts`).
 
 ### IN PROGRESS
-- Completing M126: Return relevant Brain documents.
+- Completing M127: Return relevant source files.
 
 ### CHANGED FILES
-- `src/router/brain-doc-router.ts`
-- `src/router/ranking.ts`
+- `src/router/source-file-router.ts`
 - `src/router/index.ts`
-- `tests/route-brain-doc-router.test.ts`
+- `tests/route-source-file-router.test.ts`
 - `.brain/project-map.md`
 - `.brain/state.md`
 - `.brain/handoff.md`
 
 ### TEST STATUS
-- 129/129 tests passing (`npm test`).
+- 132/132 tests passing (`npm test`).
 - TypeScript builds cleanly (`npm run build`).
 
 ### OPEN ISSUES
 - None.
 
 ### IMPORTANT DECISIONS
-- Discovering Brain documents recursively reads all `.md` documents under `.brain/` (root, decisions, subsystems), scores them with role-intent, path, and filename matchers, and ranks results.
+- Source files are filtered from tests and Brain documents, matched across path, filename, subsystem containers, and exported symbols.
 
 ### NEXT ACTION
-- Implement M127: Return relevant source files.
+- Implement M128: Return relevant ADRs.
 
 ### CONTEXT TO LOAD
 - `.brain/index.md`
 - `.brain/state.md`
 - `.brain/handoff.md`
 - `src/router/query.ts`
-- `src/router/brain-doc-router.ts`
+- `src/router/source-file-router.ts`
