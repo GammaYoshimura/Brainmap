@@ -7,3 +7,4 @@ export * from "./symbol-matcher.js";
 export * from "./ranking.js";
 export * from "./brain-doc-router.js";
 export * from "./source-file-router.js";
+export * from "./adr-router.js";

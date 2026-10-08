@@ -23,7 +23,7 @@ The handoff document ensures that any subsequent AI agent or developer session c
 ## Current Operational Handoff
 
 ### CURRENT MILESTONE
-M127: Return relevant source files.
+M128: Return relevant ADRs.
 
 ### COMPLETED
 - Repository foundation (M001–M010).
@@ -47,34 +47,35 @@ M127: Return relevant source files.
   - M125: Implemented relevance ranking engine with score aggregation, reason tracking, and category weighting (`src/router/ranking.ts`, `tests/route-ranking.test.ts`).
   - M126: Implemented relevant Brain document router (`src/router/brain-doc-router.ts`, `tests/route-brain-doc-router.test.ts`).
   - M127: Implemented relevant source file router integrating paths, filenames, subsystems, and symbols (`src/router/source-file-router.ts`, `tests/route-source-file-router.test.ts`).
+  - M128: Implemented relevant ADR router (`src/router/adr-router.ts`, `tests/route-adr-router.test.ts`).
 
 ### IN PROGRESS
-- Completing M127: Return relevant source files.
+- Completing M128: Return relevant ADRs.
 
 ### CHANGED FILES
-- `src/router/source-file-router.ts`
+- `src/router/adr-router.ts`
 - `src/router/index.ts`
-- `tests/route-source-file-router.test.ts`
+- `tests/route-adr-router.test.ts`
 - `.brain/project-map.md`
 - `.brain/state.md`
 - `.brain/handoff.md`
 
 ### TEST STATUS
-- 132/132 tests passing (`npm test`).
+- 135/135 tests passing (`npm test`).
 - TypeScript builds cleanly (`npm run build`).
 
 ### OPEN ISSUES
 - None.
 
 ### IMPORTANT DECISIONS
-- Source files are filtered from tests and Brain documents, matched across path, filename, subsystem containers, and exported symbols.
+- ADRs are parsed from `.brain/decisions/*.md`, matched by ID, title, and query keywords, and boosted when decision/ADR intent is detected.
 
 ### NEXT ACTION
-- Implement M128: Return relevant ADRs.
+- Implement M129: Return relevant tests.
 
 ### CONTEXT TO LOAD
 - `.brain/index.md`
 - `.brain/state.md`
 - `.brain/handoff.md`
 - `src/router/query.ts`
-- `src/router/source-file-router.ts`
+- `src/router/adr-router.ts`
