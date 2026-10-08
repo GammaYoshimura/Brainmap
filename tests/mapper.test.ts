@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import { createDirectoryModel, createFileModel } from "../src/core/model.js";
 import { buildDirectoryMap, formatDirectoryMap } from "../src/mapper/directory-map.js";
 import { buildFileMap, formatFileMap, formatFileSize } from "../src/mapper/file-map.js";
+import { detectModules, formatModuleMap } from "../src/mapper/module-map.js";
 
 test("buildDirectoryMap sorts directories and calculates depth", () => {
   const dirs = [
@@ -73,4 +74,51 @@ test("formatFileMap produces structured markdown with metadata", () => {
   assert.match(formatted, /### File Map/);
   assert.match(formatted, /#### `src\/` \(1 file\)/);
   assert.match(formatted, /- `cli.ts` \(TypeScript, 1.5 KB, entry-point\)/);
+});
+
+test("detectModules identifies functional modules in src and top-level directories", () => {
+  const dirs = [
+    createDirectoryModel({ path: "src/core", relativePath: "src/core", name: "core" }),
+    createDirectoryModel({ path: "src/commands", relativePath: "src/commands", name: "commands" }),
+    createDirectoryModel({ path: "tests", relativePath: "tests", name: "tests" }),
+  ];
+  const files = [
+    createFileModel({ path: "src/core/model.ts", relativePath: "src/core/model.ts", name: "model.ts", extension: ".ts", size: 1000, language: "TypeScript" }),
+    createFileModel({ path: "src/commands/init.ts", relativePath: "src/commands/init.ts", name: "init.ts", extension: ".ts", size: 2000, language: "TypeScript" }),
+    createFileModel({ path: "tests/cli.test.ts", relativePath: "tests/cli.test.ts", name: "cli.test.ts", extension: ".ts", size: 500, language: "TypeScript" }),
+  ];
+
+  const modules = detectModules(files, dirs);
+  assert.equal(modules.length, 3);
+  assert.equal(modules[0].name, "commands");
+  assert.equal(modules[0].relativePath, "src/commands");
+  assert.equal(modules[1].name, "core");
+  assert.equal(modules[1].relativePath, "src/core");
+  assert.equal(modules[2].name, "tests");
+});
+
+test("formatModuleMap produces readable markdown", () => {
+  const modules = [
+    {
+      name: "core",
+      relativePath: "src/core",
+      fileCount: 4,
+      languages: ["TypeScript"],
+      hasEntrypoint: false,
+      sampleFiles: ["model.ts"],
+    },
+    {
+      name: "cli",
+      relativePath: "src",
+      fileCount: 1,
+      languages: ["TypeScript"],
+      hasEntrypoint: true,
+      sampleFiles: ["cli.ts"],
+    },
+  ];
+
+  const formatted = formatModuleMap(modules);
+  assert.match(formatted, /### Module Map/);
+  assert.match(formatted, /- \*\*`core`\*\* \(`src\/core\/`\) — 4 files \(TypeScript\)/);
+  assert.match(formatted, /- \*\*`cli`\*\* \(`src\/`\) — 1 file \(TypeScript\) \[entry-point\]/);
 });

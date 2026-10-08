@@ -23,7 +23,7 @@ The handoff document ensures that any subsequent AI agent or developer session c
 ## Current Operational Handoff
 
 ### CURRENT MILESTONE
-M099: Create file-map generation.
+M100: Create module-map generation.
 
 ### COMPLETED
 - Repository foundation (M001–M010).
@@ -37,28 +37,29 @@ M099: Create file-map generation.
 - M097: Created `map` command handler and registered CLI entrypoint with help text.
 - M098: Created directory-map generation model and formatting (`src/mapper/directory-map.ts`).
 - M099: Created file-map generation with directory grouping and size formatting (`src/mapper/file-map.ts`).
+- M100: Created module-map generation with container inspection and language aggregation (`src/mapper/module-map.ts`).
 
 ### IN PROGRESS
-- Completing M099.
+- Completing M100.
 
 ### CHANGED FILES
-- `src/mapper/file-map.ts`
+- `src/mapper/module-map.ts`
 - `tests/mapper.test.ts`
 - `.brain/state.md`
 - `.brain/handoff.md`
 
 ### TEST STATUS
-- 47/47 tests passing (`npm test`).
+- 49/49 tests passing (`npm test`).
 - TypeScript builds cleanly (`npm run build`).
 
 ### OPEN ISSUES
 - None.
 
 ### IMPORTANT DECISIONS
-- File map groups files by directory with readable size descriptions (B, KB, MB) and entry-point indicators.
+- Module mapping groups cohesive directory roots (such as `src/*`, `packages/*`, top-level code folders) and lists language makeup and entry points.
 
 ### NEXT ACTION
-- Proceed to M100: Create module-map generation.
+- Proceed to M101: Create entry-point mapping.
 
 ### CONTEXT TO LOAD
 - `brainmap_master_prompt.md`
