@@ -116,7 +116,7 @@ test("generateDocumentsForSubsystems writes document for each detected subsystem
 
     const cliContent = fs.readFileSync(cliFile, "utf8");
     assert.ok(cliContent.includes("# CLI Subsystem"));
-    assert.ok(cliContent.includes("`src/cli.ts` [entry-point]"));
+    assert.ok(cliContent.includes("`src/cli.ts` [cli]"));
   } finally {
     fs.rmSync(tmpDir, { recursive: true, force: true });
   }

@@ -4,7 +4,7 @@ Current operational state of the Brainmap project.
 
 ## Current Milestone
 
-**M112**: Record important subsystem files.
+**M113**: Record subsystem entry points.
 
 ## What is Implemented
 
@@ -55,10 +55,11 @@ Current operational state of the Brainmap project.
   - Implemented natural subsystem grouping detection (`src/subsystems/groupings.ts`) analyzing container prefixes (`src/`, `lib/`, `packages/`), top-level architectural domain folders, entry-point groupings, and flat-structure fallbacks.
   - Implemented subsystem document generation (`src/subsystems/generator.ts`) generating comprehensive Markdown documentation per detected subsystem grouping into `.brain/subsystems/<id>/index.md`.
   - Created important subsystem file identification and prioritization (`src/subsystems/important-files.ts`), identifying core domain files, contracts/types, facades, entry points, and configurations.
+  - Implemented subsystem entry point recording (`src/subsystems/entrypoints.ts`), capturing executable entry points, module export facades, and handler dispatchers.
 
 ## What is In Progress
 
-- Completing M112: Record important subsystem files.
+- Completing M113: Record subsystem entry points.
 
 ## Known Blockers
 
@@ -68,8 +69,8 @@ Current operational state of the Brainmap project.
 
 - Environment: Node.js v20+, TypeScript 5+, zero runtime dependencies.
 - Git repository synced with remote (`https://github.com/GammaYoshimura/Brainmap`).
-- 75 passing tests across the test suite.
+- 77 passing tests across the test suite.
 
 ## Immediate Next Work
 
-- Next milestone: **M113**: Record subsystem entry points.
+- Next milestone: **M114**: Record known subsystem dependencies.

@@ -7,6 +7,11 @@ import {
   formatImportantFiles,
   ImportantSubsystemFile,
 } from "./important-files.js";
+import {
+  recordSubsystemEntryPoints,
+  formatSubsystemEntryPoints,
+  SubsystemEntryPoint,
+} from "./entrypoints.js";
 
 /**
  * Result of generating a document for a subsystem.
@@ -69,7 +74,7 @@ export function generateSubsystemDocument(
   }
   lines.push("");
 
-  // Entry Points section (extended in M113)
+  // Entry Points section (M113)
   lines.push("## Entry Points");
   lines.push("");
   if (options.entryPoints && options.entryPoints.length > 0) {
@@ -77,14 +82,8 @@ export function generateSubsystemDocument(
       lines.push(`- \`${normalizePath(ep)}\``);
     }
   } else {
-    const entryFiles = grouping.files.filter((f) => f.isEntrypoint);
-    if (entryFiles.length > 0) {
-      for (const ef of entryFiles) {
-        lines.push(`- \`${normalizePath(ef.relativePath)}\` [entry-point]`);
-      }
-    } else {
-      lines.push("_No dedicated entry points detected in this subsystem._");
-    }
+    const entryPoints = recordSubsystemEntryPoints(grouping);
+    lines.push(...formatSubsystemEntryPoints(entryPoints));
   }
   lines.push("");
 

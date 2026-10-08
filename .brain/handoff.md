@@ -23,7 +23,7 @@ The handoff document ensures that any subsequent AI agent or developer session c
 ## Current Operational Handoff
 
 ### CURRENT MILESTONE
-M112: Record important subsystem files.
+M113: Record subsystem entry points.
 
 ### COMPLETED
 - Repository foundation (M001–M010).
@@ -40,29 +40,31 @@ M112: Record important subsystem files.
   - M110: Implemented natural subsystem grouping detection (`src/subsystems/groupings.ts`) from file hierarchy, architectural containers, entrypoints, and flat structures.
   - M111: Implemented subsystem document generation (`src/subsystems/generator.ts`) generating comprehensive Markdown documentation per detected subsystem grouping into `.brain/subsystems/<id>/index.md`.
   - M112: Created important subsystem file identification and prioritization (`src/subsystems/important-files.ts`), scoring domain-core, index facades, contracts, configurations, and entry points.
+  - M113: Implemented subsystem entry point recording (`src/subsystems/entrypoints.ts`), capturing executable entry points, module export facades, and handler dispatchers.
 
 ### IN PROGRESS
-- Completing M112: Record important subsystem files.
+- Completing M113: Record subsystem entry points.
 
 ### CHANGED FILES
-- `src/subsystems/important-files.ts`
+- `src/subsystems/entrypoints.ts`
 - `src/subsystems/generator.ts`
-- `tests/subsystem-important-files.test.ts`
+- `tests/subsystem-entrypoints.test.ts`
+- `tests/subsystem-generator.test.ts`
 - `.brain/state.md`
 - `.brain/handoff.md`
 
 ### TEST STATUS
-- 75/75 tests passing (`npm test`).
+- 77/77 tests passing (`npm test`).
 - TypeScript builds cleanly (`npm run build`).
 
 ### OPEN ISSUES
 - None.
 
 ### IMPORTANT DECISIONS
-- Important files are ranked deterministically by architectural relevance, helping AI models quickly pinpoint key subsystem contracts and logic without scanning every file.
+- Subsystem entry point recording captures both executable binaries and internal public API facades, documenting access boundaries.
 
 ### NEXT ACTION
-- Proceed to M113: Record subsystem entry points.
+- Proceed to M114: Record known subsystem dependencies.
 
 ### CONTEXT TO LOAD
 - `brainmap_master_prompt.md`
