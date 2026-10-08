@@ -1,5 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
+import { FileModel } from "../core/model.js";
 import { PersistedScanState } from "./scanner.js";
 
 export function getPersistedScanPath(projectRoot: string): string {
@@ -17,4 +18,12 @@ export function loadPersistedScanState(projectRoot: string): PersistedScanState 
   } catch {
     return null;
   }
+}
+
+export function detectAddedFiles(
+  currentFiles: FileModel[],
+  persistedFiles: FileModel[]
+): FileModel[] {
+  const persistedPaths = new Set(persistedFiles.map((f) => f.relativePath));
+  return currentFiles.filter((f) => !persistedPaths.has(f.relativePath));
 }
