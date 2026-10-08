@@ -23,7 +23,7 @@ The handoff document ensures that any subsequent AI agent or developer session c
 ## Current Operational Handoff
 
 ### CURRENT MILESTONE
-M102: Create manifest mapping.
+M103: Create declared-dependency mapping.
 
 ### COMPLETED
 - Repository foundation (M001–M010).
@@ -40,28 +40,29 @@ M102: Create manifest mapping.
 - M100: Created module-map generation with container inspection and language aggregation (`src/mapper/module-map.ts`).
 - M101: Created entry-point mapping with role categorization and Markdown formatting (`src/mapper/entrypoint-map.ts`).
 - M102: Created manifest mapping with package metadata, ecosystem identification, and dependency counting (`src/mapper/manifest-map.ts`).
+- M103: Created declared-dependency mapping categorized by production, development, peer, and optional scopes (`src/mapper/dependency-map.ts`).
 
 ### IN PROGRESS
-- Completing M102.
+- Completing M103.
 
 ### CHANGED FILES
-- `src/mapper/manifest-map.ts`
+- `src/mapper/dependency-map.ts`
 - `tests/mapper.test.ts`
 - `.brain/state.md`
 - `.brain/handoff.md`
 
 ### TEST STATUS
-- 52/52 tests passing (`npm test`).
+- 53/53 tests passing (`npm test`).
 - TypeScript builds cleanly (`npm run build`).
 
 ### OPEN ISSUES
 - None.
 
 ### IMPORTANT DECISIONS
-- Manifest mapping maps detected manifests with ecosystem information, resolved project name/version, and total declared dependency counts.
+- Dependencies are grouped by kind (production, development, peer, optional) and list declared version constraints and manifest origins.
 
 ### NEXT ACTION
-- Proceed to M103: Create declared-dependency mapping.
+- Proceed to M104: Generate `project-map.md`.
 
 ### CONTEXT TO LOAD
 - `brainmap_master_prompt.md`

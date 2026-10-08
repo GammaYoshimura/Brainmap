@@ -1,11 +1,12 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { createDirectoryModel, createFileModel } from "../src/core/model.js";
+import { createDirectoryModel, createFileModel, createDependencyModel } from "../src/core/model.js";
 import { buildDirectoryMap, formatDirectoryMap } from "../src/mapper/directory-map.js";
 import { buildFileMap, formatFileMap, formatFileSize } from "../src/mapper/file-map.js";
 import { detectModules, formatModuleMap } from "../src/mapper/module-map.js";
 import { buildEntryPointMap, formatEntryPointMap, inferEntryPointKind } from "../src/mapper/entrypoint-map.js";
 import { buildManifestMap, formatManifestMap } from "../src/mapper/manifest-map.js";
+import { groupDependenciesByKind, formatDependencyMap } from "../src/mapper/dependency-map.js";
 
 test("buildDirectoryMap sorts directories and calculates depth", () => {
   const dirs = [
@@ -163,4 +164,24 @@ test("buildManifestMap and formatManifestMap map project manifests", () => {
   const formatted = formatManifestMap(map);
   assert.match(formatted, /### Manifests/);
   assert.match(formatted, /- \*\*`package.json`\*\* \(Node.js\) — `brainmap`/);
+});
+
+test("groupDependenciesByKind and formatDependencyMap map declared dependencies", () => {
+  const deps = [
+    createDependencyModel({ name: "express", version: "^4.18.2", kind: "production", manifestPath: "package.json" }),
+    createDependencyModel({ name: "typescript", version: "^5.0.0", kind: "development", manifestPath: "package.json" }),
+  ];
+
+  const groups = groupDependenciesByKind(deps);
+  assert.equal(groups.length, 2);
+  assert.equal(groups[0].kind, "production");
+  assert.equal(groups[0].dependencies.length, 1);
+  assert.equal(groups[1].kind, "development");
+
+  const formatted = formatDependencyMap(deps);
+  assert.match(formatted, /### Declared Dependencies/);
+  assert.match(formatted, /#### Production \(1\)/);
+  assert.match(formatted, /- \*\*`express`\*\* \(`\^4.18.2`\) — _package.json_/);
+  assert.match(formatted, /#### Development \(1\)/);
+  assert.match(formatted, /- \*\*`typescript`\*\* \(`\^5.0.0`\) — _package.json_/);
 });
