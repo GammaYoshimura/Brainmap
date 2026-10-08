@@ -195,10 +195,18 @@ export function formatProjectSummary(summary: ProjectScanSummary): string {
   return lines.join("\n");
 }
 
+export interface PersistedScanState {
+  summary: ProjectScanSummary;
+  scannedAt: string;
+  files?: FileModel[];
+  model?: ProjectModel;
+}
+
 export function persistScanResults(
   targetDirOrBrainDir: string,
   summary: ProjectScanSummary,
-  model?: ProjectModel
+  model?: ProjectModel,
+  files?: FileModel[]
 ): string {
   const isBrainDir = path.basename(targetDirOrBrainDir) === ".brain";
   const brainDir = isBrainDir ? targetDirOrBrainDir : path.join(targetDirOrBrainDir, ".brain");
@@ -208,9 +216,10 @@ export function persistScanResults(
   }
 
   const outputPath = path.join(brainDir, "scan.json");
-  const payload = {
+  const payload: PersistedScanState = {
     summary,
     scannedAt: new Date().toISOString(),
+    files: files ?? model?.files ?? [],
     ...(model ? { model } : {}),
   };
 

@@ -29,7 +29,7 @@ export function scanCommand(args: string[] = []): number {
 
   const brainDir = path.join(targetDir, ".brain");
   if (fs.existsSync(brainDir) && fs.statSync(brainDir).isDirectory()) {
-    const savedPath = persistScanResults(brainDir, summary);
+    const savedPath = persistScanResults(brainDir, summary, undefined, files);
     console.log(`Scan results persisted to ${savedPath}`);
   }
 
