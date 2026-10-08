@@ -1,9 +1,20 @@
 import fs from "node:fs";
 import path from "node:path";
 
+export const COMMON_DEPENDENCY_DIRECTORIES: readonly string[] = [
+  "node_modules",
+  "vendor",
+  ".pub-cache",
+  "Pods",
+  ".venv",
+  "venv",
+  "env",
+];
+
 export interface ExclusionConfig {
   useGitignore: boolean;
   excludeGit: boolean;
+  excludeDependencies: boolean;
   ignoredDirectories: string[];
   customPatterns: string[];
 }
@@ -12,9 +23,16 @@ export function createDefaultExclusionConfig(): ExclusionConfig {
   return {
     useGitignore: true,
     excludeGit: true,
-    ignoredDirectories: [],
+    excludeDependencies: true,
+    ignoredDirectories: [...COMMON_DEPENDENCY_DIRECTORIES],
     customPatterns: [],
   };
+}
+
+export function isDependencyDirectory(relativePath: string): boolean {
+  const normalized = relativePath.replace(/\\/g, "/").replace(/^\/+|\/+$/g, "");
+  const segments = normalized.split("/");
+  return segments.some((segment) => COMMON_DEPENDENCY_DIRECTORIES.includes(segment));
 }
 
 export function detectGitignore(projectRoot: string): string | null {
@@ -109,6 +127,9 @@ export function shouldExclude(
   isDirectory = false
 ): boolean {
   if (config.excludeGit && isGitDirectory(relativePath)) {
+    return true;
+  }
+  if (config.excludeDependencies && isDependencyDirectory(relativePath)) {
     return true;
   }
   if (config.useGitignore && gitignorePatterns.length > 0 && isGitignored(relativePath, gitignorePatterns, isDirectory)) {
