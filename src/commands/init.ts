@@ -54,6 +54,14 @@ export function createBrainHandoffFile(brainDir: string): string {
   return handoffPath;
 }
 
+export function createBrainDecisionsDirectory(brainDir: string): string {
+  const decisionsPath = path.join(brainDir, "decisions");
+  if (!fs.existsSync(decisionsPath)) {
+    fs.mkdirSync(decisionsPath, { recursive: true });
+  }
+  return decisionsPath;
+}
+
 export function initCommand(args: string[] = []): number {
   const targetDir = resolveProjectDirectory(args[0]);
   const exists = brainExists(targetDir);
@@ -69,5 +77,6 @@ export function initCommand(args: string[] = []): number {
   createBrainArchitectureFile(brainDir);
   createBrainStateFile(brainDir);
   createBrainHandoffFile(brainDir);
+  createBrainDecisionsDirectory(brainDir);
   return INIT_SUCCESS;
 }
