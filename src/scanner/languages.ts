@@ -46,3 +46,29 @@ export function detectLanguageByExtension(extensionOrPath: string): string | und
     : path.extname(extensionOrPath).toLowerCase();
   return EXTENSION_TO_LANGUAGE_MAP[ext];
 }
+
+export interface LanguageSummary {
+  name: string;
+  fileCount: number;
+  percentage: number;
+}
+
+export function detectProjectLanguages(files: { language?: string }[]): LanguageSummary[] {
+  const counts: Record<string, number> = {};
+  let totalWithLanguage = 0;
+
+  for (const file of files) {
+    if (file.language) {
+      counts[file.language] = (counts[file.language] ?? 0) + 1;
+      totalWithLanguage++;
+    }
+  }
+
+  return Object.entries(counts)
+    .map(([name, fileCount]) => ({
+      name,
+      fileCount,
+      percentage: totalWithLanguage > 0 ? Math.round((fileCount / totalWithLanguage) * 1000) / 10 : 0,
+    }))
+    .sort((a, b) => b.fileCount - a.fileCount || a.name.localeCompare(b.name));
+}
