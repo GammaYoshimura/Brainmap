@@ -22,15 +22,15 @@ export interface CandidateMatchInput {
   metadata?: unknown;
 }
 
-export function createRelevanceRanking(
+export function createRelevanceRanking<T = unknown>(
   inputs: CandidateMatchInput[]
-): RankedItem[] {
+): RankedItem<T>[] {
   if (!inputs || inputs.length === 0) {
     return [];
   }
 
   // Deduplicate and aggregate matches by path
-  const aggregated = new Map<string, RankedItem>();
+  const aggregated = new Map<string, RankedItem<T>>();
 
   for (const input of inputs) {
     const existing = aggregated.get(input.path);
@@ -40,7 +40,7 @@ export function createRelevanceRanking(
         category: input.category,
         score: Math.min(100, Math.max(0, input.score)),
         reasons: [input.reason],
-        metadata: input.metadata,
+        metadata: input.metadata as T,
       });
     } else {
       // If multiple match criteria hit the same item, boost the score
@@ -50,7 +50,7 @@ export function createRelevanceRanking(
         existing.reasons.push(input.reason);
       }
       if (input.metadata && !existing.metadata) {
-        existing.metadata = input.metadata;
+        existing.metadata = input.metadata as T;
       }
     }
   }

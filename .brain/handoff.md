@@ -23,7 +23,7 @@ The handoff document ensures that any subsequent AI agent or developer session c
 ## Current Operational Handoff
 
 ### CURRENT MILESTONE
-M125: Create relevance ranking.
+M126: Return relevant Brain documents.
 
 ### COMPLETED
 - Repository foundation (M001–M010).
@@ -45,34 +45,36 @@ M125: Create relevance ranking.
   - M123: Implemented Brain document matching resolver with role-intent keywords, exact paths, and subsystem mappings (`src/router/brain-doc-matcher.ts`, `tests/route-brain-doc-matcher.test.ts`).
   - M124: Implemented exported symbol extraction and symbol-matching resolver with exact and case-insensitive scoring (`src/router/symbol-matcher.ts`, `tests/route-symbol-matcher.test.ts`).
   - M125: Implemented relevance ranking engine with score aggregation, reason tracking, and category weighting (`src/router/ranking.ts`, `tests/route-ranking.test.ts`).
+  - M126: Implemented relevant Brain document router (`src/router/brain-doc-router.ts`, `tests/route-brain-doc-router.test.ts`).
 
 ### IN PROGRESS
-- Completing M125: Create relevance ranking.
+- Completing M126: Return relevant Brain documents.
 
 ### CHANGED FILES
+- `src/router/brain-doc-router.ts`
 - `src/router/ranking.ts`
 - `src/router/index.ts`
-- `tests/route-ranking.test.ts`
+- `tests/route-brain-doc-router.test.ts`
 - `.brain/project-map.md`
 - `.brain/state.md`
 - `.brain/handoff.md`
 
 ### TEST STATUS
-- 125/125 tests passing (`npm test`).
+- 129/129 tests passing (`npm test`).
 - TypeScript builds cleanly (`npm run build`).
 
 ### OPEN ISSUES
 - None.
 
 ### IMPORTANT DECISIONS
-- Relevance ranking aggregates multiple match reasons per path, boosts score upon multiple match hits, and breaks ties deterministically.
+- Discovering Brain documents recursively reads all `.md` documents under `.brain/` (root, decisions, subsystems), scores them with role-intent, path, and filename matchers, and ranks results.
 
 ### NEXT ACTION
-- Implement M126: Return relevant Brain documents.
+- Implement M127: Return relevant source files.
 
 ### CONTEXT TO LOAD
 - `.brain/index.md`
 - `.brain/state.md`
 - `.brain/handoff.md`
 - `src/router/query.ts`
-- `src/router/ranking.ts`
+- `src/router/brain-doc-router.ts`
