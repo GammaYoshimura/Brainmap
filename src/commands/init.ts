@@ -43,10 +43,36 @@ export function createBrainIndexFile(brainDir: string): string {
   return indexPath;
 }
 
+export const DEFAULT_ARCHITECTURE_TEMPLATE = `# Architecture
+
+Global architectural constitution.
+
+## 1. Core Principles
+
+- High cohesion and low coupling across modules.
+- Deterministic behavior and clear ownership of data.
+- Small, focused files and single-responsibility components.
+
+## 2. Subsystem Boundaries
+
+- Define clear boundaries between presentation, business logic, and data layers.
+- Avoid circular dependencies between modules.
+
+## 3. Dependency Rules
+
+- Core domain logic must not depend on external UI frameworks.
+- Dependencies flow inward toward domain models.
+
+## 4. Architectural Invariants
+
+- Preserve codebase consistency and established patterns.
+- Keep architectural documentation synchronized with actual code.
+`;
+
 export function createBrainArchitectureFile(brainDir: string): string {
   const archPath = path.join(brainDir, "architecture.md");
   if (!fs.existsSync(archPath)) {
-    fs.writeFileSync(archPath, "# Architecture\n\nGlobal architectural constitution.\n", "utf8");
+    fs.writeFileSync(archPath, DEFAULT_ARCHITECTURE_TEMPLATE, "utf8");
   }
   return archPath;
 }
