@@ -134,3 +134,12 @@ export function collectFileExtensions(files: (FileModel | string)[]): string[] {
   }
   return Array.from(extensions).sort();
 }
+
+export function countFilesByExtension(files: (FileModel | string)[]): Record<string, number> {
+  const counts: Record<string, number> = {};
+  for (const item of files) {
+    const ext = typeof item === "string" ? extractFileExtension(item) : item.extension;
+    counts[ext] = (counts[ext] ?? 0) + 1;
+  }
+  return counts;
+}
