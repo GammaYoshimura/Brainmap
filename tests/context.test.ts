@@ -5,6 +5,12 @@ import { createContextInput } from "../src/context/context-selector.js";
 import { selectRelevantBrainDocuments } from "../src/context/brain-doc-selector.js";
 import { selectRelevantSourceCode } from "../src/context/source-code-selector.js";
 import { filterByRelevance, DEFAULT_MIN_RELEVANCE_SCORE } from "../src/context/relevance-filter.js";
+import {
+  createContextBudget,
+  canIncludeInBudget,
+  recordInBudget,
+  truncateContentToLimit,
+} from "../src/context/context-limits.js";
 
 test("createContextInput uses routing results as input", () => {
   const query = parseTaskQuery("Refactor query parser and check test runner");
@@ -60,4 +66,26 @@ test("filterByRelevance and minRelevanceScore exclude low-relevance files", () =
   const strictFiltered = filterByRelevance(items, 60);
   assert.equal(strictFiltered.length, 1);
   assert.equal(strictFiltered[0].path, "high.ts");
+});
+
+test("createContextBudget and canIncludeInBudget enforce size and file limits", () => {
+  const budget = createContextBudget(100, 2);
+  assert.equal(budget.currentCharacters, 0);
+  assert.equal(budget.currentFiles, 0);
+
+  assert.equal(canIncludeInBudget(budget, 50), true);
+  recordInBudget(budget, 50);
+  assert.equal(budget.currentCharacters, 50);
+  assert.equal(budget.currentFiles, 1);
+
+  assert.equal(canIncludeInBudget(budget, 60), false); // Exceeds 100
+  assert.equal(canIncludeInBudget(budget, 30), true);
+  recordInBudget(budget, 30);
+  assert.equal(budget.currentFiles, 2);
+
+  assert.equal(canIncludeInBudget(budget, 10), false); // Max files reached
+
+  const truncated = truncateContentToLimit("Hello world, this is a long text", 10);
+  assert.equal(truncated.truncated, true);
+  assert.match(truncated.content, /Hello worl/);
 });
