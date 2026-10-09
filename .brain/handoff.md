@@ -23,7 +23,7 @@ The handoff document ensures that any subsequent AI agent or developer session c
 ## Current Operational Handoff
 
 ### CURRENT MILESTONE
-M145: Create `brainmap handoff`.
+M146: Read current state.
 
 ### COMPLETED
 - Repository foundation (M001–M010).
@@ -38,35 +38,34 @@ M145: Create `brainmap handoff`.
 - Specialized Documentation block (M109–M117).
 - Routing block (M118–M132).
 - Context Selection block (M133–M144).
-- Handoff block commenced:
-  - M145: Created `handoff` command handler (`src/commands/handoff.ts`), wired command dispatch and help description in CLI entry point (`src/cli.ts`), added CLI execution test (`tests/cli.test.ts`).
+- Handoff block:
+  - M145: Created `handoff` command handler (`src/commands/handoff.ts`), wired command dispatch and help description in CLI entry point (`src/cli.ts`).
+  - M146: Implemented state reader (`src/handoff/state-reader.ts`) to parse and structure operational state from `.brain/state.md`.
 
 ### IN PROGRESS
 - Handoff block (M145–M158).
 
 ### CHANGED FILES
-- `src/commands/handoff.ts`
-- `src/cli.ts`
-- `tests/cli.test.ts`
+- `src/handoff/state-reader.ts`
+- `tests/handoff.test.ts`
 - `.brain/state.md`
 - `.brain/handoff.md`
 
 ### TEST STATUS
-- 163/163 tests passing (`npm test`).
+- 165/165 tests passing (`npm test`).
 - TypeScript builds cleanly (`npm run build`).
 
 ### OPEN ISSUES
 - None.
 
 ### IMPORTANT DECISIONS
-- `brainmap handoff` command initial skeleton created with path resolution, command wiring, and CLI options.
+- The state reader parses sections of `.brain/state.md` robustly into structured fields while tolerating missing sections.
 
 ### NEXT ACTION
-- Proceed to M146: Read current state.
+- Proceed to M147: Read current milestone.
 
 ### CONTEXT TO LOAD
 - `.brain/index.md`
 - `.brain/state.md`
 - `.brain/handoff.md`
-- `src/commands/handoff.ts`
-- `src/cli.ts`
+- `src/handoff/state-reader.ts`
