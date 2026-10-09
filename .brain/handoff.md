@@ -23,7 +23,7 @@ The handoff document ensures that any subsequent AI agent or developer session c
 ## Current Operational Handoff
 
 ### CURRENT MILESTONE
-M143: Show a concise context summary.
+M144: Add context-selection tests.
 
 ### COMPLETED
 - Repository foundation (M001–M010).
@@ -37,7 +37,7 @@ M143: Show a concise context summary.
 - `brainmap map` block (M097–M108).
 - Specialized Documentation block (M109–M117).
 - Routing block (M118–M132).
-- Context Selection block in progress:
+- Context Selection block (M133–M144) complete:
   - M133: Created `context` command handler (`src/commands/context.ts`), wired command dispatch and help description in CLI entry point (`src/cli.ts`).
   - M134: Implemented task query acceptance, validation, and error reporting for `brainmap context` (`src/commands/context.ts`, `tests/cli.test.ts`).
   - M135: Connected routing output to context input via `createContextInput` (`src/context/context-selector.ts`, `tests/context.test.ts`).
@@ -49,34 +49,33 @@ M143: Show a concise context summary.
   - M141: Implemented plain-text context formatting (`src/context/formatter.ts`, `tests/context.test.ts`).
   - M142: Implemented JSON context serialization and CLI `--json` flag integration (`src/context/formatter.ts`, `src/commands/context.ts`, `tests/context.test.ts`).
   - M143: Implemented concise context summary generation and formatting with CLI `--summary` flag (`src/context/formatter.ts`, `src/commands/context.ts`, `tests/context.test.ts`).
+  - M144: Added end-to-end context-selection test suite with multi-tier fixture verification and CLI execution (`tests/context-e2e.test.ts`).
 
 ### IN PROGRESS
-- Context Selection block (M133–M144).
+- Concluding Context Selection block (M133–M144).
 
 ### CHANGED FILES
-- `src/context/formatter.ts`
-- `src/commands/context.ts`
-- `tests/context.test.ts`
+- `tests/context-e2e.test.ts`
 - `.brain/project-map.md`
 - `.brain/state.md`
 - `.brain/handoff.md`
 
 ### TEST STATUS
-- 159/159 tests passing (`npm test`).
+- 162/162 tests passing (`npm test`).
 - TypeScript builds cleanly (`npm run build`).
 
 ### OPEN ISSUES
 - None.
 
 ### IMPORTANT DECISIONS
-- The `--summary` option displays high-level item counts, character weights, and omission statistics without printing full file bodies.
+- The entire context selection pipeline is deterministic, respects token and character budgets, prioritizes architectural constitution documents, and outputs plain text or structured JSON.
 
 ### NEXT ACTION
-- Implement M144: Add context-selection tests.
+- Proceed to next block: **Handoff** (M145: Create `brainmap handoff`).
 
 ### CONTEXT TO LOAD
 - `.brain/index.md`
 - `.brain/state.md`
 - `.brain/handoff.md`
 - `src/context/context-selector.ts`
-- `src/context/formatter.ts`
+- `src/commands/context.ts`

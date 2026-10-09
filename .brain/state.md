@@ -4,7 +4,7 @@ Current operational state of the Brainmap project.
 
 ## Current Milestone
 
-**M143**: Show a concise context summary.
+**M144**: Add context-selection tests.
 
 ## What is Implemented
 
@@ -89,10 +89,11 @@ Current operational state of the Brainmap project.
   - Implemented plain-text context output formatting (`formatContextText`) with file delimiters, scores, and metadata (`src/context/formatter.ts`).
   - Implemented JSON context output formatting (`formatContextJson`) and CLI `--json` support with end-to-end context assembly (`assembleContext`) (`src/context/formatter.ts`, `src/context/context-selector.ts`, `src/commands/context.ts`).
   - Implemented concise context summary generation and formatting (`generateContextSummary`, `formatContextSummary`) and CLI `--summary` flag (`src/context/formatter.ts`, `src/commands/context.ts`).
+  - Added comprehensive context-selection unit, budget limit, formatting, and end-to-end CLI integration test suite (`tests/context.test.ts`, `tests/context-e2e.test.ts`).
 
 ## What is In Progress
 
-- Context Selection block (M133–M144).
+- Completing Context Selection block (M133–M144).
 
 ## Known Blockers
 
@@ -102,8 +103,8 @@ Current operational state of the Brainmap project.
 
 - Environment: Node.js v20+, TypeScript 5+, zero runtime dependencies.
 - Git repository synced with remote (`https://github.com/GammaYoshimura/Brainmap`).
-- 159 passing tests across the test suite.
+- 162 passing tests across the test suite.
 
 ## Immediate Next Work
 
-- **M144**: Add context-selection tests.
+- Next block: **Handoff** (M145: Create `brainmap handoff`).
