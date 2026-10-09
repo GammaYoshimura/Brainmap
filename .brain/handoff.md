@@ -23,7 +23,7 @@ The handoff document ensures that any subsequent AI agent or developer session c
 ## Current Operational Handoff
 
 ### CURRENT MILESTONE
-M167: Generate a health report.
+M168: Return meaningful exit codes.
 
 ### COMPLETED
 - Repository foundation (M001–M010).
@@ -49,33 +49,33 @@ M167: Generate a health report.
   - M165: Implemented routing inconsistency checker (`src/checker/routing-inconsistency-checker.ts`) detecting missing core constitution documents, missing router targets, and circular references.
   - M166: Implemented map synchronization checker (`src/checker/map-sync-checker.ts`) detecting changed source files not yet mapped in `.brain/project-map.md`.
   - M167: Implemented health report generator (`src/checker/health-reporter.ts`) and wired formatted diagnostic reporting into `brainmap check`.
+  - M168: Implemented meaningful exit codes returning `CHECK_SUCCESS = 0` on healthy status and `CHECK_FAILURE = 1` when problems are detected.
 
 ### IN PROGRESS
-- Pausing work after milestone M167 per user instruction.
+- Health Checks block (M159–M169).
 
 ### CHANGED FILES
-- `src/checker/health-reporter.ts`
 - `src/commands/check.ts`
+- `src/checker/map-sync-checker.ts`
 - `tests/checker.test.ts`
 - `.brain/state.md`
 - `.brain/handoff.md`
 
 ### TEST STATUS
-- 194/194 tests passing (`npm test`).
+- 195/195 tests passing (`npm test`).
 - TypeScript builds cleanly (`npm run build`).
 
 ### OPEN ISSUES
 - None.
 
 ### IMPORTANT DECISIONS
-- The health report synthesizes all integrity checkers into a single diagnostic report and formats the result clearly for human and AI inspection.
+- `brainmap check` returns standard exit code 0 when all health checks pass and exit code 1 when issues are found.
 
 ### NEXT ACTION
-- Resume next session with M168: Return meaningful exit codes.
+- Proceed to M169: Add health-check tests.
 
 ### CONTEXT TO LOAD
 - .brain/index.md
 - .brain/state.md
 - .brain/handoff.md
 - src/commands/check.ts
-- src/checker/health-reporter.ts

@@ -4,7 +4,7 @@ Current operational state of the Brainmap project.
 
 ## Current Milestone
 
-**M167**: Generate a health report.
+**M168**: Return meaningful exit codes.
 
 ## What is Implemented
 
@@ -117,10 +117,11 @@ Current operational state of the Brainmap project.
   - M165: Implemented routing inconsistency checker (`src/checker/routing-inconsistency-checker.ts`) detecting missing core constitution documents, missing router targets, and circular references.
   - M166: Implemented map synchronization checker (`src/checker/map-sync-checker.ts`) detecting changed source files not yet mapped in `.brain/project-map.md`.
   - M167: Implemented health report generator (`src/checker/health-reporter.ts`) and wired formatted diagnostic reporting into `brainmap check`.
+  - M168: Implemented meaningful exit codes returning `CHECK_SUCCESS = 0` on healthy status and `CHECK_FAILURE = 1` when problems are detected.
 
 ## What is In Progress
 
-- Concluding milestone M167 (session stopping point per user request).
+- Health Checks block (M159–M169).
 
 ## Known Blockers
 
@@ -130,8 +131,8 @@ Current operational state of the Brainmap project.
 
 - Environment: Node.js v20+, TypeScript 5+, zero runtime dependencies.
 - Git repository synced with remote (`https://github.com/GammaYoshimura/Brainmap`).
-- 194 passing tests across the test suite.
+- 195 passing tests across the test suite.
 
 ## Immediate Next Work
 
-- M168: Return meaningful exit codes.
+- M169: Add health-check tests.

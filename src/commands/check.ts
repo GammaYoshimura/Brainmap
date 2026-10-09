@@ -13,5 +13,5 @@ export function checkCommand(args: string[] = []): number {
   console.log(`Running health checks in ${targetDir}...`);
   const report = runHealthChecks(targetDir);
   console.log(formatHealthReport(report));
-  return CHECK_SUCCESS;
+  return report.isHealthy ? CHECK_SUCCESS : CHECK_FAILURE;
 }

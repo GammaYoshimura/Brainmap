@@ -33,7 +33,9 @@ export function detectUnreflectedMapChanges(
       norm.startsWith(".git") ||
       norm.startsWith(".micro-brain") ||
       norm.includes("master_prompt") ||
-      norm.startsWith(".brain/")
+      norm.startsWith(".brain/") ||
+      norm.startsWith("brain/") ||
+      norm.endsWith(".md")
     ) {
       continue;
     }

@@ -11,6 +11,7 @@ import { detectObviousDuplicateReferences } from "../src/checker/duplicate-ref-c
 import { detectBasicRoutingInconsistencies } from "../src/checker/routing-inconsistency-checker.js";
 import { detectUnreflectedMapChanges } from "../src/checker/map-sync-checker.js";
 import { runHealthChecks, formatHealthReport } from "../src/checker/health-reporter.js";
+import { checkCommand, CHECK_SUCCESS, CHECK_FAILURE } from "../src/commands/check.js";
 
 test("checkReferencedDocumentExistence reports missing referenced markdown docs", () => {
   const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "brainmap-check-doc-"));
@@ -224,4 +225,29 @@ test("runHealthChecks and formatHealthReport aggregate all checks into structure
   } finally {
     fs.rmSync(tmpDir, { recursive: true, force: true });
   }
+});
+
+test("checkCommand returns meaningful exit codes on healthy and unhealthy projects", () => {
+  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "brainmap-check-exitcode-"));
+  const brainDir = path.join(tmpDir, ".brain");
+  fs.mkdirSync(brainDir, { recursive: true });
+
+  // Unhealthy setup: missing core files
+  const failureCode = checkCommand([tmpDir]);
+  assert.equal(failureCode, CHECK_FAILURE);
+
+  // Healthy setup: create complete constitution
+  fs.writeFileSync(
+    path.join(brainDir, "index.md"),
+    "# Brain Index\n- [Arch](architecture.md)\n- [State](state.md)\n- [Handoff](handoff.md)\n",
+    "utf8"
+  );
+  fs.writeFileSync(path.join(brainDir, "architecture.md"), "# Architecture\n", "utf8");
+  fs.writeFileSync(path.join(brainDir, "state.md"), "# State\n", "utf8");
+  fs.writeFileSync(path.join(brainDir, "handoff.md"), "# Handoff\n", "utf8");
+
+  const successCode = checkCommand([tmpDir]);
+  assert.equal(successCode, CHECK_SUCCESS);
+
+  fs.rmSync(tmpDir, { recursive: true, force: true });
 });
