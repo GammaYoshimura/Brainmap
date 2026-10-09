@@ -23,7 +23,7 @@ The handoff document ensures that any subsequent AI agent or developer session c
 ## Current Operational Handoff
 
 ### CURRENT MILESTONE
-M140: Add relevance-based prioritization.
+M141: Create plain-text context output.
 
 ### COMPLETED
 - Repository foundation (M001–M010).
@@ -46,33 +46,34 @@ M140: Add relevance-based prioritization.
   - M138: Implemented low-relevance file exclusion (`src/context/relevance-filter.ts`, `tests/context.test.ts`).
   - M139: Implemented configurable context-size limits and budget controls (`src/context/context-limits.ts`, `tests/context.test.ts`).
   - M140: Implemented relevance-based prioritization and budget-aware assembly (`src/context/prioritizer.ts`, `tests/context.test.ts`).
+  - M141: Implemented plain-text context formatting with delimiters and metadata (`src/context/formatter.ts`, `tests/context.test.ts`).
 
 ### IN PROGRESS
 - Context Selection block (M133–M144).
 
 ### CHANGED FILES
-- `src/context/prioritizer.ts`
+- `src/context/formatter.ts`
 - `tests/context.test.ts`
 - `.brain/project-map.md`
 - `.brain/state.md`
 - `.brain/handoff.md`
 
 ### TEST STATUS
-- 155/155 tests passing (`npm test`).
+- 156/156 tests passing (`npm test`).
 - TypeScript builds cleanly (`npm run build`).
 
 ### OPEN ISSUES
 - None.
 
 ### IMPORTANT DECISIONS
-- Context items are strictly prioritized by score, document type hierarchy (constitution/brain -> source -> test), and deterministic path ordering before fitting within budgets.
+- Plain-text output formats all prioritized context documents with clear demarcation blocks and query headers.
 
 ### NEXT ACTION
-- Implement M141: Create plain-text context output.
+- Implement M142: Create JSON context output.
 
 ### CONTEXT TO LOAD
 - `.brain/index.md`
 - `.brain/state.md`
 - `.brain/handoff.md`
-- `src/context/prioritizer.ts`
+- `src/context/formatter.ts`
 - `src/context/context-selector.ts`

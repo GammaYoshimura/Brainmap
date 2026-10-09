@@ -12,6 +12,7 @@ import {
   truncateContentToLimit,
 } from "../src/context/context-limits.js";
 import { prioritizeContextItems } from "../src/context/prioritizer.js";
+import { formatContextText, ContextPayload } from "../src/context/formatter.js";
 
 test("createContextInput uses routing results as input", () => {
   const query = parseTaskQuery("Refactor query parser and check test runner");
@@ -128,4 +129,31 @@ test("prioritizeContextItems sorts by score, type, and fits within budget", () =
   assert.equal(items[0].path, "src/cli.ts"); // score 90
   assert.equal(items[1].path, ".brain/architecture.md"); // score 70 (brain-doc before test on tie)
   assert.equal(omittedCount, 1);
+});
+
+test("formatContextText creates plain-text context output", () => {
+  const payload: ContextPayload = {
+    query: "Implement context output",
+    projectRoot: "/mock/root",
+    items: [
+      {
+        type: "brain-doc",
+        path: ".brain/index.md",
+        score: 80,
+        reasons: ["matches router"],
+        content: "# Brain Index",
+        truncated: false,
+        characters: 13,
+      },
+    ],
+    omittedCount: 0,
+    totalCharacters: 13,
+  };
+
+  const text = formatContextText(payload);
+  assert.match(text, /=== Brainmap Context for: "Implement context output" ===/);
+  assert.match(text, /Project: \/mock\/root/);
+  assert.match(text, /--- \[BRAIN DOC\] \.brain\/index\.md \(score: 80\) ---/);
+  assert.match(text, /# Brain Index/);
+  assert.match(text, /=== End of Context ===/);
 });
