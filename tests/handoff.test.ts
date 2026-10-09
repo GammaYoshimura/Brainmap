@@ -13,6 +13,7 @@ import { generateCurrentMilestoneSection } from "../src/handoff/section-current-
 import { generateCompletedSection } from "../src/handoff/section-completed.js";
 import { generateOpenIssuesSection } from "../src/handoff/section-open-issues.js";
 import { generateNextActionSection } from "../src/handoff/section-next-action.js";
+import { generateContextToLoadSection } from "../src/handoff/section-context-to-load.js";
 
 test("readCurrentState returns null when .brain/state.md does not exist", () => {
   const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "brainmap-handoff-state-none-"));
@@ -256,6 +257,33 @@ test("generateNextActionSection extracts and formats immediate next work", () =>
   try {
     const text = generateNextActionSection(tmpDir);
     assert.equal(text, "### NEXT ACTION\n- M156: Generate CONTEXT TO LOAD.\n");
+  } finally {
+    fs.rmSync(tmpDir, { recursive: true, force: true });
+  }
+});
+
+test("generateContextToLoadSection includes brain docs and dynamic files while excluding private files", () => {
+  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "brainmap-handoff-sec-context-"));
+  const brainDir = path.join(tmpDir, ".brain");
+  fs.mkdirSync(brainDir, { recursive: true });
+
+  fs.writeFileSync(path.join(brainDir, "index.md"), "# Index\n", "utf8");
+  fs.writeFileSync(path.join(brainDir, "state.md"), "# State\n", "utf8");
+  fs.writeFileSync(path.join(brainDir, "handoff.md"), "# Handoff\n", "utf8");
+
+  try {
+    const text = generateContextToLoadSection(tmpDir, [
+      "src/handoff/section-context-to-load.ts",
+      ".micro-brain/state.json",
+      "brainmap_master_prompt.md",
+    ]);
+
+    assert.ok(text.includes("- .brain/index.md"));
+    assert.ok(text.includes("- .brain/state.md"));
+    assert.ok(text.includes("- .brain/handoff.md"));
+    assert.ok(text.includes("- src/handoff/section-context-to-load.ts"));
+    assert.ok(!text.includes(".micro-brain"));
+    assert.ok(!text.includes("master_prompt"));
   } finally {
     fs.rmSync(tmpDir, { recursive: true, force: true });
   }

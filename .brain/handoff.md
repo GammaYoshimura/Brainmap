@@ -23,7 +23,7 @@ The handoff document ensures that any subsequent AI agent or developer session c
 ## Current Operational Handoff
 
 ### CURRENT MILESTONE
-M155: Generate NEXT ACTION.
+M156: Generate CONTEXT TO LOAD.
 
 ### COMPLETED
 - Repository foundation (M001–M010).
@@ -50,31 +50,32 @@ M155: Generate NEXT ACTION.
   - M153: Implemented COMPLETED section generator (`src/handoff/section-completed.ts`).
   - M154: Implemented OPEN ISSUES section generator (`src/handoff/section-open-issues.ts`).
   - M155: Implemented NEXT ACTION section generator (`src/handoff/section-next-action.ts`).
+  - M156: Implemented CONTEXT TO LOAD section generator (`src/handoff/section-context-to-load.ts`).
 
 ### IN PROGRESS
 - Handoff block (M145–M158).
 
 ### CHANGED FILES
-- `src/handoff/section-next-action.ts`
+- `src/handoff/section-context-to-load.ts`
 - `tests/handoff.test.ts`
 - `.brain/state.md`
 - `.brain/handoff.md`
 
 ### TEST STATUS
-- 179/179 tests passing (`npm test`).
+- 180/180 tests passing (`npm test`).
 - TypeScript builds cleanly (`npm run build`).
 
 ### OPEN ISSUES
 - None.
 
 ### IMPORTANT DECISIONS
-- The NEXT ACTION generator parses immediate next work from project state or falls back to standard milestone progression.
+- The CONTEXT TO LOAD generator guarantees inclusion of foundational brain documents while scrubbing private local development trackers.
 
 ### NEXT ACTION
-- Proceed to M156: Generate CONTEXT TO LOAD.
+- Proceed to M157: Update .brain/handoff.md.
 
 ### CONTEXT TO LOAD
 - `.brain/index.md`
 - `.brain/state.md`
 - `.brain/handoff.md`
-- `src/handoff/section-next-action.ts`
+- `src/handoff/section-context-to-load.ts`
