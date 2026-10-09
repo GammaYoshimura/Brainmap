@@ -7,6 +7,7 @@ import { checkReferencedDocumentExistence } from "../src/checker/doc-existence-c
 import { detectBrokenMarkdownLinks } from "../src/checker/markdown-link-checker.js";
 import { detectMissingSourceFileReferences } from "../src/checker/source-ref-checker.js";
 import { detectSubsystemRoutingProblems } from "../src/checker/subsystem-routing-checker.js";
+import { detectObviousDuplicateReferences } from "../src/checker/duplicate-ref-checker.js";
 
 test("checkReferencedDocumentExistence reports missing referenced markdown docs", () => {
   const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "brainmap-check-doc-"));
@@ -128,6 +129,27 @@ test("detectSubsystemRoutingProblems catches missing index, unregistered subsyst
     assert.ok(issues.some((i) => i.issue === "missing_index" && i.subsystemId === "auth"));
     assert.ok(issues.some((i) => i.issue === "unregistered_in_global_index" && i.subsystemId === "payment"));
     assert.ok(issues.some((i) => i.issue === "dangling_global_link" && i.subsystemId === "ghost"));
+  } finally {
+    fs.rmSync(tmpDir, { recursive: true, force: true });
+  }
+});
+
+test("detectObviousDuplicateReferences flags repeated links in same document", () => {
+  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "brainmap-check-dup-"));
+  const brainDir = path.join(tmpDir, ".brain");
+  fs.mkdirSync(brainDir, { recursive: true });
+
+  fs.writeFileSync(
+    path.join(brainDir, "index.md"),
+    "# Index\n- [Architecture](architecture.md)\n- [Arch Again](architecture.md)\n- [State](state.md)\n",
+    "utf8"
+  );
+
+  try {
+    const dups = detectObviousDuplicateReferences(tmpDir, brainDir);
+    assert.equal(dups.length, 1);
+    assert.equal(dups[0].target, "architecture.md");
+    assert.equal(dups[0].count, 2);
   } finally {
     fs.rmSync(tmpDir, { recursive: true, force: true });
   }

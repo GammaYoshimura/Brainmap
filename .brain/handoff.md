@@ -23,7 +23,7 @@ The handoff document ensures that any subsequent AI agent or developer session c
 ## Current Operational Handoff
 
 ### CURRENT MILESTONE
-M163: Detect subsystem routing problems.
+M164: Detect obvious duplicate references.
 
 ### COMPLETED
 - Repository foundation (M001–M010).
@@ -45,32 +45,32 @@ M163: Detect subsystem routing problems.
   - M161: Implemented broken Markdown link detector (`src/checker/markdown-link-checker.ts`) validating files, anchors, and path structures.
   - M162: Implemented missing source file reference detector (`src/checker/source-ref-checker.ts`) validating code paths mentioned across documentation.
   - M163: Implemented subsystem routing checker (`src/checker/subsystem-routing-checker.ts`) detecting missing index documents, unregistered subsystems, and dangling router links.
+  - M164: Implemented duplicate reference detector (`src/checker/duplicate-ref-checker.ts`) flagging redundant identical links in the same document.
 
 ### IN PROGRESS
 - Health Checks block (M159–M169).
 
 ### CHANGED FILES
-- `src/checker/subsystem-routing-checker.ts`
+- `src/checker/duplicate-ref-checker.ts`
 - `tests/checker.test.ts`
 - `.brain/state.md`
 - `.brain/handoff.md`
 
 ### TEST STATUS
-- 190/190 tests passing (`npm test`).
+- 191/191 tests passing (`npm test`).
 - TypeScript builds cleanly (`npm run build`).
 
 ### OPEN ISSUES
 - None.
 
 ### IMPORTANT DECISIONS
-- Subsystem routing checker enforces that all detected subsystem directories contain `index.md`, are referenced in the global index, and no dangling references exist.
+- The duplicate reference checker scans link destinations in markdown files to flag redundant duplicate entries.
 
 ### NEXT ACTION
-- Proceed to M164: Detect obvious duplicate references.
+- Proceed to M165: Detect basic routing inconsistencies.
 
 ### CONTEXT TO LOAD
 - .brain/index.md
 - .brain/state.md
 - .brain/handoff.md
-- src/checker/subsystem-routing-checker.ts
-- tests/checker.test.ts
+- src/checker/duplicate-ref-checker.ts

@@ -4,7 +4,7 @@ Current operational state of the Brainmap project.
 
 ## Current Milestone
 
-**M163**: Detect subsystem routing problems.
+**M164**: Detect obvious duplicate references.
 
 ## What is Implemented
 
@@ -113,6 +113,7 @@ Current operational state of the Brainmap project.
   - M161: Implemented broken Markdown link detector (`src/checker/markdown-link-checker.ts`) validating files, anchors, and path structures.
   - M162: Implemented missing source file reference detector (`src/checker/source-ref-checker.ts`) validating code paths mentioned across documentation.
   - M163: Implemented subsystem routing checker (`src/checker/subsystem-routing-checker.ts`) detecting missing index documents, unregistered subsystems, and dangling router links.
+  - M164: Implemented duplicate reference detector (`src/checker/duplicate-ref-checker.ts`) flagging redundant identical links in the same document.
 
 ## What is In Progress
 
@@ -126,8 +127,8 @@ Current operational state of the Brainmap project.
 
 - Environment: Node.js v20+, TypeScript 5+, zero runtime dependencies.
 - Git repository synced with remote (`https://github.com/GammaYoshimura/Brainmap`).
-- 190 passing tests across the test suite.
+- 191 passing tests across the test suite.
 
 ## Immediate Next Work
 
-- M164: Detect obvious duplicate references.
+- M165: Detect basic routing inconsistencies.
