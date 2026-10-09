@@ -23,7 +23,7 @@ The handoff document ensures that any subsequent AI agent or developer session c
 ## Current Operational Handoff
 
 ### CURRENT MILESTONE
-M151: Detect open issues where possible.
+M152: Generate CURRENT MILESTONE.
 
 ### COMPLETED
 - Repository foundation (M001–M010).
@@ -46,31 +46,32 @@ M151: Detect open issues where possible.
   - M149: Implemented changed files detector (`src/handoff/file-change-detector.ts`) extracting staged, unstaged, untracked, and recent commit changed files.
   - M150: Implemented test status reader (`src/handoff/test-status-reader.ts`) extracting test suite execution metrics and pass/fail states.
   - M151: Implemented issue detector (`src/handoff/issue-detector.ts`) detecting recorded blockers and known open issues.
+  - M152: Implemented CURRENT MILESTONE section generator (`src/handoff/section-current-milestone.ts`).
 
 ### IN PROGRESS
 - Handoff block (M145–M158).
 
 ### CHANGED FILES
-- `src/handoff/issue-detector.ts`
+- `src/handoff/section-current-milestone.ts`
 - `tests/handoff.test.ts`
 - `.brain/state.md`
 - `.brain/handoff.md`
 
 ### TEST STATUS
-- 175/175 tests passing (`npm test`).
+- 176/176 tests passing (`npm test`).
 - TypeScript builds cleanly (`npm run build`).
 
 ### OPEN ISSUES
 - None.
 
 ### IMPORTANT DECISIONS
-- The issue detector reconciles blockers from state and handoff documents while discarding empty/None entries.
+- The CURRENT MILESTONE generator converts parsed milestone models into standard handoff format.
 
 ### NEXT ACTION
-- Proceed to M152: Generate CURRENT MILESTONE.
+- Proceed to M153: Generate COMPLETED.
 
 ### CONTEXT TO LOAD
 - `.brain/index.md`
 - `.brain/state.md`
 - `.brain/handoff.md`
-- `src/handoff/issue-detector.ts`
+- `src/handoff/section-current-milestone.ts`

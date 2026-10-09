@@ -9,6 +9,7 @@ import { detectRecentChanges } from "../src/handoff/change-detector.js";
 import { detectChangedFiles } from "../src/handoff/file-change-detector.js";
 import { readAvailableTestStatus } from "../src/handoff/test-status-reader.js";
 import { detectOpenIssues } from "../src/handoff/issue-detector.js";
+import { generateCurrentMilestoneSection } from "../src/handoff/section-current-milestone.js";
 
 test("readCurrentState returns null when .brain/state.md does not exist", () => {
   const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "brainmap-handoff-state-none-"));
@@ -191,6 +192,21 @@ test("detectOpenIssues returns clean fallback when no issues exist", () => {
     assert.equal(issues.hasBlockers, false);
     assert.deepEqual(issues.issues, []);
     assert.equal(issues.rawText, "- None.");
+  } finally {
+    fs.rmSync(tmpDir, { recursive: true, force: true });
+  }
+});
+
+test("generateCurrentMilestoneSection formats milestone header and item", () => {
+  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "brainmap-handoff-sec-milestone-"));
+  const brainDir = path.join(tmpDir, ".brain");
+  fs.mkdirSync(brainDir, { recursive: true });
+
+  fs.writeFileSync(path.join(brainDir, "state.md"), "# State\n\n## Current Milestone\n\n**M152**: Generate CURRENT MILESTONE.\n", "utf8");
+
+  try {
+    const text = generateCurrentMilestoneSection(tmpDir);
+    assert.equal(text, "### CURRENT MILESTONE\nM152: Generate CURRENT MILESTONE.\n");
   } finally {
     fs.rmSync(tmpDir, { recursive: true, force: true });
   }
