@@ -23,7 +23,7 @@ The handoff document ensures that any subsequent AI agent or developer session c
 ## Current Operational Handoff
 
 ### CURRENT MILESTONE
-M139: Add configurable context-size limits.
+M140: Add relevance-based prioritization.
 
 ### COMPLETED
 - Repository foundation (M001–M010).
@@ -45,33 +45,34 @@ M139: Add configurable context-size limits.
   - M137: Implemented source code and test file selection (`src/context/source-code-selector.ts`, `tests/context.test.ts`).
   - M138: Implemented low-relevance file exclusion (`src/context/relevance-filter.ts`, `tests/context.test.ts`).
   - M139: Implemented configurable context-size limits and budget controls (`src/context/context-limits.ts`, `tests/context.test.ts`).
+  - M140: Implemented relevance-based prioritization and budget-aware assembly (`src/context/prioritizer.ts`, `tests/context.test.ts`).
 
 ### IN PROGRESS
 - Context Selection block (M133–M144).
 
 ### CHANGED FILES
-- `src/context/context-limits.ts`
+- `src/context/prioritizer.ts`
 - `tests/context.test.ts`
 - `.brain/project-map.md`
 - `.brain/state.md`
 - `.brain/handoff.md`
 
 ### TEST STATUS
-- 154/154 tests passing (`npm test`).
+- 155/155 tests passing (`npm test`).
 - TypeScript builds cleanly (`npm run build`).
 
 ### OPEN ISSUES
 - None.
 
 ### IMPORTANT DECISIONS
-- Configurable size budgets cap total character length, maximum files included, and per-file lengths to keep AI prompts tight.
+- Context items are strictly prioritized by score, document type hierarchy (constitution/brain -> source -> test), and deterministic path ordering before fitting within budgets.
 
 ### NEXT ACTION
-- Implement M140: Add relevance-based prioritization.
+- Implement M141: Create plain-text context output.
 
 ### CONTEXT TO LOAD
 - `.brain/index.md`
 - `.brain/state.md`
 - `.brain/handoff.md`
-- `src/context/context-limits.ts`
+- `src/context/prioritizer.ts`
 - `src/context/context-selector.ts`

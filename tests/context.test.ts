@@ -11,6 +11,7 @@ import {
   recordInBudget,
   truncateContentToLimit,
 } from "../src/context/context-limits.js";
+import { prioritizeContextItems } from "../src/context/prioritizer.js";
 
 test("createContextInput uses routing results as input", () => {
   const query = parseTaskQuery("Refactor query parser and check test runner");
@@ -88,4 +89,43 @@ test("createContextBudget and canIncludeInBudget enforce size and file limits", 
   const truncated = truncateContentToLimit("Hello world, this is a long text", 10);
   assert.equal(truncated.truncated, true);
   assert.match(truncated.content, /Hello worl/);
+});
+
+test("prioritizeContextItems sorts by score, type, and fits within budget", () => {
+  const docs = [
+    {
+      path: ".brain/architecture.md",
+      score: 70,
+      reasons: ["matches intent"],
+      content: "# Architecture Constitution",
+      sizeBytes: 28,
+    },
+  ];
+
+  const sourceFiles = [
+    {
+      path: "src/cli.ts",
+      score: 90,
+      reasons: ["exact match"],
+      content: "export function run() {}",
+      sizeBytes: 25,
+      isTest: false,
+    },
+    {
+      path: "tests/cli.test.ts",
+      score: 70,
+      reasons: ["test match"],
+      content: "test('cli', () => {})",
+      sizeBytes: 22,
+      isTest: true,
+    },
+  ];
+
+  const budget = createContextBudget(100, 2);
+  const { items, omittedCount } = prioritizeContextItems(docs, sourceFiles, budget);
+
+  assert.equal(items.length, 2);
+  assert.equal(items[0].path, "src/cli.ts"); // score 90
+  assert.equal(items[1].path, ".brain/architecture.md"); // score 70 (brain-doc before test on tie)
+  assert.equal(omittedCount, 1);
 });

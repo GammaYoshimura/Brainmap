@@ -4,7 +4,7 @@ Current operational state of the Brainmap project.
 
 ## Current Milestone
 
-**M139**: Add configurable context-size limits.
+**M140**: Add relevance-based prioritization.
 
 ## What is Implemented
 
@@ -85,6 +85,7 @@ Current operational state of the Brainmap project.
   - Implemented relevant source code and test selector (`selectRelevantSourceCode`), extracting scored candidate source and test files (`src/context/source-code-selector.ts`).
   - Implemented relevance filtering and low-relevance exclusion (`filterByRelevance`, `minRelevanceScore`), pruning noisy candidates (`src/context/relevance-filter.ts`).
   - Implemented configurable context-size limits and budget controls (`createContextBudget`, `canIncludeInBudget`, `truncateContentToLimit`) (`src/context/context-limits.ts`).
+  - Implemented relevance-based prioritization and budget-aware assembly (`prioritizeContextItems`) ordering by score, type hierarchy, and path ties (`src/context/prioritizer.ts`).
 
 ## What is In Progress
 
@@ -98,8 +99,8 @@ Current operational state of the Brainmap project.
 
 - Environment: Node.js v20+, TypeScript 5+, zero runtime dependencies.
 - Git repository synced with remote (`https://github.com/GammaYoshimura/Brainmap`).
-- 154 passing tests across the test suite.
+- 155 passing tests across the test suite.
 
 ## Immediate Next Work
 
-- **M140**: Add relevance-based prioritization.
+- **M141**: Create plain-text context output.
