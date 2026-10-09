@@ -6,6 +6,7 @@ import path from "node:path";
 import { checkReferencedDocumentExistence } from "../src/checker/doc-existence-checker.js";
 import { detectBrokenMarkdownLinks } from "../src/checker/markdown-link-checker.js";
 import { detectMissingSourceFileReferences } from "../src/checker/source-ref-checker.js";
+import { detectSubsystemRoutingProblems } from "../src/checker/subsystem-routing-checker.js";
 
 test("checkReferencedDocumentExistence reports missing referenced markdown docs", () => {
   const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "brainmap-check-doc-"));
@@ -96,6 +97,37 @@ test("detectMissingSourceFileReferences identifies referenced non-existent code 
     assert.equal(missing.length, 1);
     assert.equal(missing[0].referencedFile, "src/nonexistent.ts");
     assert.equal(missing[0].documentFile, ".brain/architecture.md");
+  } finally {
+    fs.rmSync(tmpDir, { recursive: true, force: true });
+  }
+});
+
+test("detectSubsystemRoutingProblems catches missing index, unregistered subsystem, and dangling link", () => {
+  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "brainmap-check-subsystems-"));
+  const brainDir = path.join(tmpDir, ".brain");
+  fs.mkdirSync(brainDir, { recursive: true });
+
+  // Subsystem with missing index
+  const sub1Dir = path.join(brainDir, "subsystems", "auth");
+  fs.mkdirSync(sub1Dir, { recursive: true });
+
+  // Subsystem with index but not in global index
+  const sub2Dir = path.join(brainDir, "subsystems", "payment");
+  fs.mkdirSync(sub2Dir, { recursive: true });
+  fs.writeFileSync(path.join(sub2Dir, "index.md"), "# Payment\n", "utf8");
+
+  // Global index with dangling link
+  fs.writeFileSync(
+    path.join(brainDir, "index.md"),
+    "# Global Index\n- [Dangling](subsystems/ghost/index.md)\n",
+    "utf8"
+  );
+
+  try {
+    const issues = detectSubsystemRoutingProblems(tmpDir, brainDir);
+    assert.ok(issues.some((i) => i.issue === "missing_index" && i.subsystemId === "auth"));
+    assert.ok(issues.some((i) => i.issue === "unregistered_in_global_index" && i.subsystemId === "payment"));
+    assert.ok(issues.some((i) => i.issue === "dangling_global_link" && i.subsystemId === "ghost"));
   } finally {
     fs.rmSync(tmpDir, { recursive: true, force: true });
   }

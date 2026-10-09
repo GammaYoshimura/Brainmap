@@ -23,7 +23,7 @@ The handoff document ensures that any subsequent AI agent or developer session c
 ## Current Operational Handoff
 
 ### CURRENT MILESTONE
-M162: Detect missing source-file references.
+M163: Detect subsystem routing problems.
 
 ### COMPLETED
 - Repository foundation (M001–M010).
@@ -44,31 +44,33 @@ M162: Detect missing source-file references.
   - M160: Implemented referenced document existence checker (`src/checker/doc-existence-checker.ts`) verifying all internal document links in `.brain`.
   - M161: Implemented broken Markdown link detector (`src/checker/markdown-link-checker.ts`) validating files, anchors, and path structures.
   - M162: Implemented missing source file reference detector (`src/checker/source-ref-checker.ts`) validating code paths mentioned across documentation.
+  - M163: Implemented subsystem routing checker (`src/checker/subsystem-routing-checker.ts`) detecting missing index documents, unregistered subsystems, and dangling router links.
 
 ### IN PROGRESS
 - Health Checks block (M159–M169).
 
 ### CHANGED FILES
-- `src/checker/source-ref-checker.ts`
+- `src/checker/subsystem-routing-checker.ts`
 - `tests/checker.test.ts`
 - `.brain/state.md`
 - `.brain/handoff.md`
 
 ### TEST STATUS
-- 189/189 tests passing (`npm test`).
+- 190/190 tests passing (`npm test`).
 - TypeScript builds cleanly (`npm run build`).
 
 ### OPEN ISSUES
 - None.
 
 ### IMPORTANT DECISIONS
-- The source reference checker identifies source-code file paths in backticks inside Brain documents and flags any that no longer exist in the repo.
+- Subsystem routing checker enforces that all detected subsystem directories contain `index.md`, are referenced in the global index, and no dangling references exist.
 
 ### NEXT ACTION
-- Proceed to M163: Detect subsystem routing problems.
+- Proceed to M164: Detect obvious duplicate references.
 
 ### CONTEXT TO LOAD
 - .brain/index.md
 - .brain/state.md
 - .brain/handoff.md
-- src/checker/source-ref-checker.ts
+- src/checker/subsystem-routing-checker.ts
+- tests/checker.test.ts
