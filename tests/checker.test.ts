@@ -5,6 +5,7 @@ import os from "node:os";
 import path from "node:path";
 import { checkReferencedDocumentExistence } from "../src/checker/doc-existence-checker.js";
 import { detectBrokenMarkdownLinks } from "../src/checker/markdown-link-checker.js";
+import { detectMissingSourceFileReferences } from "../src/checker/source-ref-checker.js";
 
 test("checkReferencedDocumentExistence reports missing referenced markdown docs", () => {
   const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "brainmap-check-doc-"));
@@ -70,6 +71,31 @@ test("detectBrokenMarkdownLinks detects missing anchor and missing file targets"
     const fileBroken = broken.find((b) => b.reason === "missing_file");
     assert.ok(fileBroken);
     assert.equal(fileBroken.target, "docs/missing.md");
+  } finally {
+    fs.rmSync(tmpDir, { recursive: true, force: true });
+  }
+});
+
+test("detectMissingSourceFileReferences identifies referenced non-existent code files", () => {
+  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "brainmap-check-src-"));
+  const brainDir = path.join(tmpDir, ".brain");
+  fs.mkdirSync(brainDir, { recursive: true });
+
+  fs.writeFileSync(
+    path.join(brainDir, "architecture.md"),
+    "# Architecture\nUses `src/index.ts` and `src/nonexistent.ts`.\n",
+    "utf8"
+  );
+
+  const srcDir = path.join(tmpDir, "src");
+  fs.mkdirSync(srcDir, { recursive: true });
+  fs.writeFileSync(path.join(srcDir, "index.ts"), "// main\n", "utf8");
+
+  try {
+    const missing = detectMissingSourceFileReferences(tmpDir, brainDir);
+    assert.equal(missing.length, 1);
+    assert.equal(missing[0].referencedFile, "src/nonexistent.ts");
+    assert.equal(missing[0].documentFile, ".brain/architecture.md");
   } finally {
     fs.rmSync(tmpDir, { recursive: true, force: true });
   }
