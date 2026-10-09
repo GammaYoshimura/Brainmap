@@ -23,7 +23,7 @@ The handoff document ensures that any subsequent AI agent or developer session c
 ## Current Operational Handoff
 
 ### CURRENT MILESTONE
-M136: Select relevant Brain documents.
+M137: Select relevant source code.
 
 ### COMPLETED
 - Repository foundation (M001–M010).
@@ -42,33 +42,34 @@ M136: Select relevant Brain documents.
   - M134: Implemented task query acceptance, validation, and error reporting for `brainmap context` (`src/commands/context.ts`, `tests/cli.test.ts`).
   - M135: Connected routing output to context input via `createContextInput` (`src/context/context-selector.ts`, `tests/context.test.ts`).
   - M136: Implemented Brain document context selection and reading (`src/context/brain-doc-selector.ts`, `tests/context.test.ts`).
+  - M137: Implemented source code and test file selection (`src/context/source-code-selector.ts`, `tests/context.test.ts`).
 
 ### IN PROGRESS
 - Context Selection block (M133–M144).
 
 ### CHANGED FILES
-- `src/context/brain-doc-selector.ts`
+- `src/context/source-code-selector.ts`
 - `tests/context.test.ts`
 - `.brain/project-map.md`
 - `.brain/state.md`
 - `.brain/handoff.md`
 
 ### TEST STATUS
-- 151/151 tests passing (`npm test`).
+- 152/152 tests passing (`npm test`).
 - TypeScript builds cleanly (`npm run build`).
 
 ### OPEN ISSUES
 - None.
 
 ### IMPORTANT DECISIONS
-- Relevant Brain documents and ADRs are selected and retrieved with disk content, size metrics, and reasons attached.
+- Relevant source code and associated tests are resolved, loaded, and ranked with test-distinction flags and file size metrics.
 
 ### NEXT ACTION
-- Implement M137: Select relevant source code.
+- Implement M138: Exclude low-relevance files.
 
 ### CONTEXT TO LOAD
 - `.brain/index.md`
 - `.brain/state.md`
 - `.brain/handoff.md`
+- `src/context/source-code-selector.ts`
 - `src/context/brain-doc-selector.ts`
-- `src/context/context-selector.ts`

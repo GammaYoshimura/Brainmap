@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import { parseTaskQuery } from "../src/router/query.js";
 import { createContextInput } from "../src/context/context-selector.js";
 import { selectRelevantBrainDocuments } from "../src/context/brain-doc-selector.js";
+import { selectRelevantSourceCode } from "../src/context/source-code-selector.js";
 
 test("createContextInput uses routing results as input", () => {
   const query = parseTaskQuery("Refactor query parser and check test runner");
@@ -28,4 +29,18 @@ test("selectRelevantBrainDocuments selects and loads brain documents", () => {
   assert.ok(docs[0].path.startsWith(".brain"));
   assert.ok(typeof docs[0].content === "string");
   assert.ok(docs[0].sizeBytes > 0);
+});
+
+test("selectRelevantSourceCode selects and loads source and test files", () => {
+  const query = parseTaskQuery("cli entry point and test runner");
+  assert.notEqual(query, null);
+
+  const contextInput = createContextInput(process.cwd(), query!);
+  const codeFiles = selectRelevantSourceCode(contextInput);
+
+  assert.ok(codeFiles.length > 0);
+  assert.ok(codeFiles[0].score > 0);
+  assert.ok(typeof codeFiles[0].content === "string");
+  assert.ok(codeFiles[0].sizeBytes > 0);
+  assert.ok(typeof codeFiles[0].isTest === "boolean");
 });
