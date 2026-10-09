@@ -23,7 +23,7 @@ The handoff document ensures that any subsequent AI agent or developer session c
 ## Current Operational Handoff
 
 ### CURRENT MILESTONE
-M135: Use routing results as input.
+M136: Select relevant Brain documents.
 
 ### COMPLETED
 - Repository foundation (M001–M010).
@@ -41,33 +41,34 @@ M135: Use routing results as input.
   - M133: Created `context` command handler (`src/commands/context.ts`), wired command dispatch and help description in CLI entry point (`src/cli.ts`).
   - M134: Implemented task query acceptance, validation, and error reporting for `brainmap context` (`src/commands/context.ts`, `tests/cli.test.ts`).
   - M135: Connected routing output to context input via `createContextInput` (`src/context/context-selector.ts`, `tests/context.test.ts`).
+  - M136: Implemented Brain document context selection and reading (`src/context/brain-doc-selector.ts`, `tests/context.test.ts`).
 
 ### IN PROGRESS
 - Context Selection block (M133–M144).
 
 ### CHANGED FILES
-- `src/context/context-selector.ts`
-- `src/commands/context.ts`
+- `src/context/brain-doc-selector.ts`
 - `tests/context.test.ts`
 - `.brain/project-map.md`
 - `.brain/state.md`
 - `.brain/handoff.md`
 
 ### TEST STATUS
-- 150/150 tests passing (`npm test`).
+- 151/151 tests passing (`npm test`).
 - TypeScript builds cleanly (`npm run build`).
 
 ### OPEN ISSUES
 - None.
 
 ### IMPORTANT DECISIONS
-- `createContextInput` directly encapsulates deterministic `RouteResult` metadata for subsequent context assembly steps.
+- Relevant Brain documents and ADRs are selected and retrieved with disk content, size metrics, and reasons attached.
 
 ### NEXT ACTION
-- Implement M136: Select relevant Brain documents.
+- Implement M137: Select relevant source code.
 
 ### CONTEXT TO LOAD
 - `.brain/index.md`
 - `.brain/state.md`
 - `.brain/handoff.md`
+- `src/context/brain-doc-selector.ts`
 - `src/context/context-selector.ts`
