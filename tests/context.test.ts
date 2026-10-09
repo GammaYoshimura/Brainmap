@@ -4,6 +4,7 @@ import { parseTaskQuery } from "../src/router/query.js";
 import { createContextInput } from "../src/context/context-selector.js";
 import { selectRelevantBrainDocuments } from "../src/context/brain-doc-selector.js";
 import { selectRelevantSourceCode } from "../src/context/source-code-selector.js";
+import { filterByRelevance, DEFAULT_MIN_RELEVANCE_SCORE } from "../src/context/relevance-filter.js";
 
 test("createContextInput uses routing results as input", () => {
   const query = parseTaskQuery("Refactor query parser and check test runner");
@@ -43,4 +44,20 @@ test("selectRelevantSourceCode selects and loads source and test files", () => {
   assert.ok(typeof codeFiles[0].content === "string");
   assert.ok(codeFiles[0].sizeBytes > 0);
   assert.ok(typeof codeFiles[0].isTest === "boolean");
+});
+
+test("filterByRelevance and minRelevanceScore exclude low-relevance files", () => {
+  const items = [
+    { path: "high.ts", score: 80 },
+    { path: "medium.ts", score: 45 },
+    { path: "low.ts", score: 15 },
+  ];
+
+  const filtered = filterByRelevance(items, DEFAULT_MIN_RELEVANCE_SCORE);
+  assert.equal(filtered.length, 2);
+  assert.deepEqual(filtered.map((i) => i.path), ["high.ts", "medium.ts"]);
+
+  const strictFiltered = filterByRelevance(items, 60);
+  assert.equal(strictFiltered.length, 1);
+  assert.equal(strictFiltered[0].path, "high.ts");
 });

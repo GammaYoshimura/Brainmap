@@ -4,7 +4,7 @@ Current operational state of the Brainmap project.
 
 ## Current Milestone
 
-**M137**: Select relevant source code.
+**M138**: Exclude low-relevance files.
 
 ## What is Implemented
 
@@ -83,6 +83,7 @@ Current operational state of the Brainmap project.
   - Implemented routing integration for context selection (`createContextInput`), using `RouteResult` as the foundational input model (`src/context/context-selector.ts`).
   - Implemented relevant Brain document selector (`selectRelevantBrainDocuments`), reading and sizing relevant Brain markdown documents and ADRs (`src/context/brain-doc-selector.ts`).
   - Implemented relevant source code and test selector (`selectRelevantSourceCode`), extracting scored candidate source and test files (`src/context/source-code-selector.ts`).
+  - Implemented relevance filtering and low-relevance exclusion (`filterByRelevance`, `minRelevanceScore`), pruning noisy candidates (`src/context/relevance-filter.ts`).
 
 ## What is In Progress
 
@@ -96,8 +97,8 @@ Current operational state of the Brainmap project.
 
 - Environment: Node.js v20+, TypeScript 5+, zero runtime dependencies.
 - Git repository synced with remote (`https://github.com/GammaYoshimura/Brainmap`).
-- 152 passing tests across the test suite.
+- 153 passing tests across the test suite.
 
 ## Immediate Next Work
 
-- **M138**: Exclude low-relevance files.
+- **M139**: Add configurable context-size limits.

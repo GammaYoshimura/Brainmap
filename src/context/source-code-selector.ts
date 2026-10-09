@@ -15,13 +15,15 @@ export interface SelectedSourceFile {
 
 export function selectRelevantSourceCode(
   input: ContextSelectionInput,
-  options: { loadContent?: boolean; includeTests?: boolean } = {
+  options: { loadContent?: boolean; includeTests?: boolean; minRelevanceScore?: number } = {
     loadContent: true,
     includeTests: true,
   }
 ): SelectedSourceFile[] {
   const selected: SelectedSourceFile[] = [];
   const seenPaths = new Set<string>();
+
+  const minScore = options.minRelevanceScore ?? input.options?.minRelevanceScore;
 
   const testPaths = new Set(
     input.routeResult.tests.map((t) => normalizePath(t.path))
@@ -38,6 +40,9 @@ export function selectRelevantSourceCode(
   }
 
   for (const { item, isTest } of candidateItems) {
+    if (minScore !== undefined && item.score < minScore) {
+      continue;
+    }
     const normalized = normalizePath(item.path);
     if (seenPaths.has(normalized)) continue;
     seenPaths.add(normalized);

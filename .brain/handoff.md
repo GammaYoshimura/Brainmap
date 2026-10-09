@@ -23,7 +23,7 @@ The handoff document ensures that any subsequent AI agent or developer session c
 ## Current Operational Handoff
 
 ### CURRENT MILESTONE
-M137: Select relevant source code.
+M138: Exclude low-relevance files.
 
 ### COMPLETED
 - Repository foundation (M001–M010).
@@ -43,11 +43,14 @@ M137: Select relevant source code.
   - M135: Connected routing output to context input via `createContextInput` (`src/context/context-selector.ts`, `tests/context.test.ts`).
   - M136: Implemented Brain document context selection and reading (`src/context/brain-doc-selector.ts`, `tests/context.test.ts`).
   - M137: Implemented source code and test file selection (`src/context/source-code-selector.ts`, `tests/context.test.ts`).
+  - M138: Implemented low-relevance file exclusion (`src/context/relevance-filter.ts`, `tests/context.test.ts`).
 
 ### IN PROGRESS
 - Context Selection block (M133–M144).
 
 ### CHANGED FILES
+- `src/context/relevance-filter.ts`
+- `src/context/brain-doc-selector.ts`
 - `src/context/source-code-selector.ts`
 - `tests/context.test.ts`
 - `.brain/project-map.md`
@@ -55,21 +58,21 @@ M137: Select relevant source code.
 - `.brain/handoff.md`
 
 ### TEST STATUS
-- 152/152 tests passing (`npm test`).
+- 153/153 tests passing (`npm test`).
 - TypeScript builds cleanly (`npm run build`).
 
 ### OPEN ISSUES
 - None.
 
 ### IMPORTANT DECISIONS
-- Relevant source code and associated tests are resolved, loaded, and ranked with test-distinction flags and file size metrics.
+- Low-relevance documents and files falling below configurable thresholds are excluded to minimize token waste.
 
 ### NEXT ACTION
-- Implement M138: Exclude low-relevance files.
+- Implement M139: Add configurable context-size limits.
 
 ### CONTEXT TO LOAD
 - `.brain/index.md`
 - `.brain/state.md`
 - `.brain/handoff.md`
-- `src/context/source-code-selector.ts`
-- `src/context/brain-doc-selector.ts`
+- `src/context/relevance-filter.ts`
+- `src/context/context-selector.ts`

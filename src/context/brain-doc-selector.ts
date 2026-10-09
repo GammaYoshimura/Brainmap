@@ -3,6 +3,7 @@ import path from "node:path";
 import { normalizePath } from "../core/paths.js";
 import { RankedItem } from "../router/ranking.js";
 import { ContextSelectionInput } from "./context-selector.js";
+import { filterByRelevance } from "./relevance-filter.js";
 
 export interface SelectedBrainDoc {
   path: string;
@@ -14,10 +15,12 @@ export interface SelectedBrainDoc {
 
 export function selectRelevantBrainDocuments(
   input: ContextSelectionInput,
-  options: { loadContent?: boolean } = { loadContent: true }
+  options: { loadContent?: boolean; minRelevanceScore?: number } = { loadContent: true }
 ): SelectedBrainDoc[] {
   const selected: SelectedBrainDoc[] = [];
   const seenPaths = new Set<string>();
+
+  const minScore = options.minRelevanceScore ?? input.options?.minRelevanceScore;
 
   const candidateItems: RankedItem[] = [
     ...input.routeResult.brainDocs,
@@ -25,6 +28,9 @@ export function selectRelevantBrainDocuments(
   ];
 
   for (const item of candidateItems) {
+    if (minScore !== undefined && item.score < minScore) {
+      continue;
+    }
     const normalized = normalizePath(item.path);
     if (seenPaths.has(normalized)) continue;
     seenPaths.add(normalized);
