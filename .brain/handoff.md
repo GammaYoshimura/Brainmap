@@ -23,7 +23,7 @@ The handoff document ensures that any subsequent AI agent or developer session c
 ## Current Operational Handoff
 
 ### CURRENT MILESTONE
-M153: Generate COMPLETED.
+M154: Generate OPEN ISSUES.
 
 ### COMPLETED
 - Repository foundation (M001–M010).
@@ -48,31 +48,32 @@ M153: Generate COMPLETED.
   - M151: Implemented issue detector (`src/handoff/issue-detector.ts`) detecting recorded blockers and known open issues.
   - M152: Implemented CURRENT MILESTONE section generator (`src/handoff/section-current-milestone.ts`).
   - M153: Implemented COMPLETED section generator (`src/handoff/section-completed.ts`).
+  - M154: Implemented OPEN ISSUES section generator (`src/handoff/section-open-issues.ts`).
 
 ### IN PROGRESS
 - Handoff block (M145–M158).
 
 ### CHANGED FILES
-- `src/handoff/section-completed.ts`
+- `src/handoff/section-open-issues.ts`
 - `tests/handoff.test.ts`
 - `.brain/state.md`
 - `.brain/handoff.md`
 
 ### TEST STATUS
-- 177/177 tests passing (`npm test`).
+- 178/178 tests passing (`npm test`).
 - TypeScript builds cleanly (`npm run build`).
 
 ### OPEN ISSUES
 - None.
 
 ### IMPORTANT DECISIONS
-- The COMPLETED section generator prioritizes existing milestone lists from handoff or state documents to preserve concise continuity.
+- The OPEN ISSUES section generator formats detected blockers or falls back to standard None declaration.
 
 ### NEXT ACTION
-- Proceed to M154: Generate OPEN ISSUES.
+- Proceed to M155: Generate NEXT ACTION.
 
 ### CONTEXT TO LOAD
 - `.brain/index.md`
 - `.brain/state.md`
 - `.brain/handoff.md`
-- `src/handoff/section-completed.ts`
+- `src/handoff/section-open-issues.ts`

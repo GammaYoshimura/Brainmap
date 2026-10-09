@@ -4,7 +4,7 @@ Current operational state of the Brainmap project.
 
 ## Current Milestone
 
-**M153**: Generate COMPLETED.
+**M154**: Generate OPEN ISSUES.
 
 ## What is Implemented
 
@@ -101,6 +101,7 @@ Current operational state of the Brainmap project.
   - M151: Implemented issue detector (`src/handoff/issue-detector.ts`) detecting recorded blockers and known open issues.
   - M152: Implemented CURRENT MILESTONE section generator (`src/handoff/section-current-milestone.ts`).
   - M153: Implemented COMPLETED section generator (`src/handoff/section-completed.ts`).
+  - M154: Implemented OPEN ISSUES section generator (`src/handoff/section-open-issues.ts`).
 
 ## What is In Progress
 
@@ -114,8 +115,8 @@ Current operational state of the Brainmap project.
 
 - Environment: Node.js v20+, TypeScript 5+, zero runtime dependencies.
 - Git repository synced with remote (`https://github.com/GammaYoshimura/Brainmap`).
-- 177 passing tests across the test suite.
+- 178 passing tests across the test suite.
 
 ## Immediate Next Work
 
-- M154: Generate OPEN ISSUES.
+- M155: Generate NEXT ACTION.
