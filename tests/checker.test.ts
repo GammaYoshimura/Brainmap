@@ -10,6 +10,7 @@ import { detectSubsystemRoutingProblems } from "../src/checker/subsystem-routing
 import { detectObviousDuplicateReferences } from "../src/checker/duplicate-ref-checker.js";
 import { detectBasicRoutingInconsistencies } from "../src/checker/routing-inconsistency-checker.js";
 import { detectUnreflectedMapChanges } from "../src/checker/map-sync-checker.js";
+import { runHealthChecks, formatHealthReport } from "../src/checker/health-reporter.js";
 
 test("checkReferencedDocumentExistence reports missing referenced markdown docs", () => {
   const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "brainmap-check-doc-"));
@@ -197,6 +198,29 @@ test("detectUnreflectedMapChanges flags new files not present in project-map.md"
   try {
     const issues = detectUnreflectedMapChanges(tmpDir, brainDir);
     assert.ok(Array.isArray(issues));
+  } finally {
+    fs.rmSync(tmpDir, { recursive: true, force: true });
+  }
+});
+
+test("runHealthChecks and formatHealthReport aggregate all checks into structured report", () => {
+  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "brainmap-check-reporter-"));
+  const brainDir = path.join(tmpDir, ".brain");
+  fs.mkdirSync(brainDir, { recursive: true });
+
+  fs.writeFileSync(path.join(brainDir, "index.md"), "# Index\n[Missing](missing.md)\n", "utf8");
+  fs.writeFileSync(path.join(brainDir, "architecture.md"), "# Architecture\n", "utf8");
+  fs.writeFileSync(path.join(brainDir, "state.md"), "# State\n", "utf8");
+  fs.writeFileSync(path.join(brainDir, "handoff.md"), "# Handoff\n", "utf8");
+
+  try {
+    const report = runHealthChecks(tmpDir);
+    assert.equal(report.isHealthy, false);
+    assert.ok(report.totalIssues > 0);
+
+    const formatted = formatHealthReport(report);
+    assert.ok(formatted.includes("PROBLEMS DETECTED"));
+    assert.ok(formatted.includes("Missing Documents"));
   } finally {
     fs.rmSync(tmpDir, { recursive: true, force: true });
   }

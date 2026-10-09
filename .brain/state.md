@@ -4,7 +4,7 @@ Current operational state of the Brainmap project.
 
 ## Current Milestone
 
-**M166**: Detect changed files not reflected in generated maps.
+**M167**: Generate a health report.
 
 ## What is Implemented
 
@@ -116,10 +116,11 @@ Current operational state of the Brainmap project.
   - M164: Implemented duplicate reference detector (`src/checker/duplicate-ref-checker.ts`) flagging redundant identical links in the same document.
   - M165: Implemented routing inconsistency checker (`src/checker/routing-inconsistency-checker.ts`) detecting missing core constitution documents, missing router targets, and circular references.
   - M166: Implemented map synchronization checker (`src/checker/map-sync-checker.ts`) detecting changed source files not yet mapped in `.brain/project-map.md`.
+  - M167: Implemented health report generator (`src/checker/health-reporter.ts`) and wired formatted diagnostic reporting into `brainmap check`.
 
 ## What is In Progress
 
-- Health Checks block (M159–M169).
+- Concluding milestone M167 (session stopping point per user request).
 
 ## Known Blockers
 
@@ -129,8 +130,8 @@ Current operational state of the Brainmap project.
 
 - Environment: Node.js v20+, TypeScript 5+, zero runtime dependencies.
 - Git repository synced with remote (`https://github.com/GammaYoshimura/Brainmap`).
-- 193 passing tests across the test suite.
+- 194 passing tests across the test suite.
 
 ## Immediate Next Work
 
-- M167: Generate a health report.
+- M168: Return meaningful exit codes.

@@ -23,7 +23,7 @@ The handoff document ensures that any subsequent AI agent or developer session c
 ## Current Operational Handoff
 
 ### CURRENT MILESTONE
-M166: Detect changed files not reflected in generated maps.
+M167: Generate a health report.
 
 ### COMPLETED
 - Repository foundation (M001–M010).
@@ -48,31 +48,34 @@ M166: Detect changed files not reflected in generated maps.
   - M164: Implemented duplicate reference detector (`src/checker/duplicate-ref-checker.ts`) flagging redundant identical links in the same document.
   - M165: Implemented routing inconsistency checker (`src/checker/routing-inconsistency-checker.ts`) detecting missing core constitution documents, missing router targets, and circular references.
   - M166: Implemented map synchronization checker (`src/checker/map-sync-checker.ts`) detecting changed source files not yet mapped in `.brain/project-map.md`.
+  - M167: Implemented health report generator (`src/checker/health-reporter.ts`) and wired formatted diagnostic reporting into `brainmap check`.
 
 ### IN PROGRESS
-- Health Checks block (M159–M169).
+- Pausing work after milestone M167 per user instruction.
 
 ### CHANGED FILES
-- `src/checker/map-sync-checker.ts`
+- `src/checker/health-reporter.ts`
+- `src/commands/check.ts`
 - `tests/checker.test.ts`
 - `.brain/state.md`
 - `.brain/handoff.md`
 
 ### TEST STATUS
-- 193/193 tests passing (`npm test`).
+- 194/194 tests passing (`npm test`).
 - TypeScript builds cleanly (`npm run build`).
 
 ### OPEN ISSUES
 - None.
 
 ### IMPORTANT DECISIONS
-- The map sync checker verifies that newly modified or created project source files are reflected in `.brain/project-map.md`.
+- The health report synthesizes all integrity checkers into a single diagnostic report and formats the result clearly for human and AI inspection.
 
 ### NEXT ACTION
-- Proceed to M167: Generate a health report.
+- Resume next session with M168: Return meaningful exit codes.
 
 ### CONTEXT TO LOAD
 - .brain/index.md
 - .brain/state.md
 - .brain/handoff.md
-- src/checker/map-sync-checker.ts
+- src/commands/check.ts
+- src/checker/health-reporter.ts
