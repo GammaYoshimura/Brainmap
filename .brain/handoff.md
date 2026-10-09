@@ -23,7 +23,7 @@ The handoff document ensures that any subsequent AI agent or developer session c
 ## Current Operational Handoff
 
 ### CURRENT MILESTONE
-M164: Detect obvious duplicate references.
+M165: Detect basic routing inconsistencies.
 
 ### COMPLETED
 - Repository foundation (M001–M010).
@@ -46,31 +46,32 @@ M164: Detect obvious duplicate references.
   - M162: Implemented missing source file reference detector (`src/checker/source-ref-checker.ts`) validating code paths mentioned across documentation.
   - M163: Implemented subsystem routing checker (`src/checker/subsystem-routing-checker.ts`) detecting missing index documents, unregistered subsystems, and dangling router links.
   - M164: Implemented duplicate reference detector (`src/checker/duplicate-ref-checker.ts`) flagging redundant identical links in the same document.
+  - M165: Implemented routing inconsistency checker (`src/checker/routing-inconsistency-checker.ts`) detecting missing core constitution documents, missing router targets, and circular references.
 
 ### IN PROGRESS
 - Health Checks block (M159–M169).
 
 ### CHANGED FILES
-- `src/checker/duplicate-ref-checker.ts`
+- `src/checker/routing-inconsistency-checker.ts`
 - `tests/checker.test.ts`
 - `.brain/state.md`
 - `.brain/handoff.md`
 
 ### TEST STATUS
-- 191/191 tests passing (`npm test`).
+- 192/192 tests passing (`npm test`).
 - TypeScript builds cleanly (`npm run build`).
 
 ### OPEN ISSUES
 - None.
 
 ### IMPORTANT DECISIONS
-- The duplicate reference checker scans link destinations in markdown files to flag redundant duplicate entries.
+- The routing inconsistency checker enforces core constitution presence in `.brain`, presence of routes to them in `.brain/index.md`, and detects circular references.
 
 ### NEXT ACTION
-- Proceed to M165: Detect basic routing inconsistencies.
+- Proceed to M166: Detect changed files not reflected in generated maps.
 
 ### CONTEXT TO LOAD
 - .brain/index.md
 - .brain/state.md
 - .brain/handoff.md
-- src/checker/duplicate-ref-checker.ts
+- src/checker/routing-inconsistency-checker.ts

@@ -8,6 +8,7 @@ import { detectBrokenMarkdownLinks } from "../src/checker/markdown-link-checker.
 import { detectMissingSourceFileReferences } from "../src/checker/source-ref-checker.js";
 import { detectSubsystemRoutingProblems } from "../src/checker/subsystem-routing-checker.js";
 import { detectObviousDuplicateReferences } from "../src/checker/duplicate-ref-checker.js";
+import { detectBasicRoutingInconsistencies } from "../src/checker/routing-inconsistency-checker.js";
 
 test("checkReferencedDocumentExistence reports missing referenced markdown docs", () => {
   const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "brainmap-check-doc-"));
@@ -150,6 +151,32 @@ test("detectObviousDuplicateReferences flags repeated links in same document", (
     assert.equal(dups.length, 1);
     assert.equal(dups[0].target, "architecture.md");
     assert.equal(dups[0].count, 2);
+  } finally {
+    fs.rmSync(tmpDir, { recursive: true, force: true });
+  }
+});
+
+test("detectBasicRoutingInconsistencies identifies missing core routes and self-references", () => {
+  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "brainmap-check-inconsist-"));
+  const brainDir = path.join(tmpDir, ".brain");
+  fs.mkdirSync(brainDir, { recursive: true });
+
+  // Missing handoff.md file
+  fs.writeFileSync(path.join(brainDir, "architecture.md"), "# Architecture\n", "utf8");
+  fs.writeFileSync(path.join(brainDir, "state.md"), "# State\n", "utf8");
+
+  // index.md linking to index.md and missing handoff link
+  fs.writeFileSync(
+    path.join(brainDir, "index.md"),
+    "# Index\n- [Self](index.md)\n- [Arch](architecture.md)\n",
+    "utf8"
+  );
+
+  try {
+    const issues = detectBasicRoutingInconsistencies(tmpDir, brainDir);
+    assert.ok(issues.some((i) => i.type === "missing_core_doc" && i.file === ".brain/handoff.md"));
+    assert.ok(issues.some((i) => i.type === "missing_core_route" && i.details.includes("state.md")));
+    assert.ok(issues.some((i) => i.type === "circular_reference"));
   } finally {
     fs.rmSync(tmpDir, { recursive: true, force: true });
   }
