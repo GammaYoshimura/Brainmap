@@ -12,7 +12,13 @@ import {
   truncateContentToLimit,
 } from "../src/context/context-limits.js";
 import { prioritizeContextItems } from "../src/context/prioritizer.js";
-import { formatContextText, formatContextJson, ContextPayload } from "../src/context/formatter.js";
+import {
+  formatContextText,
+  formatContextJson,
+  generateContextSummary,
+  formatContextSummary,
+  ContextPayload,
+} from "../src/context/formatter.js";
 import { assembleContext } from "../src/context/context-selector.js";
 
 test("createContextInput uses routing results as input", () => {
@@ -186,4 +192,45 @@ test("assembleContext builds complete context payload from input", () => {
   assert.ok(Array.isArray(payload.items));
   assert.ok(payload.items.length > 0);
   assert.ok(payload.totalCharacters > 0);
+});
+
+test("formatContextSummary creates concise context overview", () => {
+  const payload: ContextPayload = {
+    query: "Summary test",
+    projectRoot: "/mock/root",
+    items: [
+      {
+        type: "brain-doc",
+        path: ".brain/index.md",
+        score: 80,
+        reasons: ["doc match"],
+        content: "...",
+        truncated: false,
+        characters: 3,
+      },
+      {
+        type: "source-file",
+        path: "src/cli.ts",
+        score: 90,
+        reasons: ["cli match"],
+        content: "...",
+        truncated: false,
+        characters: 3,
+      },
+    ],
+    omittedCount: 2,
+    totalCharacters: 6,
+  };
+
+  const summary = generateContextSummary(payload);
+  assert.equal(summary.totalIncluded, 2);
+  assert.equal(summary.brainDocsCount, 1);
+  assert.equal(summary.sourceFilesCount, 1);
+  assert.equal(summary.testsCount, 0);
+  assert.equal(summary.omittedCount, 2);
+
+  const text = formatContextSummary(payload);
+  assert.match(text, /Context Summary for: "Summary test"/);
+  assert.match(text, /Included files: 2 \(1 brain docs, 1 source files, 0 tests\)/);
+  assert.match(text, /Omitted due to budget limits: 2/);
 });

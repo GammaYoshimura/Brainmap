@@ -5,7 +5,11 @@ import {
   assembleContext,
   ContextSelectionInput,
 } from "../context/context-selector.js";
-import { formatContextText, formatContextJson } from "../context/formatter.js";
+import {
+  formatContextText,
+  formatContextJson,
+  formatContextSummary,
+} from "../context/formatter.js";
 
 export const CONTEXT_SUCCESS = 0;
 export const CONTEXT_FAILURE = 1;
@@ -16,12 +20,13 @@ export function resolveContextDirectory(targetPath?: string): string {
 
 export function contextCommand(args: string[] = []): number {
   const isJson = args.includes("--json");
-  const queryArgs = args.filter((a) => a !== "--json");
+  const isSummary = args.includes("--summary");
+  const queryArgs = args.filter((a) => a !== "--json" && a !== "--summary");
 
   const query = parseTaskQuery(queryArgs);
   if (!query) {
     console.error("Please provide a task query.");
-    console.error("Usage: brainmap context <query> [--json]");
+    console.error("Usage: brainmap context <query> [--json] [--summary]");
     return CONTEXT_FAILURE;
   }
 
@@ -31,6 +36,8 @@ export function contextCommand(args: string[] = []): number {
 
   if (isJson) {
     console.log(formatContextJson(payload));
+  } else if (isSummary) {
+    console.log(formatContextSummary(payload));
   } else {
     console.log(formatContextText(payload));
   }

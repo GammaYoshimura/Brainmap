@@ -23,7 +23,7 @@ The handoff document ensures that any subsequent AI agent or developer session c
 ## Current Operational Handoff
 
 ### CURRENT MILESTONE
-M142: Create JSON context output.
+M143: Show a concise context summary.
 
 ### COMPLETED
 - Repository foundation (M001–M010).
@@ -48,13 +48,13 @@ M142: Create JSON context output.
   - M140: Implemented relevance-based prioritization and budget-aware assembly (`src/context/prioritizer.ts`, `tests/context.test.ts`).
   - M141: Implemented plain-text context formatting (`src/context/formatter.ts`, `tests/context.test.ts`).
   - M142: Implemented JSON context serialization and CLI `--json` flag integration (`src/context/formatter.ts`, `src/commands/context.ts`, `tests/context.test.ts`).
+  - M143: Implemented concise context summary generation and formatting with CLI `--summary` flag (`src/context/formatter.ts`, `src/commands/context.ts`, `tests/context.test.ts`).
 
 ### IN PROGRESS
 - Context Selection block (M133–M144).
 
 ### CHANGED FILES
 - `src/context/formatter.ts`
-- `src/context/context-selector.ts`
 - `src/commands/context.ts`
 - `tests/context.test.ts`
 - `.brain/project-map.md`
@@ -62,21 +62,21 @@ M142: Create JSON context output.
 - `.brain/handoff.md`
 
 ### TEST STATUS
-- 158/158 tests passing (`npm test`).
+- 159/159 tests passing (`npm test`).
 - TypeScript builds cleanly (`npm run build`).
 
 ### OPEN ISSUES
 - None.
 
 ### IMPORTANT DECISIONS
-- The `context` command supports machine-readable `--json` output alongside human-friendly plain-text output.
+- The `--summary` option displays high-level item counts, character weights, and omission statistics without printing full file bodies.
 
 ### NEXT ACTION
-- Implement M143: Show a concise context summary.
+- Implement M144: Add context-selection tests.
 
 ### CONTEXT TO LOAD
 - `.brain/index.md`
 - `.brain/state.md`
 - `.brain/handoff.md`
+- `src/context/context-selector.ts`
 - `src/context/formatter.ts`
-- `src/commands/context.ts`
