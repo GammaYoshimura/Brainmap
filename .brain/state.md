@@ -4,7 +4,7 @@ Current operational state of the Brainmap project.
 
 ## Current Milestone
 
-**M158**: Add handoff tests.
+**M159**: Create `brainmap check`.
 
 ## What is Implemented
 
@@ -107,9 +107,12 @@ Current operational state of the Brainmap project.
   - M157: Implemented handoff document update and writer (`src/handoff/handoff-writer.ts`) updating `.brain/handoff.md`.
   - M158: Added comprehensive handoff test suite (`tests/handoff.test.ts`, `tests/handoff-e2e.test.ts`).
 
+- **Health Checks (M159–M169)**:
+  - M159: Created `check` command handler (`src/commands/check.ts`), wired command dispatch and help description in CLI entry point (`src/cli.ts`).
+
 ## What is In Progress
 
-- Concluding Handoff block (M145–M158).
+- Health Checks block (M159–M169).
 
 ## Known Blockers
 
@@ -119,8 +122,8 @@ Current operational state of the Brainmap project.
 
 - Environment: Node.js v20+, TypeScript 5+, zero runtime dependencies.
 - Git repository synced with remote (`https://github.com/GammaYoshimura/Brainmap`).
-- 184 passing tests across the test suite.
+- 185 passing tests across the test suite.
 
 ## Immediate Next Work
 
-- Next block: **Health Checks** (M159: Create `brainmap check`).
+- M160: Check referenced document existence.

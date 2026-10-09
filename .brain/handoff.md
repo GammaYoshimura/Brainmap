@@ -23,7 +23,7 @@ The handoff document ensures that any subsequent AI agent or developer session c
 ## Current Operational Handoff
 
 ### CURRENT MILESTONE
-M158: Add handoff tests.
+M159: Create `brainmap check`.
 
 ### COMPLETED
 - Repository foundation (M001–M010).
@@ -38,47 +38,36 @@ M158: Add handoff tests.
 - Specialized Documentation block (M109–M117).
 - Routing block (M118–M132).
 - Context Selection block (M133–M144).
-- Handoff block (M145–M158) complete:
-  - M145: Created `handoff` command handler (`src/commands/handoff.ts`), wired command dispatch and help description in CLI entry point (`src/cli.ts`).
-  - M146: Implemented state reader (`src/handoff/state-reader.ts`) to parse and structure operational state from `.brain/state.md`.
-  - M147: Implemented milestone reader (`src/handoff/milestone-reader.ts`) extracting active milestone codes and titles.
-  - M148: Implemented recent changes detector (`src/handoff/change-detector.ts`) extracting git commit log records and commit summaries.
-  - M149: Implemented changed files detector (`src/handoff/file-change-detector.ts`) extracting staged, unstaged, untracked, and recent commit changed files.
-  - M150: Implemented test status reader (`src/handoff/test-status-reader.ts`) extracting test suite execution metrics and pass/fail states.
-  - M151: Implemented issue detector (`src/handoff/issue-detector.ts`) detecting recorded blockers and known open issues.
-  - M152: Implemented CURRENT MILESTONE section generator (`src/handoff/section-current-milestone.ts`).
-  - M153: Implemented COMPLETED section generator (`src/handoff/section-completed.ts`).
-  - M154: Implemented OPEN ISSUES section generator (`src/handoff/section-open-issues.ts`).
-  - M155: Implemented NEXT ACTION section generator (`src/handoff/section-next-action.ts`).
-  - M156: Implemented CONTEXT TO LOAD section generator (`src/handoff/section-context-to-load.ts`).
-  - M157: Implemented handoff document update and writer (`src/handoff/handoff-writer.ts`) updating `.brain/handoff.md`.
-  - M158: Added comprehensive handoff test suite (`tests/handoff.test.ts`, `tests/handoff-e2e.test.ts`).
+- Handoff block (M145–M158).
+- Health Checks block started:
+  - M159: Created `check` command handler (`src/commands/check.ts`), wired command dispatch and help description in CLI entry point (`src/cli.ts`), added CLI test (`tests/cli.test.ts`).
 
 ### IN PROGRESS
-- Concluding Handoff block (M145–M158).
+- Health Checks block (M159–M169).
 
 ### CHANGED FILES
-- `src/handoff/section-context-to-load.ts`
-- `tests/handoff-e2e.test.ts`
+- `src/commands/check.ts`
+- `src/cli.ts`
+- `tests/cli.test.ts`
 - `.brain/state.md`
 - `.brain/handoff.md`
 
 ### TEST STATUS
-- 184/184 tests passing (`npm test`).
+- 185/185 tests passing (`npm test`).
 - TypeScript builds cleanly (`npm run build`).
 
 ### OPEN ISSUES
 - None.
 
 ### IMPORTANT DECISIONS
-- The entire Handoff pipeline (M145–M158) is complete, fully automated, deterministic, tested unit and end-to-end, and integrated into CLI.
+- Initial `check` command registered in CLI entry point and ready for integrity checkers.
 
 ### NEXT ACTION
-- Proceed to next block: **Health Checks** (M159: Create `brainmap check`).
+- Proceed to M160: Check referenced document existence.
 
 ### CONTEXT TO LOAD
 - .brain/index.md
 - .brain/state.md
 - .brain/handoff.md
-- src/commands/handoff.ts
-- src/handoff/handoff-writer.ts
+- src/cli.ts
+- src/commands/check.ts
