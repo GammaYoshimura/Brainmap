@@ -14,6 +14,7 @@ import { generateCompletedSection } from "../src/handoff/section-completed.js";
 import { generateOpenIssuesSection } from "../src/handoff/section-open-issues.js";
 import { generateNextActionSection } from "../src/handoff/section-next-action.js";
 import { generateContextToLoadSection } from "../src/handoff/section-context-to-load.js";
+import { updateHandoffDocument, synthesizeHandoffDocument } from "../src/handoff/handoff-writer.js";
 
 test("readCurrentState returns null when .brain/state.md does not exist", () => {
   const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "brainmap-handoff-state-none-"));
@@ -284,6 +285,63 @@ test("generateContextToLoadSection includes brain docs and dynamic files while e
     assert.ok(text.includes("- src/handoff/section-context-to-load.ts"));
     assert.ok(!text.includes(".micro-brain"));
     assert.ok(!text.includes("master_prompt"));
+  } finally {
+    fs.rmSync(tmpDir, { recursive: true, force: true });
+  }
+});
+
+test("updateHandoffDocument writes synthesized handoff.md with all standard sections", () => {
+  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "brainmap-handoff-update-doc-"));
+  const brainDir = path.join(tmpDir, ".brain");
+  fs.mkdirSync(brainDir, { recursive: true });
+
+  fs.writeFileSync(path.join(brainDir, "state.md"), `# State
+
+## Current Milestone
+
+**M157**: Update .brain/handoff.md.
+
+## What is Implemented
+
+- Complete handoff synthesis
+
+## What is In Progress
+
+- Handoff verification
+
+## Known Blockers
+
+- None.
+
+## Relevant Current Conditions
+
+- 180 passing tests
+
+## Immediate Next Work
+
+- M158: Add handoff tests.
+`, "utf8");
+
+  try {
+    const writtenPath = updateHandoffDocument(tmpDir, {
+      inProgressText: "- Completing handoff block (M145–M158).\n",
+      importantDecisions: ["Deterministic handoff generation."],
+    });
+
+    assert.equal(writtenPath, path.join(brainDir, "handoff.md"));
+    assert.ok(fs.existsSync(writtenPath));
+
+    const content = fs.readFileSync(writtenPath, "utf8");
+    assert.ok(content.includes("### CURRENT MILESTONE"));
+    assert.ok(content.includes("M157: Update .brain/handoff.md."));
+    assert.ok(content.includes("### COMPLETED"));
+    assert.ok(content.includes("### IN PROGRESS"));
+    assert.ok(content.includes("### CHANGED FILES"));
+    assert.ok(content.includes("### TEST STATUS"));
+    assert.ok(content.includes("### OPEN ISSUES"));
+    assert.ok(content.includes("### IMPORTANT DECISIONS"));
+    assert.ok(content.includes("### NEXT ACTION"));
+    assert.ok(content.includes("### CONTEXT TO LOAD"));
   } finally {
     fs.rmSync(tmpDir, { recursive: true, force: true });
   }

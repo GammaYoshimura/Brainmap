@@ -23,7 +23,7 @@ The handoff document ensures that any subsequent AI agent or developer session c
 ## Current Operational Handoff
 
 ### CURRENT MILESTONE
-M156: Generate CONTEXT TO LOAD.
+M157: Update .brain/handoff.md.
 
 ### COMPLETED
 - Repository foundation (M001–M010).
@@ -51,31 +51,35 @@ M156: Generate CONTEXT TO LOAD.
   - M154: Implemented OPEN ISSUES section generator (`src/handoff/section-open-issues.ts`).
   - M155: Implemented NEXT ACTION section generator (`src/handoff/section-next-action.ts`).
   - M156: Implemented CONTEXT TO LOAD section generator (`src/handoff/section-context-to-load.ts`).
+  - M157: Implemented handoff document update and writer (`src/handoff/handoff-writer.ts`) updating `.brain/handoff.md`.
 
 ### IN PROGRESS
 - Handoff block (M145–M158).
 
 ### CHANGED FILES
-- `src/handoff/section-context-to-load.ts`
+- `src/handoff/handoff-writer.ts`
+- `src/commands/handoff.ts`
 - `tests/handoff.test.ts`
 - `.brain/state.md`
 - `.brain/handoff.md`
 
 ### TEST STATUS
-- 180/180 tests passing (`npm test`).
+- 181/181 tests passing (`npm test`).
 - TypeScript builds cleanly (`npm run build`).
 
 ### OPEN ISSUES
 - None.
 
 ### IMPORTANT DECISIONS
-- The CONTEXT TO LOAD generator guarantees inclusion of foundational brain documents while scrubbing private local development trackers.
+- The handoff document update engine synthesizes all standard sections deterministically and writes to `.brain/handoff.md`.
 
 ### NEXT ACTION
-- Proceed to M157: Update .brain/handoff.md.
+- Proceed to M158: Add handoff tests.
 
 ### CONTEXT TO LOAD
-- `.brain/index.md`
-- `.brain/state.md`
-- `.brain/handoff.md`
-- `src/handoff/section-context-to-load.ts`
+- .brain/index.md
+- .brain/state.md
+- .brain/handoff.md
+- src/commands/handoff.ts
+- src/handoff/handoff-writer.ts
+- tests/handoff.test.ts

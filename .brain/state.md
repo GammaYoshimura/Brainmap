@@ -4,7 +4,7 @@ Current operational state of the Brainmap project.
 
 ## Current Milestone
 
-**M156**: Generate CONTEXT TO LOAD.
+**M157**: Update .brain/handoff.md.
 
 ## What is Implemented
 
@@ -104,6 +104,7 @@ Current operational state of the Brainmap project.
   - M154: Implemented OPEN ISSUES section generator (`src/handoff/section-open-issues.ts`).
   - M155: Implemented NEXT ACTION section generator (`src/handoff/section-next-action.ts`).
   - M156: Implemented CONTEXT TO LOAD section generator (`src/handoff/section-context-to-load.ts`).
+  - M157: Implemented handoff document update and writer (`src/handoff/handoff-writer.ts`) updating `.brain/handoff.md`.
 
 ## What is In Progress
 
@@ -117,8 +118,8 @@ Current operational state of the Brainmap project.
 
 - Environment: Node.js v20+, TypeScript 5+, zero runtime dependencies.
 - Git repository synced with remote (`https://github.com/GammaYoshimura/Brainmap`).
-- 180 passing tests across the test suite.
+- 181 passing tests across the test suite.
 
 ## Immediate Next Work
 
-- M157: Update .brain/handoff.md.
+- M158: Add handoff tests.
