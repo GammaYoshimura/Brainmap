@@ -8,6 +8,7 @@ import { readCurrentMilestone } from "../src/handoff/milestone-reader.js";
 import { detectRecentChanges } from "../src/handoff/change-detector.js";
 import { detectChangedFiles } from "../src/handoff/file-change-detector.js";
 import { readAvailableTestStatus } from "../src/handoff/test-status-reader.js";
+import { detectOpenIssues } from "../src/handoff/issue-detector.js";
 
 test("readCurrentState returns null when .brain/state.md does not exist", () => {
   const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "brainmap-handoff-state-none-"));
@@ -154,6 +155,42 @@ test("readAvailableTestStatus returns unknown when no handoff or state exists", 
   try {
     const status = readAvailableTestStatus(tmpDir);
     assert.equal(status.status, "unknown");
+  } finally {
+    fs.rmSync(tmpDir, { recursive: true, force: true });
+  }
+});
+
+test("detectOpenIssues extracts blockers and ignores None entries", () => {
+  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "brainmap-handoff-issues-test-"));
+  const brainDir = path.join(tmpDir, ".brain");
+  fs.mkdirSync(brainDir, { recursive: true });
+
+  fs.writeFileSync(path.join(brainDir, "handoff.md"), "# Handoff\n\n### OPEN ISSUES\n- None.\n", "utf8");
+  fs.writeFileSync(path.join(brainDir, "state.md"), "# State\n\n## Known Blockers\n- Flaky network test on CI\n", "utf8");
+
+  try {
+    const issues = detectOpenIssues(tmpDir);
+    assert.equal(issues.hasBlockers, true);
+    assert.deepEqual(issues.issues, ["Flaky network test on CI"]);
+    assert.equal(issues.rawText, "- Flaky network test on CI");
+  } finally {
+    fs.rmSync(tmpDir, { recursive: true, force: true });
+  }
+});
+
+test("detectOpenIssues returns clean fallback when no issues exist", () => {
+  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "brainmap-handoff-issues-clean-"));
+  const brainDir = path.join(tmpDir, ".brain");
+  fs.mkdirSync(brainDir, { recursive: true });
+
+  fs.writeFileSync(path.join(brainDir, "handoff.md"), "# Handoff\n\n### OPEN ISSUES\n- None.\n", "utf8");
+  fs.writeFileSync(path.join(brainDir, "state.md"), "# State\n\n## Known Blockers\n- None.\n", "utf8");
+
+  try {
+    const issues = detectOpenIssues(tmpDir);
+    assert.equal(issues.hasBlockers, false);
+    assert.deepEqual(issues.issues, []);
+    assert.equal(issues.rawText, "- None.");
   } finally {
     fs.rmSync(tmpDir, { recursive: true, force: true });
   }
