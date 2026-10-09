@@ -7,9 +7,14 @@
   "bin": {
     "brainmap": "dist/src/cli.js"
   },
+  "files": [
+    "dist/src",
+    "README.md"
+  ],
   "scripts": {
     "build": "tsc",
     "start": "node dist/src/cli.js",
+    "prepack": "npm run build",
     "test": "npm run build && node --test dist/tests"
   },
   "repository": {

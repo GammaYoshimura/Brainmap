@@ -1,5 +1,6 @@
 import path from "node:path";
 import { createProjectModel } from "../core/model.js";
+import { collectDeclaredDependencies } from "../detector/manifests.js";
 import {
   traverseProject,
   recordDiscoveredFiles,
@@ -24,6 +25,12 @@ export function resolveUpdateDirectory(targetPath?: string): string {
 }
 
 export function updateCommand(args: string[] = []): number {
+  const unknownFlag = args.find((a) => a.startsWith("-"));
+  if (unknownFlag) {
+    console.error(`Unknown option: ${unknownFlag}`);
+    return UPDATE_FAILURE;
+  }
+
   const targetDir = resolveUpdateDirectory(args[0]);
   console.log(`Updating project state in ${targetDir}...`);
 
@@ -51,6 +58,7 @@ export function updateCommand(args: string[] = []): number {
   const baseModel = previousState.model ?? {
     ...createProjectModel(path.basename(targetDir), traversal.rootPath),
     files: previousState.files ?? [],
+    dependencies: collectDeclaredDependencies(previousState.files ?? [], traversal.rootPath),
   };
 
   const updatedModel = updateProjectModelIncrementally(baseModel, {

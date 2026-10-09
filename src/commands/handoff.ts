@@ -9,6 +9,12 @@ export function resolveHandoffDirectory(targetPath?: string): string {
 }
 
 export function handoffCommand(args: string[] = []): number {
+  const unknownFlag = args.find((a) => a.startsWith("-"));
+  if (unknownFlag) {
+    console.error(`Unknown option: ${unknownFlag}`);
+    return HANDOFF_FAILURE;
+  }
+
   const targetDir = resolveHandoffDirectory(args[0]);
   console.log(`Generating handoff in ${targetDir}...`);
   const updatedPath = updateHandoffDocument(targetDir);

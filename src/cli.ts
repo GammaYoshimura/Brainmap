@@ -32,6 +32,11 @@ export const EXIT_SUCCESS = 0;
 export const EXIT_FAILURE = 1;
 
 export function run(args: string[] = process.argv.slice(2)): number {
+  if (args.length === 0) {
+    console.log("Brainmap");
+    return EXIT_SUCCESS;
+  }
+
   if (args.includes("--help") || args.includes("-h") || args[0] === "help") {
     console.log(HELP_TEXT.trim());
     return EXIT_SUCCESS;
@@ -71,13 +76,15 @@ export function run(args: string[] = process.argv.slice(2)): number {
     return checkCommand(args.slice(1));
   }
 
-  if (args.length > 0 && args[0].startsWith("-")) {
-    console.error(`Unknown option: ${args[0]}`);
+  if (command.startsWith("-")) {
+    console.error(`Unknown option: ${command}`);
+    console.error("Run 'brainmap --help' for usage information.");
     return EXIT_FAILURE;
   }
 
-  console.log("Brainmap");
-  return EXIT_SUCCESS;
+  console.error(`Unknown command: "${command}"`);
+  console.error("Run 'brainmap --help' for available commands.");
+  return EXIT_FAILURE;
 }
 
 const isDirectRun = process.argv[1] && (

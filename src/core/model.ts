@@ -11,6 +11,7 @@ export interface FileModel {
   name: string;
   extension: string;
   size: number;
+  hash?: string;
   language?: string;
   isEntrypoint?: boolean;
 }
@@ -116,6 +117,7 @@ export function createFileModel(data: {
   name: string;
   extension: string;
   size: number;
+  hash?: string;
   language?: string;
   isEntrypoint?: boolean;
 }): FileModel {

@@ -2,6 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { normalizePath, toRelativePath } from "../core/paths.js";
 import { traverseProject } from "../scanner/scanner.js";
+import { isSourceFile, isTestPath } from "../core/classification.js";
 import { TaskQuery } from "./query.js";
 import { resolveExactPathMatches } from "./path-matcher.js";
 import { resolveFilenameMatches } from "./filename-matcher.js";
@@ -9,29 +10,7 @@ import { resolveSubsystemMatches, SubsystemCandidate } from "./subsystem-matcher
 import { extractSymbolsFromContent, resolveSymbolMatches, SymbolDeclaration } from "./symbol-matcher.js";
 import { createRelevanceRanking, RankedItem, CandidateMatchInput } from "./ranking.js";
 
-export function isTestPath(relativePath: string): boolean {
-  const norm = normalizePath(relativePath).toLowerCase();
-  return (
-    norm.startsWith("tests/") ||
-    norm.startsWith("test/") ||
-    norm.includes("/tests/") ||
-    norm.includes("/test/") ||
-    norm.includes("/__tests__/") ||
-    /\.(test|spec)\.[^.]+$/.test(norm)
-  );
-}
-
-export function isSourceFile(relativePath: string): boolean {
-  const norm = normalizePath(relativePath).toLowerCase();
-  if (norm.startsWith(".brain/") || norm.startsWith(".git/")) {
-    return false;
-  }
-  if (isTestPath(norm)) {
-    return false;
-  }
-  // Common programming and config file extensions
-  return /\.(ts|js|mjs|cjs|py|go|rs|dart|php|cs|java|cpp|c|h|json|yaml|yml|toml)$/.test(norm);
-}
+export { isSourceFile, isTestPath };
 
 export interface RouteSourceFilesOptions {
   files?: string[];
@@ -82,10 +61,13 @@ export function routeRelevantSourceFiles(
   if (options.subsystems && options.subsystems.length > 0) {
     const matchedSubsystems = resolveSubsystemMatches(options.subsystems, query);
     for (const subMatch of matchedSubsystems) {
-      const subPathNorm = normalizePath(subMatch.subsystem.path).toLowerCase();
+      const subPathNorm = normalizePath(subMatch.subsystem.path)
+        .toLowerCase()
+        .replace(/^\.\//, "")
+        .replace(/\/+$/, "");
       for (const file of sourceFiles) {
         const fileNorm = normalizePath(file).toLowerCase();
-        if (fileNorm.startsWith(subPathNorm + "/")) {
+        if (fileNorm === subPathNorm || fileNorm.startsWith(subPathNorm + "/")) {
           candidateInputs.push({
             path: file,
             category: "source-file",

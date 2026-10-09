@@ -119,10 +119,20 @@ Current operational state of the Brainmap project.
   - M167: Implemented health report generator (`src/checker/health-reporter.ts`) and wired formatted diagnostic reporting into `brainmap check`.
   - M168: Implemented meaningful exit codes returning `CHECK_SUCCESS = 0` on healthy status and `CHECK_FAILURE = 1` when problems are detected.
   - M169: Added comprehensive health-check test suite with unit, diagnostic report, exit-code, and end-to-end multi-tier fixture verification (`tests/checker.test.ts`, `tests/check-e2e.test.ts`).
+- **Review Remediations & System Hardening**:
+  - Implemented SHA-256 file content hashing for change detection in `updateCommand` to prevent missing same-size edits.
+  - Hardened dependency lifecycle in `scan`, `update`, and `map` to preserve dependencies on unrelated edits, remove dependencies when manifests are cleared, and migrate legacy states.
+  - Integrated subsystem documentation generation directly into `mapCommand` with idempotent routing synchronization.
+  - Wired subsystem discovery into `executeRouting` pipeline so queries matching subsystems route all internal subsystem source files and tests.
+  - Centralized source file classification (`src/core/classification.ts`) and added `.jsx`/`.tsx` routing eligibility.
+  - Improved `.gitignore` pattern parsing, negation, and nested directory traversal rules.
+  - Enforced strict non-zero exit codes on unknown CLI commands and options.
+  - Verified npm packaging with `prepack`, shebang preservation, explicit `files` inclusion, and isolated package installation.
+  - Implemented relevance-centered context truncation around matched symbols with line-range omission markers and CLI budget flags.
 
 ## What is In Progress
 
-- Health Checks block (M159–M169) complete.
+- Review findings remediation completed; test suite updated.
 
 ## Known Blockers
 
@@ -132,7 +142,7 @@ Current operational state of the Brainmap project.
 
 - Environment: Node.js v20+, TypeScript 5+, zero runtime dependencies.
 - Git repository synced with remote (`https://github.com/GammaYoshimura/Brainmap`).
-- 198 passing tests across the test suite.
+- All automated tests passing across the test suite.
 
 ## Immediate Next Work
 

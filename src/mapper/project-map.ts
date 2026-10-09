@@ -25,7 +25,9 @@ export function generateProjectMapContent(data: ProjectMapData): string {
   const modules = detectModules(data.files, data.directories);
   const entryPoints = buildEntryPointMap(data.files);
   const manifests = buildManifestMap(data.files, data.projectRoot);
-  const dependencies = data.dependencies || collectDeclaredDependencies(data.files, data.projectRoot);
+  const dependencies = data.dependencies !== undefined
+    ? data.dependencies
+    : collectDeclaredDependencies(data.files, data.projectRoot);
 
   const sections: string[] = [
     `# Project Map: ${data.projectName}`,

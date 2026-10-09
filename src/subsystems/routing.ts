@@ -26,10 +26,10 @@ export function ensureSubsystemRoutingInIndex(
       const linkLine = `  - **[subsystems/${sub.id}/](subsystems/${sub.id}/)**: ${sub.name} routing and architectural context.`;
 
       // Check if subsystems/ parent entry exists
-      const parentPattern = /-\s+\*\*\[subsystems\/\]\(subsystems\/\)\*\*:[^\n]*/;
+      const parentPattern = /-\s+(\*\*)?\[subsystems\/\]\(subsystems\/\)(\*\*)?:[^\n]*/;
       if (parentPattern.test(content)) {
         // Insert after the parent or after the last nested item
-        const lastNestedPattern = new RegExp(`(-\\s+\\*\\*\\[subsystems\\/\\].*?(?:\\n\\s+-\\s+\\*\\*\\[subsystems\\/[^\\n]+)*)`, "s");
+        const lastNestedPattern = new RegExp(`(-\\s+(\\*\\*)?\\[subsystems\\/\\].*?(?:\\n\\s+-\\s+\\*\\*\\[subsystems\\/[^\\n]+)*)`, "s");
         const match = content.match(lastNestedPattern);
         if (match && match[0]) {
           content = content.replace(match[0], `${match[0]}\n${linkLine}`);

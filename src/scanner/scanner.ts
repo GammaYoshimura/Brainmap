@@ -1,5 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
+import crypto from "node:crypto";
 import { normalizePath, toRelativePath } from "../core/paths.js";
 import { FileModel, DirectoryModel, ProjectModel, createFileModel, createDirectoryModel } from "../core/model.js";
 import { detectLanguageByExtension, detectProjectLanguages, LanguageSummary } from "./languages.js";
@@ -8,13 +9,29 @@ import {
   ExclusionConfig,
   createDefaultExclusionConfig,
   loadGitignorePatterns,
-  shouldExclude,
+  parseGitignoreLines,
+  shouldExcludeWithRules,
+  GitignoreRule,
 } from "./exclusions.js";
 
 export interface TraversalResult {
   rootPath: string;
   files: string[];
   directories: string[];
+}
+
+export function computeFileHash(filePath: string): string | undefined {
+  try {
+    const buffer = fs.readFileSync(filePath);
+    return crypto.createHash("sha256").update(buffer).digest("hex");
+  } catch (error) {
+    console.warn(
+      `Warning: Could not compute hash for file "${filePath}": ${
+        error instanceof Error ? error.message : String(error)
+      }`
+    );
+    return undefined;
+  }
 }
 
 export function recordDiscoveredFile(fullPath: string, rootPath: string): FileModel {
@@ -24,6 +41,7 @@ export function recordDiscoveredFile(fullPath: string, rootPath: string): FileMo
   const extension = path.extname(fullPath).toLowerCase();
   const stat = fs.statSync(fullPath);
   const language = detectLanguageByExtension(extension);
+  const hash = computeFileHash(fullPath);
 
   return createFileModel({
     path: normPath,
@@ -31,6 +49,7 @@ export function recordDiscoveredFile(fullPath: string, rootPath: string): FileMo
     name,
     extension,
     size: stat.size,
+    hash,
     language,
     isEntrypoint: isEntryPoint(relPath),
   });
@@ -84,14 +103,34 @@ export function traverseProject(
   config: ExclusionConfig = createDefaultExclusionConfig()
 ): TraversalResult {
   const root = path.resolve(projectRoot);
-  const gitignorePatterns = config.useGitignore ? loadGitignorePatterns(root) : [];
+  const rootPatterns = config.useGitignore ? loadGitignorePatterns(root) : [];
+  const rootRules = parseGitignoreLines(rootPatterns, "");
 
   const files: string[] = [];
   const directories: string[] = [];
 
-  function walk(currentDir: string): void {
+  function walk(currentDir: string, activeRules: GitignoreRule[]): void {
     if (!fs.existsSync(currentDir)) {
       return;
+    }
+
+    let dirRules = activeRules;
+    if (config.useGitignore && currentDir !== root) {
+      const nestedGitignore = path.join(currentDir, ".gitignore");
+      if (fs.existsSync(nestedGitignore) && fs.statSync(nestedGitignore).isFile()) {
+        try {
+          const content = fs.readFileSync(nestedGitignore, "utf8");
+          const relDir = toRelativePath(root, currentDir);
+          const lines = content
+            .split(/\r?\n/)
+            .map((line) => line.trim())
+            .filter((line) => line.length > 0 && !line.startsWith("#"));
+          const nestedRules = parseGitignoreLines(lines, relDir);
+          dirRules = [...activeRules, ...nestedRules];
+        } catch {
+          // Skip unreadable files
+        }
+      }
     }
 
     const entries = fs.readdirSync(currentDir, { withFileTypes: true });
@@ -104,13 +143,13 @@ export function traverseProject(
       const relPath = toRelativePath(root, fullPath);
 
       if (entry.isDirectory()) {
-        if (shouldExclude(relPath, config, gitignorePatterns, true)) {
+        if (shouldExcludeWithRules(relPath, config, dirRules, true)) {
           continue;
         }
         directories.push(normalizePath(fullPath));
-        walk(fullPath);
+        walk(fullPath, dirRules);
       } else if (entry.isFile()) {
-        if (shouldExclude(relPath, config, gitignorePatterns, false)) {
+        if (shouldExcludeWithRules(relPath, config, dirRules, false)) {
           continue;
         }
         files.push(normalizePath(fullPath));
@@ -118,7 +157,7 @@ export function traverseProject(
     }
   }
 
-  walk(root);
+  walk(root, rootRules);
 
   return {
     rootPath: normalizePath(root),

@@ -5,6 +5,7 @@ import {
   assembleContext,
   ContextSelectionInput,
 } from "../context/context-selector.js";
+import { createContextBudget } from "../context/context-limits.js";
 import {
   formatContextText,
   formatContextJson,
@@ -19,20 +20,65 @@ export function resolveContextDirectory(targetPath?: string): string {
 }
 
 export function contextCommand(args: string[] = []): number {
-  const isJson = args.includes("--json");
-  const isSummary = args.includes("--summary");
-  const queryArgs = args.filter((a) => a !== "--json" && a !== "--summary");
+  let isJson = false;
+  let isSummary = false;
+  let maxCharacters: number | undefined;
+  let maxFiles: number | undefined;
+  let minScore: number | undefined;
+  const queryWords: string[] = [];
 
-  const query = parseTaskQuery(queryArgs);
+  for (let i = 0; i < args.length; i++) {
+    const arg = args[i];
+    if (arg === "--json") {
+      isJson = true;
+    } else if (arg === "--summary") {
+      isSummary = true;
+    } else if (arg === "--max-chars" || arg === "--max-characters") {
+      const val = parseInt(args[++i], 10);
+      if (isNaN(val) || val <= 0) {
+        console.error(`Invalid value for ${arg}`);
+        return CONTEXT_FAILURE;
+      }
+      maxCharacters = val;
+    } else if (arg === "--max-files") {
+      const val = parseInt(args[++i], 10);
+      if (isNaN(val) || val <= 0) {
+        console.error(`Invalid value for ${arg}`);
+        return CONTEXT_FAILURE;
+      }
+      maxFiles = val;
+    } else if (arg === "--min-score") {
+      const val = parseInt(args[++i], 10);
+      if (isNaN(val) || val < 0) {
+        console.error(`Invalid value for ${arg}`);
+        return CONTEXT_FAILURE;
+      }
+      minScore = val;
+    } else if (arg.startsWith("-")) {
+      console.error(`Unknown option: ${arg}`);
+      return CONTEXT_FAILURE;
+    } else {
+      queryWords.push(arg);
+    }
+  }
+
+  const query = parseTaskQuery(queryWords);
   if (!query) {
     console.error("Please provide a task query.");
-    console.error("Usage: brainmap context <query> [--json] [--summary]");
+    console.error("Usage: brainmap context <query> [--json] [--summary] [--max-chars <chars>] [--max-files <files>] [--min-score <score>]");
     return CONTEXT_FAILURE;
   }
 
   const targetDir = resolveContextDirectory();
-  const contextInput = createContextInput(targetDir, query);
-  const payload = assembleContext(contextInput);
+  const contextInput = createContextInput(targetDir, query, {
+    maxCharacters,
+    minRelevanceScore: minScore,
+  });
+  const budget =
+    maxFiles !== undefined || maxCharacters !== undefined
+      ? createContextBudget(maxCharacters, maxFiles)
+      : undefined;
+  const payload = assembleContext(contextInput, budget);
 
   if (isJson) {
     console.log(formatContextJson(payload));

@@ -53,29 +53,91 @@ M169: Add health-check tests.
   - M169: Added comprehensive health-check test suite with unit, diagnostic report, exit-code, and end-to-end multi-tier fixture verification (`tests/checker.test.ts`, `tests/check-e2e.test.ts`).
 
 ### IN PROGRESS
-- Concluding Health Checks block (M159–M169).
+- Active development cycle.
 
 ### CHANGED FILES
-- `tests/check-e2e.test.ts`
 - `.brain/state.md`
-- `.brain/handoff.md`
+- `README.md`
+- `brain/handoff.md`
+- `package.json`
+- `src/cli.ts`
+- `src/commands/check.ts`
+- `src/commands/context.ts`
+- `src/commands/handoff.ts`
+- `src/commands/init.ts`
+- `src/commands/map.ts`
+- `src/commands/route.ts`
+- `src/commands/scan.ts`
+- `src/commands/update.ts`
+- `src/context/context-limits.ts`
+- `src/context/prioritizer.ts`
+- `src/core/classification.ts`
+- `src/core/model.ts`
+- `src/mapper/project-map.ts`
+- `src/router/route-pipeline.ts`
+- `src/router/source-file-router.ts`
+- `src/router/subsystem-discovery.ts`
+- `src/scanner/exclusions.ts`
+- `src/scanner/scanner.ts`
+- `src/scanner/updater.ts`
+- `src/subsystems/routing.ts`
+- `tests/acceptance-e2e.test.ts`
+- `tests/cli.test.ts`
+- `tests/context-truncation.test.ts`
+- `tests/gitignore-semantics.test.ts`
+- `tests/jsx-tsx-source-routing.test.ts`
+- `tests/map-subsystems-e2e.test.ts`
+- `tests/subsystem-routing-e2e.test.ts`
+- `tests/update-dependencies.test.ts`
+- `tests/update.test.ts`
 
 ### TEST STATUS
-- 198/198 tests passing (`npm test`).
+- 216/216 tests passing (`npm test`).
 - TypeScript builds cleanly (`npm run build`).
 
 ### OPEN ISSUES
 - None.
 
 ### IMPORTANT DECISIONS
-- The entire health check subsystem is complete, covering referenced documents, markdown link anchors, source code references, subsystem routing, duplicate references, and exit-code propagation.
+- None.
 
 ### NEXT ACTION
-- Proceed to next block: **ADR Management** (M170: Create an ADR-creation command).
+- Next block: **ADR Management** (M170: Create an ADR-creation command).
 
 ### CONTEXT TO LOAD
 - .brain/index.md
 - .brain/state.md
 - .brain/handoff.md
+- README.md
+- brain/handoff.md
+- package.json
+- src/cli.ts
 - src/commands/check.ts
-- src/checker/health-reporter.ts
+- src/commands/context.ts
+- src/commands/handoff.ts
+- src/commands/init.ts
+- src/commands/map.ts
+- src/commands/route.ts
+- src/commands/scan.ts
+- src/commands/update.ts
+- src/context/context-limits.ts
+- src/context/prioritizer.ts
+- src/core/classification.ts
+- src/core/model.ts
+- src/mapper/project-map.ts
+- src/router/route-pipeline.ts
+- src/router/source-file-router.ts
+- src/router/subsystem-discovery.ts
+- src/scanner/exclusions.ts
+- src/scanner/scanner.ts
+- src/scanner/updater.ts
+- src/subsystems/routing.ts
+- tests/acceptance-e2e.test.ts
+- tests/cli.test.ts
+- tests/context-truncation.test.ts
+- tests/gitignore-semantics.test.ts
+- tests/jsx-tsx-source-routing.test.ts
+- tests/map-subsystems-e2e.test.ts
+- tests/subsystem-routing-e2e.test.ts
+- tests/update-dependencies.test.ts
+- tests/update.test.ts

@@ -75,29 +75,62 @@ export function detectGitignore(projectRoot: string): string | null {
 }
 
 export function loadGitignorePatterns(projectRoot: string): string[] {
+  const patterns: string[] = [];
   const gitignorePath = detectGitignore(projectRoot);
-  if (!gitignorePath) {
-    return [];
+  if (gitignorePath) {
+    const content = fs.readFileSync(gitignorePath, "utf8");
+    const lines = content
+      .split(/\r?\n/)
+      .map((line) => line.trim())
+      .filter((line) => line.length > 0 && !line.startsWith("#"));
+    patterns.push(...lines);
   }
-  const content = fs.readFileSync(gitignorePath, "utf8");
-  return content
-    .split(/\r?\n/)
-    .map((line) => line.trim())
-    .filter((line) => line.length > 0 && !line.startsWith("#"));
+
+  const gitExcludePath = path.join(projectRoot, ".git", "info", "exclude");
+  if (fs.existsSync(gitExcludePath) && fs.statSync(gitExcludePath).isFile()) {
+    try {
+      const content = fs.readFileSync(gitExcludePath, "utf8");
+      const lines = content
+        .split(/\r?\n/)
+        .map((line) => line.trim())
+        .filter((line) => line.length > 0 && !line.startsWith("#"));
+      patterns.push(...lines);
+    } catch {
+      // Ignored if unreadable
+    }
+  }
+
+  return patterns;
 }
 
-export function matchGitignorePattern(
-  normalizedRelativePath: string,
+export interface GitignoreRule {
+  raw: string;
+  pattern: string;
+  isNegation: boolean;
+  directoryOnly: boolean;
+  basePrefix: string;
+  regex: RegExp;
+}
+
+export function compileGitignorePattern(
   rawPattern: string,
-  isDirectory = false
-): boolean {
+  basePrefix = ""
+): GitignoreRule | null {
   let pattern = rawPattern.trim();
   if (!pattern || pattern.startsWith("#")) {
-    return false;
+    return null;
   }
 
-  const matchesDirectoryOnly = pattern.endsWith("/");
-  if (matchesDirectoryOnly) {
+  const isNegation = pattern.startsWith("!");
+  if (isNegation) {
+    pattern = pattern.slice(1).trim();
+  }
+  if (!pattern) {
+    return null;
+  }
+
+  const directoryOnly = pattern.endsWith("/");
+  if (directoryOnly) {
     pattern = pattern.slice(0, -1);
   }
 
@@ -106,19 +139,105 @@ export function matchGitignorePattern(
     pattern = pattern.slice(1);
   }
 
-  const regexStr = pattern
-    .replace(/[.+^${}()|[\]\\]/g, "\\$&")
-    .replace(/\*\*/g, "{{GLOBSTAR}}")
-    .replace(/\*/g, "[^/]*")
-    .replace(/\?/g, "[^/]")
-    .replace(/\{\{GLOBSTAR\}\}/g, ".*");
+  const hasSlash = anchored || pattern.includes("/");
 
-  const trailingSlashRule = matchesDirectoryOnly && !isDirectory ? "/.+" : "(/.*)?";
-  const regex = anchored || pattern.includes("/")
-    ? new RegExp(`^${regexStr}${trailingSlashRule}$`)
-    : new RegExp(`(^|/)${regexStr}${trailingSlashRule}$`);
+  let regexBody = "";
+  for (let i = 0; i < pattern.length; i++) {
+    const c = pattern[i];
+    if (c === "*" && pattern[i + 1] === "*") {
+      if (pattern[i + 2] === "/") {
+        regexBody += "(?:.*/)?";
+        i += 2;
+      } else {
+        regexBody += ".*";
+        i++;
+      }
+    } else if (c === "*") {
+      regexBody += "[^/]*";
+    } else if (c === "?") {
+      regexBody += "[^/]";
+    } else if (c === "[") {
+      const closeIdx = pattern.indexOf("]", i);
+      if (closeIdx !== -1) {
+        regexBody += pattern.slice(i, closeIdx + 1);
+        i = closeIdx;
+      } else {
+        regexBody += "\\[";
+      }
+    } else if ("()+{}^$|\\.".includes(c)) {
+      regexBody += "\\" + c;
+    } else {
+      regexBody += c;
+    }
+  }
 
-  return regex.test(normalizedRelativePath);
+  const prefixNorm = basePrefix ? basePrefix.replace(/\\/g, "/").replace(/^\/+|\/+$/g, "") : "";
+  const prefixPart = prefixNorm ? `${prefixNorm}/` : "";
+  const childMatch = "(?:/.*)?";
+
+  let fullRegexStr: string;
+  if (hasSlash) {
+    fullRegexStr = `^${prefixPart}${regexBody}${childMatch}$`;
+  } else {
+    fullRegexStr = `^(?:.*\\/)?${prefixPart}${regexBody}${childMatch}$`;
+  }
+
+  return {
+    raw: rawPattern,
+    pattern,
+    isNegation,
+    directoryOnly,
+    basePrefix: prefixNorm,
+    regex: new RegExp(fullRegexStr, "i"),
+  };
+}
+
+export function parseGitignoreLines(patterns: string[], basePrefix = ""): GitignoreRule[] {
+  const rules: GitignoreRule[] = [];
+  for (const raw of patterns) {
+    const compiled = compileGitignorePattern(raw, basePrefix);
+    if (compiled) {
+      rules.push(compiled);
+    }
+  }
+  return rules;
+}
+
+export function matchCompiledRule(
+  normalizedRelativePath: string,
+  rule: GitignoreRule,
+  isDirectory = false
+): boolean {
+  const norm = normalizedRelativePath.replace(/\\/g, "/").replace(/^\/+/, "");
+
+  if (rule.basePrefix) {
+    if (norm !== rule.basePrefix && !norm.startsWith(rule.basePrefix + "/")) {
+      return false;
+    }
+  }
+
+  if (!rule.regex.test(norm)) {
+    return false;
+  }
+
+  if (rule.directoryOnly && !isDirectory) {
+    const relToScope = rule.basePrefix ? norm.slice(rule.basePrefix.length + 1) : norm;
+    if (!relToScope.includes("/")) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+export function matchGitignorePattern(
+  normalizedRelativePath: string,
+  rawPattern: string,
+  isDirectory = false
+): boolean {
+  const rule = compileGitignorePattern(rawPattern, "");
+  if (!rule) return false;
+  return matchCompiledRule(normalizedRelativePath, rule, isDirectory);
 }
 
 export function filterIgnoredFiles(
@@ -135,27 +254,30 @@ export function filterIgnoredFiles(
   });
 }
 
-export function isGitignored(
+export function isGitignoredWithRules(
   relativePath: string,
-  patterns: string[],
+  rules: GitignoreRule[],
   isDirectory = false
 ): boolean {
   const normalized = relativePath.replace(/\\/g, "/").replace(/^\/+/, "");
   let ignored = false;
 
-  for (const rawPattern of patterns) {
-    const trimmed = rawPattern.trim();
-    if (!trimmed || trimmed.startsWith("#")) continue;
-
-    const isNegation = trimmed.startsWith("!");
-    const pattern = isNegation ? trimmed.slice(1) : trimmed;
-
-    if (matchGitignorePattern(normalized, pattern, isDirectory)) {
-      ignored = !isNegation;
+  for (const rule of rules) {
+    if (matchCompiledRule(normalized, rule, isDirectory)) {
+      ignored = !rule.isNegation;
     }
   }
 
   return ignored;
+}
+
+export function isGitignored(
+  relativePath: string,
+  patterns: string[],
+  isDirectory = false
+): boolean {
+  const rules = parseGitignoreLines(patterns, "");
+  return isGitignoredWithRules(relativePath, rules, isDirectory);
 }
 
 export function isGitDirectory(relativePath: string): boolean {
@@ -163,10 +285,10 @@ export function isGitDirectory(relativePath: string): boolean {
   return normalized === ".git" || normalized.startsWith(".git/") || normalized.includes("/.git/") || normalized.endsWith("/.git");
 }
 
-export function shouldExclude(
+export function shouldExcludeWithRules(
   relativePath: string,
   config: ExclusionConfig,
-  gitignorePatterns: string[] = [],
+  gitignoreRules: GitignoreRule[] = [],
   isDirectory = false
 ): boolean {
   if (config.excludeGit && isGitDirectory(relativePath)) {
@@ -193,8 +315,18 @@ export function shouldExclude(
       return true;
     }
   }
-  if (config.useGitignore && gitignorePatterns.length > 0 && isGitignored(relativePath, gitignorePatterns, isDirectory)) {
+  if (config.useGitignore && gitignoreRules.length > 0 && isGitignoredWithRules(relativePath, gitignoreRules, isDirectory)) {
     return true;
   }
   return false;
+}
+
+export function shouldExclude(
+  relativePath: string,
+  config: ExclusionConfig,
+  gitignorePatterns: string[] = [],
+  isDirectory = false
+): boolean {
+  const rules = parseGitignoreLines(gitignorePatterns, "");
+  return shouldExcludeWithRules(relativePath, config, rules, isDirectory);
 }

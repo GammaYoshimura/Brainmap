@@ -5,6 +5,8 @@ import { routeRelevantSourceFiles } from "./source-file-router.js";
 import { routeRelevantAdrs } from "./adr-router.js";
 import { routeRelevantTests } from "./test-router.js";
 import { routeRelevantDependencies } from "./dependency-router.js";
+import { SubsystemCandidate } from "./subsystem-matcher.js";
+import { discoverSubsystems } from "./subsystem-discovery.js";
 
 export interface RouteResult {
   query: string;
@@ -16,10 +18,19 @@ export interface RouteResult {
   dependencies: RankedItem[];
 }
 
-export function executeRouting(projectRoot: string, query: TaskQuery): RouteResult {
+export interface RouteExecutionOptions {
+  subsystems?: SubsystemCandidate[];
+}
+
+export function executeRouting(
+  projectRoot: string,
+  query: TaskQuery,
+  options: RouteExecutionOptions = {}
+): RouteResult {
+  const subsystems = options.subsystems ?? discoverSubsystems(projectRoot);
   const brainDocs = routeRelevantBrainDocs(projectRoot, query);
   const adrs = routeRelevantAdrs(projectRoot, query);
-  const sourceFiles = routeRelevantSourceFiles(projectRoot, query);
+  const sourceFiles = routeRelevantSourceFiles(projectRoot, query, { subsystems });
   const tests = routeRelevantTests(projectRoot, query, {
     relevantSourceFiles: sourceFiles.map((s) => s.path),
   });

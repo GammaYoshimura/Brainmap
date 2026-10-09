@@ -146,3 +146,67 @@ test("updateCommand works end-to-end for unchanged and changed project states", 
     fs.rmSync(tmpDir, { recursive: true, force: true });
   }
 });
+
+test("detectModifiedFiles detects edits where file size does not change using SHA-256 content hashes", () => {
+  const f1 = createFileModel({
+    path: "/p/a.ts",
+    relativePath: "a.ts",
+    name: "a.ts",
+    extension: ".ts",
+    size: 20,
+    hash: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  });
+  // Same size (20), but different hash
+  const f1Mod = createFileModel({
+    path: "/p/a.ts",
+    relativePath: "a.ts",
+    name: "a.ts",
+    extension: ".ts",
+    size: 20,
+    hash: "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  });
+
+  const modified = detectModifiedFiles([f1Mod], [f1]);
+  assert.equal(modified.length, 1);
+  assert.equal(modified[0].relativePath, "a.ts");
+
+  const diff = computeProjectDiff([f1Mod], [f1]);
+  assert.equal(diff.hasChanges, true);
+  assert.equal(diff.modified.length, 1);
+  assert.equal(diff.modified[0].relativePath, "a.ts");
+});
+
+test("updateCommand detects modification when file size does not change and is idempotent on second run", () => {
+  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "brainmap-update-hash-"));
+  try {
+    fs.mkdirSync(path.join(tmpDir, ".brain"), { recursive: true });
+    const fPath = path.join(tmpDir, "config.ts");
+    // "export const flag = true;" is 25 bytes
+    fs.writeFileSync(fPath, "export const flag = true;", "utf8");
+
+    const t1 = traverseProject(tmpDir);
+    const files1 = recordDiscoveredFiles(t1.files, t1.rootPath);
+    const dirs1 = recordDiscoveredDirectories(t1.directories, t1.rootPath, t1.files);
+    const s1 = generateProjectSummary(t1.rootPath, files1, dirs1);
+    persistScanResults(tmpDir, s1, undefined, files1);
+
+    // Initial update without changes should be a no-op
+    assert.equal(updateCommand([tmpDir]), UPDATE_SUCCESS);
+
+    // Change file content without changing size: "export const flag = fals;" is also 25 bytes
+    fs.writeFileSync(fPath, "export const flag = fals;", "utf8");
+
+    // updateCommand must detect that the file was modified despite identical size
+    assert.equal(updateCommand([tmpDir]), UPDATE_SUCCESS);
+
+    const state = loadPersistedScanState(tmpDir);
+    assert.ok(state);
+    assert.equal(state?.files?.length, 1);
+    assert.ok(state?.files?.[0].hash);
+
+    // Second run with no further changes must report no changes
+    assert.equal(updateCommand([tmpDir]), UPDATE_SUCCESS);
+  } finally {
+    fs.rmSync(tmpDir, { recursive: true, force: true });
+  }
+});

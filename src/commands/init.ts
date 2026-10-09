@@ -178,6 +178,12 @@ export function createBrainSubsystemsDirectory(brainDir: string): string {
 }
 
 export function initCommand(args: string[] = []): number {
+  const unknownFlag = args.find((a) => a.startsWith("-"));
+  if (unknownFlag) {
+    console.error(`Unknown option: ${unknownFlag}`);
+    return INIT_FAILURE;
+  }
+
   const targetDir = resolveProjectDirectory(args[0]);
   const alreadyExisted = brainExists(targetDir);
 

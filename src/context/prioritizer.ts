@@ -84,7 +84,17 @@ export function prioritizeContextItems(
   let omittedCount = 0;
 
   for (const cand of candidates) {
-    const { content, truncated } = truncateContentToLimit(cand.content);
+    const focusTokens: string[] = [];
+    for (const r of cand.reasons) {
+      if (r.startsWith("symbol match: ")) {
+        focusTokens.push(r.slice("symbol match: ".length).trim());
+      }
+    }
+
+    const { content, truncated } = truncateContentToLimit(cand.content, {
+      focusTokens,
+      filePath: cand.path,
+    });
     const chars = content.length;
 
     if (budget && !canIncludeInBudget(budget, chars)) {

@@ -9,6 +9,12 @@ export function resolveCheckDirectory(targetPath?: string): string {
 }
 
 export function checkCommand(args: string[] = []): number {
+  const unknownFlag = args.find((a) => a.startsWith("-"));
+  if (unknownFlag) {
+    console.error(`Unknown option: ${unknownFlag}`);
+    return CHECK_FAILURE;
+  }
+
   const targetDir = resolveCheckDirectory(args[0]);
   console.log(`Running health checks in ${targetDir}...`);
   const report = runHealthChecks(targetDir);

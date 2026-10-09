@@ -15,6 +15,12 @@ export function resolveRouteDirectory(targetPath?: string): string {
 }
 
 export function routeCommand(args: string[] = []): number {
+  const unknownFlag = args.find((a) => a.startsWith("-") && a !== "--json");
+  if (unknownFlag) {
+    console.error(`Unknown option: ${unknownFlag}`);
+    return ROUTE_FAILURE;
+  }
+
   const isJson = args.includes("--json");
   const queryArgs = args.filter((a) => a !== "--json");
 
