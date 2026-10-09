@@ -27,6 +27,11 @@ test("cli dispatches context command successfully with query", () => {
   assert.equal(code, EXIT_SUCCESS);
 });
 
+test("cli dispatches handoff command successfully", () => {
+  const code = run(["handoff"]);
+  assert.equal(code, EXIT_SUCCESS);
+});
+
 test("cli fails when context is invoked without query", () => {
   const code = run(["context"]);
   assert.equal(code, EXIT_FAILURE);

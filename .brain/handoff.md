@@ -23,7 +23,7 @@ The handoff document ensures that any subsequent AI agent or developer session c
 ## Current Operational Handoff
 
 ### CURRENT MILESTONE
-M144: Add context-selection tests.
+M145: Create `brainmap handoff`.
 
 ### COMPLETED
 - Repository foundation (M001–M010).
@@ -37,45 +37,36 @@ M144: Add context-selection tests.
 - `brainmap map` block (M097–M108).
 - Specialized Documentation block (M109–M117).
 - Routing block (M118–M132).
-- Context Selection block (M133–M144) complete:
-  - M133: Created `context` command handler (`src/commands/context.ts`), wired command dispatch and help description in CLI entry point (`src/cli.ts`).
-  - M134: Implemented task query acceptance, validation, and error reporting for `brainmap context` (`src/commands/context.ts`, `tests/cli.test.ts`).
-  - M135: Connected routing output to context input via `createContextInput` (`src/context/context-selector.ts`, `tests/context.test.ts`).
-  - M136: Implemented Brain document context selection and reading (`src/context/brain-doc-selector.ts`, `tests/context.test.ts`).
-  - M137: Implemented source code and test file selection (`src/context/source-code-selector.ts`, `tests/context.test.ts`).
-  - M138: Implemented low-relevance file exclusion (`src/context/relevance-filter.ts`, `tests/context.test.ts`).
-  - M139: Implemented configurable context-size limits and budget controls (`src/context/context-limits.ts`, `tests/context.test.ts`).
-  - M140: Implemented relevance-based prioritization and budget-aware assembly (`src/context/prioritizer.ts`, `tests/context.test.ts`).
-  - M141: Implemented plain-text context formatting (`src/context/formatter.ts`, `tests/context.test.ts`).
-  - M142: Implemented JSON context serialization and CLI `--json` flag integration (`src/context/formatter.ts`, `src/commands/context.ts`, `tests/context.test.ts`).
-  - M143: Implemented concise context summary generation and formatting with CLI `--summary` flag (`src/context/formatter.ts`, `src/commands/context.ts`, `tests/context.test.ts`).
-  - M144: Added end-to-end context-selection test suite with multi-tier fixture verification and CLI execution (`tests/context-e2e.test.ts`).
+- Context Selection block (M133–M144).
+- Handoff block commenced:
+  - M145: Created `handoff` command handler (`src/commands/handoff.ts`), wired command dispatch and help description in CLI entry point (`src/cli.ts`), added CLI execution test (`tests/cli.test.ts`).
 
 ### IN PROGRESS
-- Concluding Context Selection block (M133–M144).
+- Handoff block (M145–M158).
 
 ### CHANGED FILES
-- `tests/context-e2e.test.ts`
-- `.brain/project-map.md`
+- `src/commands/handoff.ts`
+- `src/cli.ts`
+- `tests/cli.test.ts`
 - `.brain/state.md`
 - `.brain/handoff.md`
 
 ### TEST STATUS
-- 162/162 tests passing (`npm test`).
+- 163/163 tests passing (`npm test`).
 - TypeScript builds cleanly (`npm run build`).
 
 ### OPEN ISSUES
 - None.
 
 ### IMPORTANT DECISIONS
-- The entire context selection pipeline is deterministic, respects token and character budgets, prioritizes architectural constitution documents, and outputs plain text or structured JSON.
+- `brainmap handoff` command initial skeleton created with path resolution, command wiring, and CLI options.
 
 ### NEXT ACTION
-- Proceed to next block: **Handoff** (M145: Create `brainmap handoff`).
+- Proceed to M146: Read current state.
 
 ### CONTEXT TO LOAD
 - `.brain/index.md`
 - `.brain/state.md`
 - `.brain/handoff.md`
-- `src/context/context-selector.ts`
-- `src/commands/context.ts`
+- `src/commands/handoff.ts`
+- `src/cli.ts`

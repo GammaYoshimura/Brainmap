@@ -6,6 +6,7 @@ import { updateCommand } from "./commands/update.js";
 import { mapCommand } from "./commands/map.js";
 import { routeCommand } from "./commands/route.js";
 import { contextCommand } from "./commands/context.js";
+import { handoffCommand } from "./commands/handoff.js";
 
 export const HELP_TEXT = `Brainmap - Project memory and context-routing tool
 
@@ -19,6 +20,7 @@ Commands:
   map            Generate comprehensive project map
   route          Route task query to relevant files and context
   context        Select relevant task context for AI workflows
+  handoff        Generate session-to-session continuation handoff
 
 Options:
   -h, --help     Show this help message
@@ -57,6 +59,10 @@ export function run(args: string[] = process.argv.slice(2)): number {
 
   if (command === "context") {
     return contextCommand(args.slice(1));
+  }
+
+  if (command === "handoff") {
+    return handoffCommand(args.slice(1));
   }
 
   if (args.length > 0 && args[0].startsWith("-")) {

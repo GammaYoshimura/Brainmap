@@ -4,7 +4,7 @@ Current operational state of the Brainmap project.
 
 ## Current Milestone
 
-**M144**: Add context-selection tests.
+**M145**: Create `brainmap handoff`.
 
 ## What is Implemented
 
@@ -91,9 +91,12 @@ Current operational state of the Brainmap project.
   - Implemented concise context summary generation and formatting (`generateContextSummary`, `formatContextSummary`) and CLI `--summary` flag (`src/context/formatter.ts`, `src/commands/context.ts`).
   - Added comprehensive context-selection unit, budget limit, formatting, and end-to-end CLI integration test suite (`tests/context.test.ts`, `tests/context-e2e.test.ts`).
 
+- **Handoff (M145–M158)**:
+  - Created `handoff` command handler (`src/commands/handoff.ts`) and wired command dispatch and help description in CLI entry point (`src/cli.ts`).
+
 ## What is In Progress
 
-- Completing Context Selection block (M133–M144).
+- Implementing Handoff block (M145–M158).
 
 ## Known Blockers
 
@@ -103,8 +106,8 @@ Current operational state of the Brainmap project.
 
 - Environment: Node.js v20+, TypeScript 5+, zero runtime dependencies.
 - Git repository synced with remote (`https://github.com/GammaYoshimura/Brainmap`).
-- 162 passing tests across the test suite.
+- 163 passing tests across the test suite.
 
 ## Immediate Next Work
 
-- Next block: **Handoff** (M145: Create `brainmap handoff`).
+- M146: Read current state.
