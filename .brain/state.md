@@ -4,7 +4,7 @@ Current operational state of the Brainmap project.
 
 ## Current Milestone
 
-**M134**: Accept a task query.
+**M135**: Use routing results as input.
 
 ## What is Implemented
 
@@ -80,6 +80,7 @@ Current operational state of the Brainmap project.
 - **Context Selection (M133–M144)**:
   - Created `context` command handler (`src/commands/context.ts`) and registered `context` in CLI entry point and help text (`src/cli.ts`).
   - Added natural-language task query acceptance, parsing, validation, and CLI invocation handling (`src/commands/context.ts`).
+  - Implemented routing integration for context selection (`createContextInput`), using `RouteResult` as the foundational input model (`src/context/context-selector.ts`).
 
 ## What is In Progress
 
@@ -93,8 +94,8 @@ Current operational state of the Brainmap project.
 
 - Environment: Node.js v20+, TypeScript 5+, zero runtime dependencies.
 - Git repository synced with remote (`https://github.com/GammaYoshimura/Brainmap`).
-- 149 passing tests across the test suite.
+- 150 passing tests across the test suite.
 
 ## Immediate Next Work
 
-- **M135**: Use routing results as input.
+- **M136**: Select relevant Brain documents.

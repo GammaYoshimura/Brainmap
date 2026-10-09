@@ -23,7 +23,7 @@ The handoff document ensures that any subsequent AI agent or developer session c
 ## Current Operational Handoff
 
 ### CURRENT MILESTONE
-M134: Accept a task query.
+M135: Use routing results as input.
 
 ### COMPLETED
 - Repository foundation (M001–M010).
@@ -40,33 +40,34 @@ M134: Accept a task query.
 - Context Selection block in progress:
   - M133: Created `context` command handler (`src/commands/context.ts`), wired command dispatch and help description in CLI entry point (`src/cli.ts`).
   - M134: Implemented task query acceptance, validation, and error reporting for `brainmap context` (`src/commands/context.ts`, `tests/cli.test.ts`).
+  - M135: Connected routing output to context input via `createContextInput` (`src/context/context-selector.ts`, `tests/context.test.ts`).
 
 ### IN PROGRESS
 - Context Selection block (M133–M144).
 
 ### CHANGED FILES
+- `src/context/context-selector.ts`
 - `src/commands/context.ts`
-- `tests/cli.test.ts`
+- `tests/context.test.ts`
 - `.brain/project-map.md`
 - `.brain/state.md`
 - `.brain/handoff.md`
 
 ### TEST STATUS
-- 149/149 tests passing (`npm test`).
+- 150/150 tests passing (`npm test`).
 - TypeScript builds cleanly (`npm run build`).
 
 ### OPEN ISSUES
 - None.
 
 ### IMPORTANT DECISIONS
-- The `context` command validates task queries strictly, returning exit failure when queries are empty or missing.
+- `createContextInput` directly encapsulates deterministic `RouteResult` metadata for subsequent context assembly steps.
 
 ### NEXT ACTION
-- Implement M135: Use routing results as input.
+- Implement M136: Select relevant Brain documents.
 
 ### CONTEXT TO LOAD
 - `.brain/index.md`
 - `.brain/state.md`
 - `.brain/handoff.md`
-- `src/commands/context.ts`
-- `src/router/route-pipeline.ts`
+- `src/context/context-selector.ts`
