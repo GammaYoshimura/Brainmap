@@ -6,6 +6,7 @@ import path from "node:path";
 import { readCurrentState } from "../src/handoff/state-reader.js";
 import { readCurrentMilestone } from "../src/handoff/milestone-reader.js";
 import { detectRecentChanges } from "../src/handoff/change-detector.js";
+import { detectChangedFiles } from "../src/handoff/file-change-detector.js";
 
 test("readCurrentState returns null when .brain/state.md does not exist", () => {
   const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "brainmap-handoff-state-none-"));
@@ -106,6 +107,25 @@ test("detectRecentChanges handles non-git directories gracefully", () => {
     const changes = detectRecentChanges(tmpDir, 3);
     assert.equal(changes.hasGit, false);
     assert.equal(changes.recentCommits.length, 0);
+  } finally {
+    fs.rmSync(tmpDir, { recursive: true, force: true });
+  }
+});
+
+test("detectChangedFiles returns committed files from latest commit in git repo", () => {
+  const result = detectChangedFiles(process.cwd());
+  assert.equal(result.hasGit, true);
+  assert.ok(Array.isArray(result.committedInLastCommit));
+  assert.ok(Array.isArray(result.allCurrentChanges));
+});
+
+test("detectChangedFiles handles non-git directories gracefully", () => {
+  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "brainmap-handoff-nogit-files-"));
+  try {
+    const result = detectChangedFiles(tmpDir);
+    assert.equal(result.hasGit, false);
+    assert.deepEqual(result.allCurrentChanges, []);
+    assert.deepEqual(result.committedInLastCommit, []);
   } finally {
     fs.rmSync(tmpDir, { recursive: true, force: true });
   }
