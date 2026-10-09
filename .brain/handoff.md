@@ -23,7 +23,7 @@ The handoff document ensures that any subsequent AI agent or developer session c
 ## Current Operational Handoff
 
 ### CURRENT MILESTONE
-M152: Generate CURRENT MILESTONE.
+M153: Generate COMPLETED.
 
 ### COMPLETED
 - Repository foundation (M001–M010).
@@ -47,31 +47,32 @@ M152: Generate CURRENT MILESTONE.
   - M150: Implemented test status reader (`src/handoff/test-status-reader.ts`) extracting test suite execution metrics and pass/fail states.
   - M151: Implemented issue detector (`src/handoff/issue-detector.ts`) detecting recorded blockers and known open issues.
   - M152: Implemented CURRENT MILESTONE section generator (`src/handoff/section-current-milestone.ts`).
+  - M153: Implemented COMPLETED section generator (`src/handoff/section-completed.ts`).
 
 ### IN PROGRESS
 - Handoff block (M145–M158).
 
 ### CHANGED FILES
-- `src/handoff/section-current-milestone.ts`
+- `src/handoff/section-completed.ts`
 - `tests/handoff.test.ts`
 - `.brain/state.md`
 - `.brain/handoff.md`
 
 ### TEST STATUS
-- 176/176 tests passing (`npm test`).
+- 177/177 tests passing (`npm test`).
 - TypeScript builds cleanly (`npm run build`).
 
 ### OPEN ISSUES
 - None.
 
 ### IMPORTANT DECISIONS
-- The CURRENT MILESTONE generator converts parsed milestone models into standard handoff format.
+- The COMPLETED section generator prioritizes existing milestone lists from handoff or state documents to preserve concise continuity.
 
 ### NEXT ACTION
-- Proceed to M153: Generate COMPLETED.
+- Proceed to M154: Generate OPEN ISSUES.
 
 ### CONTEXT TO LOAD
 - `.brain/index.md`
 - `.brain/state.md`
 - `.brain/handoff.md`
-- `src/handoff/section-current-milestone.ts`
+- `src/handoff/section-completed.ts`
