@@ -23,7 +23,7 @@ The handoff document ensures that any subsequent AI agent or developer session c
 ## Current Operational Handoff
 
 ### CURRENT MILESTONE
-M165: Detect basic routing inconsistencies.
+M166: Detect changed files not reflected in generated maps.
 
 ### COMPLETED
 - Repository foundation (M001–M010).
@@ -47,31 +47,32 @@ M165: Detect basic routing inconsistencies.
   - M163: Implemented subsystem routing checker (`src/checker/subsystem-routing-checker.ts`) detecting missing index documents, unregistered subsystems, and dangling router links.
   - M164: Implemented duplicate reference detector (`src/checker/duplicate-ref-checker.ts`) flagging redundant identical links in the same document.
   - M165: Implemented routing inconsistency checker (`src/checker/routing-inconsistency-checker.ts`) detecting missing core constitution documents, missing router targets, and circular references.
+  - M166: Implemented map synchronization checker (`src/checker/map-sync-checker.ts`) detecting changed source files not yet mapped in `.brain/project-map.md`.
 
 ### IN PROGRESS
 - Health Checks block (M159–M169).
 
 ### CHANGED FILES
-- `src/checker/routing-inconsistency-checker.ts`
+- `src/checker/map-sync-checker.ts`
 - `tests/checker.test.ts`
 - `.brain/state.md`
 - `.brain/handoff.md`
 
 ### TEST STATUS
-- 192/192 tests passing (`npm test`).
+- 193/193 tests passing (`npm test`).
 - TypeScript builds cleanly (`npm run build`).
 
 ### OPEN ISSUES
 - None.
 
 ### IMPORTANT DECISIONS
-- The routing inconsistency checker enforces core constitution presence in `.brain`, presence of routes to them in `.brain/index.md`, and detects circular references.
+- The map sync checker verifies that newly modified or created project source files are reflected in `.brain/project-map.md`.
 
 ### NEXT ACTION
-- Proceed to M166: Detect changed files not reflected in generated maps.
+- Proceed to M167: Generate a health report.
 
 ### CONTEXT TO LOAD
 - .brain/index.md
 - .brain/state.md
 - .brain/handoff.md
-- src/checker/routing-inconsistency-checker.ts
+- src/checker/map-sync-checker.ts

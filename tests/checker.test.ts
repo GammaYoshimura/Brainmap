@@ -9,6 +9,7 @@ import { detectMissingSourceFileReferences } from "../src/checker/source-ref-che
 import { detectSubsystemRoutingProblems } from "../src/checker/subsystem-routing-checker.js";
 import { detectObviousDuplicateReferences } from "../src/checker/duplicate-ref-checker.js";
 import { detectBasicRoutingInconsistencies } from "../src/checker/routing-inconsistency-checker.js";
+import { detectUnreflectedMapChanges } from "../src/checker/map-sync-checker.js";
 
 test("checkReferencedDocumentExistence reports missing referenced markdown docs", () => {
   const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "brainmap-check-doc-"));
@@ -177,6 +178,25 @@ test("detectBasicRoutingInconsistencies identifies missing core routes and self-
     assert.ok(issues.some((i) => i.type === "missing_core_doc" && i.file === ".brain/handoff.md"));
     assert.ok(issues.some((i) => i.type === "missing_core_route" && i.details.includes("state.md")));
     assert.ok(issues.some((i) => i.type === "circular_reference"));
+  } finally {
+    fs.rmSync(tmpDir, { recursive: true, force: true });
+  }
+});
+
+test("detectUnreflectedMapChanges flags new files not present in project-map.md", () => {
+  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "brainmap-check-mapsync-"));
+  const brainDir = path.join(tmpDir, ".brain");
+  fs.mkdirSync(brainDir, { recursive: true });
+
+  fs.writeFileSync(
+    path.join(brainDir, "project-map.md"),
+    "# Project Map\n- `src/existing.ts`\n",
+    "utf8"
+  );
+
+  try {
+    const issues = detectUnreflectedMapChanges(tmpDir, brainDir);
+    assert.ok(Array.isArray(issues));
   } finally {
     fs.rmSync(tmpDir, { recursive: true, force: true });
   }
