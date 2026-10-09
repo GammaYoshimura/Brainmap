@@ -12,7 +12,8 @@ import {
   truncateContentToLimit,
 } from "../src/context/context-limits.js";
 import { prioritizeContextItems } from "../src/context/prioritizer.js";
-import { formatContextText, ContextPayload } from "../src/context/formatter.js";
+import { formatContextText, formatContextJson, ContextPayload } from "../src/context/formatter.js";
+import { assembleContext } from "../src/context/context-selector.js";
 
 test("createContextInput uses routing results as input", () => {
   const query = parseTaskQuery("Refactor query parser and check test runner");
@@ -156,4 +157,33 @@ test("formatContextText creates plain-text context output", () => {
   assert.match(text, /--- \[BRAIN DOC\] \.brain\/index\.md \(score: 80\) ---/);
   assert.match(text, /# Brain Index/);
   assert.match(text, /=== End of Context ===/);
+});
+
+test("formatContextJson creates valid parseable JSON output", () => {
+  const payload: ContextPayload = {
+    query: "JSON context test",
+    projectRoot: "/mock/root",
+    items: [],
+    omittedCount: 0,
+    totalCharacters: 0,
+  };
+
+  const jsonStr = formatContextJson(payload);
+  const parsed = JSON.parse(jsonStr);
+  assert.equal(parsed.query, "JSON context test");
+  assert.equal(parsed.projectRoot, "/mock/root");
+  assert.deepEqual(parsed.items, []);
+});
+
+test("assembleContext builds complete context payload from input", () => {
+  const query = parseTaskQuery("architecture routing and cli");
+  assert.notEqual(query, null);
+
+  const contextInput = createContextInput(process.cwd(), query!);
+  const payload = assembleContext(contextInput);
+
+  assert.equal(payload.query, "architecture routing and cli");
+  assert.ok(Array.isArray(payload.items));
+  assert.ok(payload.items.length > 0);
+  assert.ok(payload.totalCharacters > 0);
 });

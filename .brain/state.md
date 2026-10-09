@@ -4,7 +4,7 @@ Current operational state of the Brainmap project.
 
 ## Current Milestone
 
-**M141**: Create plain-text context output.
+**M142**: Create JSON context output.
 
 ## What is Implemented
 
@@ -87,6 +87,7 @@ Current operational state of the Brainmap project.
   - Implemented configurable context-size limits and budget controls (`createContextBudget`, `canIncludeInBudget`, `truncateContentToLimit`) (`src/context/context-limits.ts`).
   - Implemented relevance-based prioritization and budget-aware assembly (`prioritizeContextItems`) ordering by score, type hierarchy, and path ties (`src/context/prioritizer.ts`).
   - Implemented plain-text context output formatting (`formatContextText`) with file delimiters, scores, and metadata (`src/context/formatter.ts`).
+  - Implemented JSON context output formatting (`formatContextJson`) and CLI `--json` support with end-to-end context assembly (`assembleContext`) (`src/context/formatter.ts`, `src/context/context-selector.ts`, `src/commands/context.ts`).
 
 ## What is In Progress
 
@@ -100,8 +101,8 @@ Current operational state of the Brainmap project.
 
 - Environment: Node.js v20+, TypeScript 5+, zero runtime dependencies.
 - Git repository synced with remote (`https://github.com/GammaYoshimura/Brainmap`).
-- 156 passing tests across the test suite.
+- 158 passing tests across the test suite.
 
 ## Immediate Next Work
 
-- **M142**: Create JSON context output.
+- **M143**: Show a concise context summary.

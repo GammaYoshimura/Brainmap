@@ -23,7 +23,7 @@ The handoff document ensures that any subsequent AI agent or developer session c
 ## Current Operational Handoff
 
 ### CURRENT MILESTONE
-M141: Create plain-text context output.
+M142: Create JSON context output.
 
 ### COMPLETED
 - Repository foundation (M001–M010).
@@ -46,34 +46,37 @@ M141: Create plain-text context output.
   - M138: Implemented low-relevance file exclusion (`src/context/relevance-filter.ts`, `tests/context.test.ts`).
   - M139: Implemented configurable context-size limits and budget controls (`src/context/context-limits.ts`, `tests/context.test.ts`).
   - M140: Implemented relevance-based prioritization and budget-aware assembly (`src/context/prioritizer.ts`, `tests/context.test.ts`).
-  - M141: Implemented plain-text context formatting with delimiters and metadata (`src/context/formatter.ts`, `tests/context.test.ts`).
+  - M141: Implemented plain-text context formatting (`src/context/formatter.ts`, `tests/context.test.ts`).
+  - M142: Implemented JSON context serialization and CLI `--json` flag integration (`src/context/formatter.ts`, `src/commands/context.ts`, `tests/context.test.ts`).
 
 ### IN PROGRESS
 - Context Selection block (M133–M144).
 
 ### CHANGED FILES
 - `src/context/formatter.ts`
+- `src/context/context-selector.ts`
+- `src/commands/context.ts`
 - `tests/context.test.ts`
 - `.brain/project-map.md`
 - `.brain/state.md`
 - `.brain/handoff.md`
 
 ### TEST STATUS
-- 156/156 tests passing (`npm test`).
+- 158/158 tests passing (`npm test`).
 - TypeScript builds cleanly (`npm run build`).
 
 ### OPEN ISSUES
 - None.
 
 ### IMPORTANT DECISIONS
-- Plain-text output formats all prioritized context documents with clear demarcation blocks and query headers.
+- The `context` command supports machine-readable `--json` output alongside human-friendly plain-text output.
 
 ### NEXT ACTION
-- Implement M142: Create JSON context output.
+- Implement M143: Show a concise context summary.
 
 ### CONTEXT TO LOAD
 - `.brain/index.md`
 - `.brain/state.md`
 - `.brain/handoff.md`
 - `src/context/formatter.ts`
-- `src/context/context-selector.ts`
+- `src/commands/context.ts`

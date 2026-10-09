@@ -38,3 +38,7 @@ export function formatContextText(payload: ContextPayload): string {
   lines.push("=== End of Context ===");
   return lines.join("\n").trim();
 }
+
+export function formatContextJson(payload: ContextPayload, pretty = true): string {
+  return pretty ? JSON.stringify(payload, null, 2) : JSON.stringify(payload);
+}
