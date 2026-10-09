@@ -4,7 +4,7 @@ Current operational state of the Brainmap project.
 
 ## Current Milestone
 
-**M168**: Return meaningful exit codes.
+**M169**: Add health-check tests.
 
 ## What is Implemented
 
@@ -118,10 +118,11 @@ Current operational state of the Brainmap project.
   - M166: Implemented map synchronization checker (`src/checker/map-sync-checker.ts`) detecting changed source files not yet mapped in `.brain/project-map.md`.
   - M167: Implemented health report generator (`src/checker/health-reporter.ts`) and wired formatted diagnostic reporting into `brainmap check`.
   - M168: Implemented meaningful exit codes returning `CHECK_SUCCESS = 0` on healthy status and `CHECK_FAILURE = 1` when problems are detected.
+  - M169: Added comprehensive health-check test suite with unit, diagnostic report, exit-code, and end-to-end multi-tier fixture verification (`tests/checker.test.ts`, `tests/check-e2e.test.ts`).
 
 ## What is In Progress
 
-- Health Checks block (M159–M169).
+- Health Checks block (M159–M169) complete.
 
 ## Known Blockers
 
@@ -131,8 +132,8 @@ Current operational state of the Brainmap project.
 
 - Environment: Node.js v20+, TypeScript 5+, zero runtime dependencies.
 - Git repository synced with remote (`https://github.com/GammaYoshimura/Brainmap`).
-- 195 passing tests across the test suite.
+- 198 passing tests across the test suite.
 
 ## Immediate Next Work
 
-- M169: Add health-check tests.
+- Next block: **ADR Management** (M170: Create an ADR-creation command).

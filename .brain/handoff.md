@@ -23,7 +23,7 @@ The handoff document ensures that any subsequent AI agent or developer session c
 ## Current Operational Handoff
 
 ### CURRENT MILESTONE
-M168: Return meaningful exit codes.
+M169: Add health-check tests.
 
 ### COMPLETED
 - Repository foundation (M001–M010).
@@ -39,7 +39,7 @@ M168: Return meaningful exit codes.
 - Routing block (M118–M132).
 - Context Selection block (M133–M144).
 - Handoff block (M145–M158).
-- Health Checks block:
+- Health Checks block (M159–M169) complete:
   - M159: Created `check` command handler (`src/commands/check.ts`), wired command dispatch and help description in CLI entry point (`src/cli.ts`), added CLI test (`tests/cli.test.ts`).
   - M160: Implemented referenced document existence checker (`src/checker/doc-existence-checker.ts`) verifying all internal document links in `.brain`.
   - M161: Implemented broken Markdown link detector (`src/checker/markdown-link-checker.ts`) validating files, anchors, and path structures.
@@ -50,32 +50,32 @@ M168: Return meaningful exit codes.
   - M166: Implemented map synchronization checker (`src/checker/map-sync-checker.ts`) detecting changed source files not yet mapped in `.brain/project-map.md`.
   - M167: Implemented health report generator (`src/checker/health-reporter.ts`) and wired formatted diagnostic reporting into `brainmap check`.
   - M168: Implemented meaningful exit codes returning `CHECK_SUCCESS = 0` on healthy status and `CHECK_FAILURE = 1` when problems are detected.
+  - M169: Added comprehensive health-check test suite with unit, diagnostic report, exit-code, and end-to-end multi-tier fixture verification (`tests/checker.test.ts`, `tests/check-e2e.test.ts`).
 
 ### IN PROGRESS
-- Health Checks block (M159–M169).
+- Concluding Health Checks block (M159–M169).
 
 ### CHANGED FILES
-- `src/commands/check.ts`
-- `src/checker/map-sync-checker.ts`
-- `tests/checker.test.ts`
+- `tests/check-e2e.test.ts`
 - `.brain/state.md`
 - `.brain/handoff.md`
 
 ### TEST STATUS
-- 195/195 tests passing (`npm test`).
+- 198/198 tests passing (`npm test`).
 - TypeScript builds cleanly (`npm run build`).
 
 ### OPEN ISSUES
 - None.
 
 ### IMPORTANT DECISIONS
-- `brainmap check` returns standard exit code 0 when all health checks pass and exit code 1 when issues are found.
+- The entire health check subsystem is complete, covering referenced documents, markdown link anchors, source code references, subsystem routing, duplicate references, and exit-code propagation.
 
 ### NEXT ACTION
-- Proceed to M169: Add health-check tests.
+- Proceed to next block: **ADR Management** (M170: Create an ADR-creation command).
 
 ### CONTEXT TO LOAD
 - .brain/index.md
 - .brain/state.md
 - .brain/handoff.md
 - src/commands/check.ts
+- src/checker/health-reporter.ts
