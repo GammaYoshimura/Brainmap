@@ -22,9 +22,14 @@ test("cli dispatches route command successfully with query", () => {
   assert.equal(code, EXIT_SUCCESS);
 });
 
-test("cli dispatches context command successfully", () => {
-  const code = run(["context"]);
+test("cli dispatches context command successfully with query", () => {
+  const code = run(["context", "Add refresh-token support to authentication"]);
   assert.equal(code, EXIT_SUCCESS);
+});
+
+test("cli fails when context is invoked without query", () => {
+  const code = run(["context"]);
+  assert.equal(code, EXIT_FAILURE);
 });
 
 test("cli fails when route is invoked without query", () => {

@@ -23,7 +23,7 @@ The handoff document ensures that any subsequent AI agent or developer session c
 ## Current Operational Handoff
 
 ### CURRENT MILESTONE
-M133: Create brainmap context.
+M134: Accept a task query.
 
 ### COMPLETED
 - Repository foundation (M001–M010).
@@ -37,35 +37,36 @@ M133: Create brainmap context.
 - `brainmap map` block (M097–M108).
 - Specialized Documentation block (M109–M117).
 - Routing block (M118–M132).
-- Context Selection block started:
+- Context Selection block in progress:
   - M133: Created `context` command handler (`src/commands/context.ts`), wired command dispatch and help description in CLI entry point (`src/cli.ts`).
+  - M134: Implemented task query acceptance, validation, and error reporting for `brainmap context` (`src/commands/context.ts`, `tests/cli.test.ts`).
 
 ### IN PROGRESS
 - Context Selection block (M133–M144).
 
 ### CHANGED FILES
 - `src/commands/context.ts`
-- `src/cli.ts`
 - `tests/cli.test.ts`
+- `.brain/project-map.md`
 - `.brain/state.md`
 - `.brain/handoff.md`
 
 ### TEST STATUS
-- 148/148 tests passing (`npm test`).
+- 149/149 tests passing (`npm test`).
 - TypeScript builds cleanly (`npm run build`).
 
 ### OPEN ISSUES
 - None.
 
 ### IMPORTANT DECISIONS
-- The `context` command builds directly on top of the routing pipeline to extract, prioritize, format, and bound context payloads for AI agents and developer workflows.
+- The `context` command validates task queries strictly, returning exit failure when queries are empty or missing.
 
 ### NEXT ACTION
-- Implement M134: Accept a task query.
+- Implement M135: Use routing results as input.
 
 ### CONTEXT TO LOAD
 - `.brain/index.md`
 - `.brain/state.md`
 - `.brain/handoff.md`
 - `src/commands/context.ts`
-- `src/cli.ts`
+- `src/router/route-pipeline.ts`
