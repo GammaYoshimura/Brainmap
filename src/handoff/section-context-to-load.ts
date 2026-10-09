@@ -12,9 +12,7 @@ export function generateContextToLoadSection(targetDir: string, dynamicFiles: st
   ];
 
   for (const doc of standardBrainDocs) {
-    if (fs.existsSync(path.join(targetDir, doc))) {
-      contextFiles.add(doc);
-    }
+    contextFiles.add(doc);
   }
 
   for (const f of dynamicFiles) {

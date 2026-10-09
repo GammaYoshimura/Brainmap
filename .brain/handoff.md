@@ -23,7 +23,7 @@ The handoff document ensures that any subsequent AI agent or developer session c
 ## Current Operational Handoff
 
 ### CURRENT MILESTONE
-M157: Update .brain/handoff.md.
+M158: Add handoff tests.
 
 ### COMPLETED
 - Repository foundation (M001–M010).
@@ -38,7 +38,7 @@ M157: Update .brain/handoff.md.
 - Specialized Documentation block (M109–M117).
 - Routing block (M118–M132).
 - Context Selection block (M133–M144).
-- Handoff block:
+- Handoff block (M145–M158) complete:
   - M145: Created `handoff` command handler (`src/commands/handoff.ts`), wired command dispatch and help description in CLI entry point (`src/cli.ts`).
   - M146: Implemented state reader (`src/handoff/state-reader.ts`) to parse and structure operational state from `.brain/state.md`.
   - M147: Implemented milestone reader (`src/handoff/milestone-reader.ts`) extracting active milestone codes and titles.
@@ -52,29 +52,29 @@ M157: Update .brain/handoff.md.
   - M155: Implemented NEXT ACTION section generator (`src/handoff/section-next-action.ts`).
   - M156: Implemented CONTEXT TO LOAD section generator (`src/handoff/section-context-to-load.ts`).
   - M157: Implemented handoff document update and writer (`src/handoff/handoff-writer.ts`) updating `.brain/handoff.md`.
+  - M158: Added comprehensive handoff test suite (`tests/handoff.test.ts`, `tests/handoff-e2e.test.ts`).
 
 ### IN PROGRESS
-- Handoff block (M145–M158).
+- Concluding Handoff block (M145–M158).
 
 ### CHANGED FILES
-- `src/handoff/handoff-writer.ts`
-- `src/commands/handoff.ts`
-- `tests/handoff.test.ts`
+- `src/handoff/section-context-to-load.ts`
+- `tests/handoff-e2e.test.ts`
 - `.brain/state.md`
 - `.brain/handoff.md`
 
 ### TEST STATUS
-- 181/181 tests passing (`npm test`).
+- 184/184 tests passing (`npm test`).
 - TypeScript builds cleanly (`npm run build`).
 
 ### OPEN ISSUES
 - None.
 
 ### IMPORTANT DECISIONS
-- The handoff document update engine synthesizes all standard sections deterministically and writes to `.brain/handoff.md`.
+- The entire Handoff pipeline (M145–M158) is complete, fully automated, deterministic, tested unit and end-to-end, and integrated into CLI.
 
 ### NEXT ACTION
-- Proceed to M158: Add handoff tests.
+- Proceed to next block: **Health Checks** (M159: Create `brainmap check`).
 
 ### CONTEXT TO LOAD
 - .brain/index.md
@@ -82,4 +82,3 @@ M157: Update .brain/handoff.md.
 - .brain/handoff.md
 - src/commands/handoff.ts
 - src/handoff/handoff-writer.ts
-- tests/handoff.test.ts

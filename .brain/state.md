@@ -4,7 +4,7 @@ Current operational state of the Brainmap project.
 
 ## Current Milestone
 
-**M157**: Update .brain/handoff.md.
+**M158**: Add handoff tests.
 
 ## What is Implemented
 
@@ -105,10 +105,11 @@ Current operational state of the Brainmap project.
   - M155: Implemented NEXT ACTION section generator (`src/handoff/section-next-action.ts`).
   - M156: Implemented CONTEXT TO LOAD section generator (`src/handoff/section-context-to-load.ts`).
   - M157: Implemented handoff document update and writer (`src/handoff/handoff-writer.ts`) updating `.brain/handoff.md`.
+  - M158: Added comprehensive handoff test suite (`tests/handoff.test.ts`, `tests/handoff-e2e.test.ts`).
 
 ## What is In Progress
 
-- Handoff block (M145–M158).
+- Concluding Handoff block (M145–M158).
 
 ## Known Blockers
 
@@ -118,8 +119,8 @@ Current operational state of the Brainmap project.
 
 - Environment: Node.js v20+, TypeScript 5+, zero runtime dependencies.
 - Git repository synced with remote (`https://github.com/GammaYoshimura/Brainmap`).
-- 181 passing tests across the test suite.
+- 184 passing tests across the test suite.
 
 ## Immediate Next Work
 
-- M158: Add handoff tests.
+- Next block: **Health Checks** (M159: Create `brainmap check`).
