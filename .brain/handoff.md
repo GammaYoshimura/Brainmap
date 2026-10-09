@@ -23,7 +23,7 @@ The handoff document ensures that any subsequent AI agent or developer session c
 ## Current Operational Handoff
 
 ### CURRENT MILESTONE
-M159: Create `brainmap check`.
+M160: Check referenced document existence.
 
 ### COMPLETED
 - Repository foundation (M001–M010).
@@ -39,35 +39,34 @@ M159: Create `brainmap check`.
 - Routing block (M118–M132).
 - Context Selection block (M133–M144).
 - Handoff block (M145–M158).
-- Health Checks block started:
+- Health Checks block:
   - M159: Created `check` command handler (`src/commands/check.ts`), wired command dispatch and help description in CLI entry point (`src/cli.ts`), added CLI test (`tests/cli.test.ts`).
+  - M160: Implemented referenced document existence checker (`src/checker/doc-existence-checker.ts`) verifying all internal document links in `.brain`.
 
 ### IN PROGRESS
 - Health Checks block (M159–M169).
 
 ### CHANGED FILES
-- `src/commands/check.ts`
-- `src/cli.ts`
-- `tests/cli.test.ts`
+- `src/checker/doc-existence-checker.ts`
+- `tests/checker.test.ts`
 - `.brain/state.md`
 - `.brain/handoff.md`
 
 ### TEST STATUS
-- 185/185 tests passing (`npm test`).
+- 187/187 tests passing (`npm test`).
 - TypeScript builds cleanly (`npm run build`).
 
 ### OPEN ISSUES
 - None.
 
 ### IMPORTANT DECISIONS
-- Initial `check` command registered in CLI entry point and ready for integrity checkers.
+- The document existence checker recursively inspects all markdown files within `.brain`, extracts internal relative and absolute links, and verifies file targets exist.
 
 ### NEXT ACTION
-- Proceed to M160: Check referenced document existence.
+- Proceed to M161: Detect broken Markdown links.
 
 ### CONTEXT TO LOAD
 - .brain/index.md
 - .brain/state.md
 - .brain/handoff.md
-- src/cli.ts
-- src/commands/check.ts
+- src/checker/doc-existence-checker.ts

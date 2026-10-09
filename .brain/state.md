@@ -4,7 +4,7 @@ Current operational state of the Brainmap project.
 
 ## Current Milestone
 
-**M159**: Create `brainmap check`.
+**M160**: Check referenced document existence.
 
 ## What is Implemented
 
@@ -109,6 +109,7 @@ Current operational state of the Brainmap project.
 
 - **Health Checks (M159–M169)**:
   - M159: Created `check` command handler (`src/commands/check.ts`), wired command dispatch and help description in CLI entry point (`src/cli.ts`).
+  - M160: Implemented referenced document existence checker (`src/checker/doc-existence-checker.ts`) verifying all internal document links in `.brain`.
 
 ## What is In Progress
 
@@ -122,8 +123,8 @@ Current operational state of the Brainmap project.
 
 - Environment: Node.js v20+, TypeScript 5+, zero runtime dependencies.
 - Git repository synced with remote (`https://github.com/GammaYoshimura/Brainmap`).
-- 185 passing tests across the test suite.
+- 187 passing tests across the test suite.
 
 ## Immediate Next Work
 
-- M160: Check referenced document existence.
+- M161: Detect broken Markdown links.
