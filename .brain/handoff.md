@@ -23,7 +23,7 @@ The handoff document ensures that any subsequent AI agent or developer session c
 ## Current Operational Handoff
 
 ### CURRENT MILESTONE
-M147: Read current milestone.
+M148: Detect recent changes.
 
 ### COMPLETED
 - Repository foundation (M001–M010).
@@ -42,31 +42,32 @@ M147: Read current milestone.
   - M145: Created `handoff` command handler (`src/commands/handoff.ts`), wired command dispatch and help description in CLI entry point (`src/cli.ts`).
   - M146: Implemented state reader (`src/handoff/state-reader.ts`) to parse and structure operational state from `.brain/state.md`.
   - M147: Implemented milestone reader (`src/handoff/milestone-reader.ts`) extracting active milestone codes and titles.
+  - M148: Implemented recent changes detector (`src/handoff/change-detector.ts`) extracting git commit log records and commit summaries.
 
 ### IN PROGRESS
 - Handoff block (M145–M158).
 
 ### CHANGED FILES
-- `src/handoff/milestone-reader.ts`
+- `src/handoff/change-detector.ts`
 - `tests/handoff.test.ts`
 - `.brain/state.md`
 - `.brain/handoff.md`
 
 ### TEST STATUS
-- 167/167 tests passing (`npm test`).
+- 169/169 tests passing (`npm test`).
 - TypeScript builds cleanly (`npm run build`).
 
 ### OPEN ISSUES
 - None.
 
 ### IMPORTANT DECISIONS
-- The milestone reader parses milestone code and title with regex patterns supporting markdown markers and falls back gracefully to raw content.
+- The recent changes detector securely attempts `git log` execution and falls back gracefully to a non-git payload if unavailable.
 
 ### NEXT ACTION
-- Proceed to M148: Detect recent changes.
+- Proceed to M149: Detect changed files.
 
 ### CONTEXT TO LOAD
 - `.brain/index.md`
 - `.brain/state.md`
 - `.brain/handoff.md`
-- `src/handoff/milestone-reader.ts`
+- `src/handoff/change-detector.ts`

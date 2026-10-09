@@ -5,6 +5,7 @@ import os from "node:os";
 import path from "node:path";
 import { readCurrentState } from "../src/handoff/state-reader.js";
 import { readCurrentMilestone } from "../src/handoff/milestone-reader.js";
+import { detectRecentChanges } from "../src/handoff/change-detector.js";
 
 test("readCurrentState returns null when .brain/state.md does not exist", () => {
   const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "brainmap-handoff-state-none-"));
@@ -86,6 +87,25 @@ test("readCurrentMilestone returns null when state is missing", () => {
   try {
     const milestone = readCurrentMilestone(tmpDir);
     assert.equal(milestone, null);
+  } finally {
+    fs.rmSync(tmpDir, { recursive: true, force: true });
+  }
+});
+
+test("detectRecentChanges detects git commits when run in a valid repo", () => {
+  const changes = detectRecentChanges(process.cwd(), 3);
+  assert.equal(changes.hasGit, true);
+  assert.ok(changes.recentCommits.length > 0);
+  assert.ok(changes.commitHash);
+  assert.ok(changes.commitMessage);
+});
+
+test("detectRecentChanges handles non-git directories gracefully", () => {
+  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "brainmap-handoff-nogit-"));
+  try {
+    const changes = detectRecentChanges(tmpDir, 3);
+    assert.equal(changes.hasGit, false);
+    assert.equal(changes.recentCommits.length, 0);
   } finally {
     fs.rmSync(tmpDir, { recursive: true, force: true });
   }
