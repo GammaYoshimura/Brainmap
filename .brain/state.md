@@ -4,7 +4,7 @@ Current operational state of the Brainmap project.
 
 ## Current Milestone
 
-**M132**: Add routing tests.
+**M133**: Create `brainmap context`.
 
 ## What is Implemented
 
@@ -77,9 +77,12 @@ Current operational state of the Brainmap project.
   - Implemented structured routing pipeline and output formatters for text and JSON (`src/router/route-pipeline.ts`, `src/commands/route.ts`).
   - Added routing end-to-end integration test suite verifying documents, ADRs, source files, tests, and dependencies across fixtures (`tests/routing-e2e.test.ts`).
 
+- **Context Selection (M133–M144)**:
+  - Created `context` command handler (`src/commands/context.ts`) and registered `context` in CLI entry point and help text (`src/cli.ts`).
+
 ## What is In Progress
 
-- Completing Routing block (M118–M132).
+- Context Selection block (M133–M144).
 
 ## Known Blockers
 
@@ -89,8 +92,8 @@ Current operational state of the Brainmap project.
 
 - Environment: Node.js v20+, TypeScript 5+, zero runtime dependencies.
 - Git repository synced with remote (`https://github.com/GammaYoshimura/Brainmap`).
-- 147 passing tests across the test suite.
+- 148 passing tests across the test suite.
 
 ## Immediate Next Work
 
-- Next block: **Context** (M133: Create `brainmap context`).
+- **M134**: Accept a task query.

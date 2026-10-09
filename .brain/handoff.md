@@ -23,7 +23,7 @@ The handoff document ensures that any subsequent AI agent or developer session c
 ## Current Operational Handoff
 
 ### CURRENT MILESTONE
-M132: Add routing tests.
+M133: Create brainmap context.
 
 ### COMPLETED
 - Repository foundation (M001–M010).
@@ -36,48 +36,36 @@ M132: Add routing tests.
 - Project Structure Detection (M086–M096).
 - `brainmap map` block (M097–M108).
 - Specialized Documentation block (M109–M117).
-- Routing block (M118–M132) complete:
-  - M118: Created `route` command handler (`src/commands/route.ts`), wired command dispatch and help description in CLI entry point (`src/cli.ts`).
-  - M119: Implemented natural-language task query parsing, normalization, tokenization, and CLI argument integration (`src/router/query.ts`, `src/commands/route.ts`, `tests/route-query.test.ts`).
-  - M120: Implemented exact path matching resolver against project and brain files (`src/router/path-matcher.ts`, `tests/route-path-matcher.test.ts`).
-  - M121: Implemented file name and stem matching resolver against candidate paths (`src/router/filename-matcher.ts`, `tests/route-filename-matcher.test.ts`).
-  - M122: Implemented subsystem matching resolver with identifier, name, path, and token heuristics (`src/router/subsystem-matcher.ts`, `tests/route-subsystem-matcher.test.ts`).
-  - M123: Implemented Brain document matching resolver with role-intent keywords, exact paths, and subsystem mappings (`src/router/brain-doc-matcher.ts`, `tests/route-brain-doc-matcher.test.ts`).
-  - M124: Implemented exported symbol extraction and symbol-matching resolver with exact and case-insensitive scoring (`src/router/symbol-matcher.ts`, `tests/route-symbol-matcher.test.ts`).
-  - M125: Implemented relevance ranking engine with score aggregation, reason tracking, and category weighting (`src/router/ranking.ts`, `tests/route-ranking.test.ts`).
-  - M126: Implemented relevant Brain document router (`src/router/brain-doc-router.ts`, `tests/route-brain-doc-router.test.ts`).
-  - M127: Implemented relevant source file router integrating paths, filenames, subsystems, and symbols (`src/router/source-file-router.ts`, `tests/route-source-file-router.test.ts`).
-  - M128: Implemented relevant ADR router (`src/router/adr-router.ts`, `tests/route-adr-router.test.ts`).
-  - M129: Implemented relevant test router linking direct test mentions and matching test files corresponding to relevant source files (`src/router/test-router.ts`, `tests/route-test-router.test.ts`).
-  - M130: Implemented relevant dependency router matching declared manifest packages against task queries (`src/router/dependency-router.ts`, `tests/route-dependency-router.test.ts`).
-  - M131: Implemented structured routing pipeline and output formatters for human-readable text and structured JSON (`src/router/route-pipeline.ts`, `src/commands/route.ts`, `tests/route-pipeline.test.ts`).
-  - M132: Added comprehensive routing integration and CLI end-to-end test suite (`tests/routing-e2e.test.ts`).
+- Routing block (M118–M132).
+- Context Selection block started:
+  - M133: Created `context` command handler (`src/commands/context.ts`), wired command dispatch and help description in CLI entry point (`src/cli.ts`).
 
 ### IN PROGRESS
-- Concluding Routing block (M118–M132).
+- Context Selection block (M133–M144).
 
 ### CHANGED FILES
-- `tests/routing-e2e.test.ts`
-- `.brain/project-map.md`
+- `src/commands/context.ts`
+- `src/cli.ts`
+- `tests/cli.test.ts`
 - `.brain/state.md`
 - `.brain/handoff.md`
 
 ### TEST STATUS
-- 147/147 tests passing (`npm test`).
+- 148/148 tests passing (`npm test`).
 - TypeScript builds cleanly (`npm run build`).
 
 ### OPEN ISSUES
 - None.
 
 ### IMPORTANT DECISIONS
-- The entire routing engine is deterministic, requires zero external services or front-end LLMs, and correctly maps queries to documents, code, tests, ADRs, and dependencies.
+- The `context` command builds directly on top of the routing pipeline to extract, prioritize, format, and bound context payloads for AI agents and developer workflows.
 
 ### NEXT ACTION
-- Proceed to next block: **Context** (M133: Create `brainmap context`).
+- Implement M134: Accept a task query.
 
 ### CONTEXT TO LOAD
 - `.brain/index.md`
 - `.brain/state.md`
 - `.brain/handoff.md`
-- `src/router/index.ts`
-- `src/router/route-pipeline.ts`
+- `src/commands/context.ts`
+- `src/cli.ts`
