@@ -4,7 +4,7 @@ Current operational state of the Brainmap project.
 
 ## Current Milestone
 
-**M146**: Read current state.
+**M147**: Read current milestone.
 
 ## What is Implemented
 
@@ -92,8 +92,9 @@ Current operational state of the Brainmap project.
   - Added comprehensive context-selection unit, budget limit, formatting, and end-to-end CLI integration test suite (`tests/context.test.ts`, `tests/context-e2e.test.ts`).
 
 - **Handoff (M145–M158)**:
-  - M145: Created `handoff` command handler (`src/commands/handoff.ts`) and wired command dispatch and help description in CLI entry point (`src/cli.ts`).
+  - M145: Created `handoff` command handler (`src/commands/handoff.ts`), wired command dispatch and help description in CLI entry point (`src/cli.ts`).
   - M146: Implemented state reader (`src/handoff/state-reader.ts`) to parse and structure operational state from `.brain/state.md`.
+  - M147: Implemented milestone reader (`src/handoff/milestone-reader.ts`) extracting active milestone codes and titles.
 
 ## What is In Progress
 
@@ -107,8 +108,8 @@ Current operational state of the Brainmap project.
 
 - Environment: Node.js v20+, TypeScript 5+, zero runtime dependencies.
 - Git repository synced with remote (`https://github.com/GammaYoshimura/Brainmap`).
-- 165 passing tests across the test suite.
+- 167 passing tests across the test suite.
 
 ## Immediate Next Work
 
-- M147: Read current milestone.
+- M148: Detect recent changes.

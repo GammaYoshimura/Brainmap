@@ -23,7 +23,7 @@ The handoff document ensures that any subsequent AI agent or developer session c
 ## Current Operational Handoff
 
 ### CURRENT MILESTONE
-M146: Read current state.
+M147: Read current milestone.
 
 ### COMPLETED
 - Repository foundation (M001–M010).
@@ -41,31 +41,32 @@ M146: Read current state.
 - Handoff block:
   - M145: Created `handoff` command handler (`src/commands/handoff.ts`), wired command dispatch and help description in CLI entry point (`src/cli.ts`).
   - M146: Implemented state reader (`src/handoff/state-reader.ts`) to parse and structure operational state from `.brain/state.md`.
+  - M147: Implemented milestone reader (`src/handoff/milestone-reader.ts`) extracting active milestone codes and titles.
 
 ### IN PROGRESS
 - Handoff block (M145–M158).
 
 ### CHANGED FILES
-- `src/handoff/state-reader.ts`
+- `src/handoff/milestone-reader.ts`
 - `tests/handoff.test.ts`
 - `.brain/state.md`
 - `.brain/handoff.md`
 
 ### TEST STATUS
-- 165/165 tests passing (`npm test`).
+- 167/167 tests passing (`npm test`).
 - TypeScript builds cleanly (`npm run build`).
 
 ### OPEN ISSUES
 - None.
 
 ### IMPORTANT DECISIONS
-- The state reader parses sections of `.brain/state.md` robustly into structured fields while tolerating missing sections.
+- The milestone reader parses milestone code and title with regex patterns supporting markdown markers and falls back gracefully to raw content.
 
 ### NEXT ACTION
-- Proceed to M147: Read current milestone.
+- Proceed to M148: Detect recent changes.
 
 ### CONTEXT TO LOAD
 - `.brain/index.md`
 - `.brain/state.md`
 - `.brain/handoff.md`
-- `src/handoff/state-reader.ts`
+- `src/handoff/milestone-reader.ts`

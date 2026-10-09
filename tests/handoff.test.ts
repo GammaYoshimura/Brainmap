@@ -4,6 +4,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { readCurrentState } from "../src/handoff/state-reader.js";
+import { readCurrentMilestone } from "../src/handoff/milestone-reader.js";
 
 test("readCurrentState returns null when .brain/state.md does not exist", () => {
   const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "brainmap-handoff-state-none-"));
@@ -58,6 +59,33 @@ test("readCurrentState parses sections correctly when state.md exists", () => {
     assert.equal(result.knownBlockersRaw, "- None");
     assert.equal(result.currentConditionsRaw, "- Passing test suite");
     assert.equal(result.immediateNextWorkRaw, "- M147: Read current milestone");
+  } finally {
+    fs.rmSync(tmpDir, { recursive: true, force: true });
+  }
+});
+
+test("readCurrentMilestone extracts code and title from formatted milestone string", () => {
+  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "brainmap-handoff-milestone-test-"));
+  const brainDir = path.join(tmpDir, ".brain");
+  fs.mkdirSync(brainDir, { recursive: true });
+
+  fs.writeFileSync(path.join(brainDir, "state.md"), "# Project State\n\n## Current Milestone\n\n**M147**: Read current milestone.\n", "utf8");
+
+  try {
+    const milestone = readCurrentMilestone(tmpDir);
+    assert.ok(milestone);
+    assert.equal(milestone.code, "M147");
+    assert.equal(milestone.title, "Read current milestone.");
+  } finally {
+    fs.rmSync(tmpDir, { recursive: true, force: true });
+  }
+});
+
+test("readCurrentMilestone returns null when state is missing", () => {
+  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "brainmap-handoff-milestone-none-"));
+  try {
+    const milestone = readCurrentMilestone(tmpDir);
+    assert.equal(milestone, null);
   } finally {
     fs.rmSync(tmpDir, { recursive: true, force: true });
   }
