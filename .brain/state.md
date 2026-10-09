@@ -4,7 +4,7 @@ Current operational state of the Brainmap project.
 
 ## Current Milestone
 
-**M149**: Detect changed files.
+**M150**: Read available test status.
 
 ## What is Implemented
 
@@ -97,6 +97,7 @@ Current operational state of the Brainmap project.
   - M147: Implemented milestone reader (`src/handoff/milestone-reader.ts`) extracting active milestone codes and titles.
   - M148: Implemented recent changes detector (`src/handoff/change-detector.ts`) extracting git commit log records and commit summaries.
   - M149: Implemented changed files detector (`src/handoff/file-change-detector.ts`) extracting staged, unstaged, untracked, and recent commit changed files.
+  - M150: Implemented test status reader (`src/handoff/test-status-reader.ts`) extracting test suite execution metrics and pass/fail states.
 
 ## What is In Progress
 
@@ -110,8 +111,8 @@ Current operational state of the Brainmap project.
 
 - Environment: Node.js v20+, TypeScript 5+, zero runtime dependencies.
 - Git repository synced with remote (`https://github.com/GammaYoshimura/Brainmap`).
-- 171 passing tests across the test suite.
+- 173 passing tests across the test suite.
 
 ## Immediate Next Work
 
-- M150: Read available test status.
+- M151: Detect open issues where possible.

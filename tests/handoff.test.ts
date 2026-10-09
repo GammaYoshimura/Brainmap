@@ -7,6 +7,7 @@ import { readCurrentState } from "../src/handoff/state-reader.js";
 import { readCurrentMilestone } from "../src/handoff/milestone-reader.js";
 import { detectRecentChanges } from "../src/handoff/change-detector.js";
 import { detectChangedFiles } from "../src/handoff/file-change-detector.js";
+import { readAvailableTestStatus } from "../src/handoff/test-status-reader.js";
 
 test("readCurrentState returns null when .brain/state.md does not exist", () => {
   const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "brainmap-handoff-state-none-"));
@@ -126,6 +127,33 @@ test("detectChangedFiles handles non-git directories gracefully", () => {
     assert.equal(result.hasGit, false);
     assert.deepEqual(result.allCurrentChanges, []);
     assert.deepEqual(result.committedInLastCommit, []);
+  } finally {
+    fs.rmSync(tmpDir, { recursive: true, force: true });
+  }
+});
+
+test("readAvailableTestStatus parses passing test count from existing handoff document", () => {
+  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "brainmap-handoff-tests-status-"));
+  const brainDir = path.join(tmpDir, ".brain");
+  fs.mkdirSync(brainDir, { recursive: true });
+
+  fs.writeFileSync(path.join(brainDir, "handoff.md"), "# Handoff\n\n### TEST STATUS\n- 171/171 tests passing (`npm test`).\n- TypeScript builds cleanly.\n", "utf8");
+
+  try {
+    const status = readAvailableTestStatus(tmpDir);
+    assert.equal(status.status, "passing");
+    assert.equal(status.testCount, 171);
+    assert.equal(status.failingCount, 0);
+  } finally {
+    fs.rmSync(tmpDir, { recursive: true, force: true });
+  }
+});
+
+test("readAvailableTestStatus returns unknown when no handoff or state exists", () => {
+  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "brainmap-handoff-tests-none-"));
+  try {
+    const status = readAvailableTestStatus(tmpDir);
+    assert.equal(status.status, "unknown");
   } finally {
     fs.rmSync(tmpDir, { recursive: true, force: true });
   }
